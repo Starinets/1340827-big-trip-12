@@ -1,4 +1,8 @@
-env:
+parserOptions:
+  sourceType: 'module'
+  ecmaVersion: 2015
+
+  env:
   es6: true
   browser: true
   commonjs: true
