@@ -1,5 +1,7 @@
 'use strict';
 
+const EVENT_COUNT = 3;
+
 const tripInfoPlace = document.querySelector('.trip-main');
 const tripMenuPlace = tripInfoPlace.querySelector('.js-menu');
 const tripFiltersPlace = tripInfoPlace.querySelector('.trip-controls');
@@ -164,3 +166,9 @@ render(tripContentPlace, createTripDaysTemplate(), 'beforeend');
 const tripDayPlace = tripContentPlace.querySelector('.trip-days');
 
 render(tripDayPlace, createTripDayTemplate(), 'beforeend');
+
+const tripEventPlace = tripDayPlace.querySelector('.trip-events__list');
+
+for (let i = 0; i < EVENT_COUNT; i++) {
+  render(tripEventPlace, createTripEventTemplate(), 'beforeend');
+}
