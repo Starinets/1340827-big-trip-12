@@ -278,6 +278,11 @@ const render = (container, template, place) => {
 
 render(tripInfoPlace, createTripInfoTemplate(), 'afterbegin');
 
+const tripInfoMainPlace = tripInfoPlace.querySelector('.trip-info');
+render(tripInfoMainPlace, createTripMainInfoTemplate(), 'beforeend');
+render(tripInfoMainPlace, createTripCostInfoTemplate(), 'beforeend');
+
+
 render(tripMenuPlace, createMenuTemplate(), 'afterend');
 render(tripFiltersPlace, createFiltersTemplate(), 'beforeend');
 
@@ -286,7 +291,6 @@ render(tripContentPlace, createEventFormTemplate(), 'beforeend');
 render(tripContentPlace, createTripDaysTemplate(), 'beforeend');
 
 const tripDayPlace = tripContentPlace.querySelector('.trip-days');
-
 render(tripDayPlace, createTripDayTemplate(), 'beforeend');
 
 const tripEventPlace = tripDayPlace.querySelector('.trip-events__list');
