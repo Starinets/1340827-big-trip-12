@@ -2,12 +2,12 @@
 
 const EVENT_COUNT = 3;
 
-const tripInfoPlace = document.querySelector('.trip-main');
-const tripMenuPlace = tripInfoPlace.querySelector('.js-menu');
-const tripFiltersPlace = tripInfoPlace.querySelector('.trip-controls');
+const tripInfoPlace = document.querySelector(`.trip-main`);
+const tripMenuPlace = tripInfoPlace.querySelector(`.js-menu`);
+const tripFiltersPlace = tripInfoPlace.querySelector(`.trip-controls`);
 
-const tripContentPlace = document.querySelector('.trip-events');
-const tripSortingPlace = document.querySelector('.js-sorting');
+const tripContentPlace = document.querySelector(`.trip-events`);
+const tripSortingPlace = document.querySelector(`.js-sorting`);
 
 const createTripInfoTemplate = () => {
   return (
@@ -158,7 +158,7 @@ const createTripEventTemplate = () => {
       </div>
     </li>`
   );
-}
+};
 
 const createEventFormTemplate = () => {
   return (
@@ -276,25 +276,25 @@ const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
 
-render(tripInfoPlace, createTripInfoTemplate(), 'afterbegin');
+render(tripInfoPlace, createTripInfoTemplate(), `afterbegin`);
 
-const tripInfoMainPlace = tripInfoPlace.querySelector('.trip-info');
-render(tripInfoMainPlace, createTripMainInfoTemplate(), 'beforeend');
-render(tripInfoMainPlace, createTripCostInfoTemplate(), 'beforeend');
+const tripInfoMainPlace = tripInfoPlace.querySelector(`.trip-info`);
+render(tripInfoMainPlace, createTripMainInfoTemplate(), `beforeend`);
+render(tripInfoMainPlace, createTripCostInfoTemplate(), `beforeend`);
 
 
-render(tripMenuPlace, createMenuTemplate(), 'afterend');
-render(tripFiltersPlace, createFiltersTemplate(), 'beforeend');
+render(tripMenuPlace, createMenuTemplate(), `afterend`);
+render(tripFiltersPlace, createFiltersTemplate(), `beforeend`);
 
-render(tripSortingPlace, createTripSortTemplate(), 'afterend');
-render(tripContentPlace, createEventFormTemplate(), 'beforeend');
-render(tripContentPlace, createTripDaysTemplate(), 'beforeend');
+render(tripSortingPlace, createTripSortTemplate(), `afterend`);
+render(tripContentPlace, createEventFormTemplate(), `beforeend`);
+render(tripContentPlace, createTripDaysTemplate(), `beforeend`);
 
-const tripDayPlace = tripContentPlace.querySelector('.trip-days');
-render(tripDayPlace, createTripDayTemplate(), 'beforeend');
+const tripDayPlace = tripContentPlace.querySelector(`.trip-days`);
+render(tripDayPlace, createTripDayTemplate(), `beforeend`);
 
-const tripEventPlace = tripDayPlace.querySelector('.trip-events__list');
+const tripEventPlace = tripDayPlace.querySelector(`.trip-events__list`);
 
 for (let i = 0; i < EVENT_COUNT; i++) {
-  render(tripEventPlace, createTripEventTemplate(), 'beforeend');
+  render(tripEventPlace, createTripEventTemplate(), `beforeend`);
 }
