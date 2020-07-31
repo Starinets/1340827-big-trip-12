@@ -1,5 +1,12 @@
 'use strict';
 
+const tripInfoPlace = document.querySelector('.trip-main');
+const tripMenuPlace = tripInfoPlace.querySelector('.js-menu');
+const tripFiltersPlace = tripInfoPlace.querySelector('.trip-controls');
+
+const tripContentPlace = document.querySelector('.trip-events');
+const tripSortingPlace = document.querySelector('.js-sorting');
+
 const createTripInfoTemplate = () => {
   return (
     `<section class="trip-main__trip-info  trip-info">
@@ -141,3 +148,15 @@ const createTripDayTemplate = () => {
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
+
+render(tripInfoPlace, createTripInfoTemplate(), 'afterbegin');
+
+render(tripMenuPlace, createMenuTemplate(), 'afterend');
+render(tripFiltersPlace, createFiltersTemplate(), 'beforeend');
+
+render(tripSortingPlace, createTripSortTemplate(), 'afterend');
+render(tripContentPlace, createTripDaysTemplate(), 'beforeend');
+
+const tripDayPlace = tripContentPlace.querySelector('.trip-days');
+
+render(tripDayPlace, createTripDayTemplate(), 'beforeend');
