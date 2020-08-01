@@ -7,6 +7,7 @@ import {createFiltersTemplate} from './view/filters.js';
 import {createSortTemplate} from './view/sort.js';
 import {createDaysTemplate} from './view/days.js';
 import {createDayTemplate} from './view/day.js';
+import {createPointListTemplate} from './view/point-list.js';
 import {createPointTemplate} from './view/point.js';
 import {createPointFormTemplate} from './view/point-form.js';
 import {createAddPointButtonTemplate} from './view/add-point-button.js';
@@ -36,6 +37,8 @@ render(contentPlace, createDaysTemplate(), `beforeend`);
 
 const dayPlace = contentPlace.querySelector(`.trip-days`);
 render(dayPlace, createDayTemplate(), `beforeend`);
+const pointListPlace = contentPlace.querySelector(`.day`);
+render(pointListPlace, createPointListTemplate(), `beforeend`);
 
 const eventPlace = dayPlace.querySelector(`.trip-events__list`);
 
