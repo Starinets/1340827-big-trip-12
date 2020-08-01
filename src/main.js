@@ -8,6 +8,7 @@ import {createTripDaysTemplate} from './view/trip-days.js';
 import {createTripDayTemplate} from './view/trip-day.js';
 import {createTripEventTemplate} from './view/trip-event.js';
 import {createTripEventFormTemplate} from './view/trip-event-form.js';
+import {createTripAddEventButtonTemplate} from './view/trip-add-event-button.js';
 
 const EVENT_COUNT = 3;
 
@@ -23,6 +24,7 @@ const render = (container, template, place) => {
 };
 
 render(tripInfoPlace, createTripInfoTemplate(), `afterbegin`);
+render(tripInfoPlace, createTripAddEventButtonTemplate(), `beforeend`);
 
 const tripInfoMainPlace = tripInfoPlace.querySelector(`.trip-info`);
 render(tripInfoMainPlace, createTripMainInfoTemplate(), `beforeend`);
