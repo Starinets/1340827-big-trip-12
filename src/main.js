@@ -1,3 +1,4 @@
+import {render} from './utils/dom.js';
 import {createInfoTemplate} from './view/info.js';
 import {createMainInfoTemplate} from './view/main-info.js';
 import {createCostInfoTemplate} from './view/cost-info.js';
@@ -18,10 +19,6 @@ const filtersPlace = infoPlace.querySelector(`.trip-controls`);
 
 const contentPlace = document.querySelector(`.trip-events`);
 const sortingPlace = document.querySelector(`.js-sorting`);
-
-const render = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
-};
 
 render(infoPlace, createInfoTemplate(), `afterbegin`);
 render(infoPlace, createAddPointButtonTemplate(), `beforeend`);
