@@ -160,7 +160,7 @@ const createTripEventTemplate = () => {
   );
 };
 
-const createEventFormTemplate = () => {
+const createTripEventFormTemplate = () => {
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
       <header class="event__header">
@@ -287,7 +287,7 @@ render(tripMenuPlace, createMenuTemplate(), `afterend`);
 render(tripFiltersPlace, createFiltersTemplate(), `beforeend`);
 
 render(tripSortingPlace, createTripSortTemplate(), `afterend`);
-render(tripContentPlace, createEventFormTemplate(), `beforeend`);
+render(tripContentPlace, createTripEventFormTemplate(), `beforeend`);
 render(tripContentPlace, createTripDaysTemplate(), `beforeend`);
 
 const tripDayPlace = tripContentPlace.querySelector(`.trip-days`);
