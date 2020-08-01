@@ -1,4 +1,4 @@
-const createTripEventFormTemplate = () => {
+const createPointFormTemplate = () => {
   return (
     `<li class="trip-events__item">
     <form class="event  event--edit" action="#" method="post">
@@ -176,4 +176,4 @@ const createTripEventFormTemplate = () => {
   );
 };
 
-export {createTripEventFormTemplate};
+export {createPointFormTemplate};
