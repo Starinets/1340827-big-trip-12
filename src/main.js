@@ -33,7 +33,6 @@ render(tripMenuPlace, createMenuTemplate(), `afterend`);
 render(tripFiltersPlace, createFiltersTemplate(), `beforeend`);
 
 render(tripSortingPlace, createTripSortTemplate(), `afterend`);
-render(tripContentPlace, createTripEventFormTemplate(), `beforeend`);
 render(tripContentPlace, createTripDaysTemplate(), `beforeend`);
 
 const tripDayPlace = tripContentPlace.querySelector(`.trip-days`);
@@ -41,6 +40,7 @@ render(tripDayPlace, createTripDayTemplate(), `beforeend`);
 
 const tripEventPlace = tripDayPlace.querySelector(`.trip-events__list`);
 
+render(tripEventPlace, createTripEventFormTemplate(), `beforeend`);
 for (let i = 0; i < EVENT_COUNT; i++) {
   render(tripEventPlace, createTripEventTemplate(), `beforeend`);
 }
