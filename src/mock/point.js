@@ -3,6 +3,11 @@ import {getRandomInteger, getRandomDate} from '../utils/random.js';
 const OFFERS_COUNT = 5;
 const INFO_COUNT = 5;
 const PHOTOS_COUNT = 5;
+const Price = {
+  min: 2,
+  max: 50,
+  multiplicity: 10,
+};
 
 const pointType = [
   `Taxi`,
@@ -52,6 +57,7 @@ const generatePoint = () => ({
   },
   startTime: getRandomDate(),
   endTime: getRandomDate(),
+  cost: getRandomInteger(Price.min, Price.max) * Price.multiplicity,
 });
 
 const generateOffers = (offersCount) => new Array(offersCount)
