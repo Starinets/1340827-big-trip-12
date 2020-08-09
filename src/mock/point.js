@@ -1,4 +1,4 @@
-import {getRandomInteger} from '../utils/random.js';
+import {getRandomInteger, getRandomDate} from '../utils/random.js';
 
 const OFFERS_COUNT = 5;
 const INFO_COUNT = 5;
@@ -50,6 +50,8 @@ const generatePoint = () => ({
     text: generateDestinationInfo(getRandomInteger(1, INFO_COUNT)),
     photos: generateDestinationPhotos(getRandomInteger(1, PHOTOS_COUNT)),
   },
+  startTime: getRandomDate(),
+  endTime: getRandomDate(),
 });
 
 const generateOffers = (offersCount) => new Array(offersCount)
