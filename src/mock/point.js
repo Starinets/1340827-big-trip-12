@@ -47,18 +47,25 @@ const infos = [
   `In rutrum ac purus sit amet tempus.`
 ];
 
-const generatePoint = () => ({
-  type: pointType[getRandomInteger(0, pointType.length - 1)],
-  destination: destinations[getRandomInteger(0, destinations.length - 1)],
-  offers: generateOffers(getRandomInteger(0, OFFERS_COUNT)),
-  destinationInfo: {
-    text: generateDestinationInfo(getRandomInteger(1, INFO_COUNT)),
-    photos: generateDestinationPhotos(getRandomInteger(1, PHOTOS_COUNT)),
-  },
-  startTime: getRandomDate(),
-  endTime: getRandomDate(),
-  cost: getRandomInteger(Price.min, Price.max) * Price.multiplicity,
-});
+const generatePoint = (minDate = new Date()) => {
+  let point = {
+    type: pointType[getRandomInteger(0, pointType.length - 1)],
+    destination: destinations[getRandomInteger(0, destinations.length - 1)],
+    offers: generateOffers(getRandomInteger(0, OFFERS_COUNT)),
+    destinationInfo: {
+      text: generateDestinationInfo(getRandomInteger(1, INFO_COUNT)),
+      photos: generateDestinationPhotos(getRandomInteger(1, PHOTOS_COUNT)),
+    },
+    cost: getRandomInteger(Price.min, Price.max) * Price.multiplicity,
+  };
+
+  minDate = getRandomDate(minDate);
+  point.startTime = minDate;
+  minDate = getRandomDate(minDate);
+  point.endTime = minDate;
+
+  return point;
+};
 
 const generateOffers = (offersCount) => new Array(offersCount)
   .fill()
