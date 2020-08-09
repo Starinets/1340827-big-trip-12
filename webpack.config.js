@@ -2,18 +2,18 @@
 
 const path = require(`path`);
 
-let pathToBundle = path.join(__dirname, `public`);
+const PATH_TO_BUNDLE = path.join(__dirname, 'public');
 
 module.exports = {
   mode: `development`,
   entry: `./src/main.js`,
   output: {
     filename: `bundle.js`,
-    path: pathToBundle,
+    path: PATH_TO_BUNDLE,
   },
   devtool: `source-map`,
   devServer: {
-    contentBase: pathToBundle,
+    contentBase: PATH_TO_BUNDLE,
     watchContentBase: true,
   }
 };
