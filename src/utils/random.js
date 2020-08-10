@@ -1,7 +1,7 @@
 const MINUTES_IN_HALF_HOUR = 30;
 const maxAddToDate = {
-  DAYS: 2,
-  HOURS: 23,
+  DAYS: 1,
+  HOURS: 12,
   HALF_HOUR_PERIODS: 3,
 };
 
@@ -26,4 +26,7 @@ const getRandomDate = (minDate = new Date()) => {
   return new Date(randomDate);
 };
 
-export {getRandomInteger, getRandomDate};
+export {
+  getRandomInteger,
+  getRandomDate
+};

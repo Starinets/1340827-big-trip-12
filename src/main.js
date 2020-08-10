@@ -12,8 +12,9 @@ import {createPointListTemplate} from './view/point-list.js';
 import {createPointTemplate} from './view/point.js';
 import {createPointFormTemplate} from './view/point-form.js';
 import {createAddPointButtonTemplate} from './view/add-point-button.js';
+import {generatePoint} from './mock/point.js';
 
-const EVENT_COUNT = 3;
+const EVENT_COUNT = 30;
 
 const infoPlace = document.querySelector(`.trip-main`);
 const menuPlace = infoPlace.querySelector(`.js-menu`);
@@ -21,6 +22,16 @@ const filtersPlace = infoPlace.querySelector(`.trip-controls`);
 
 const contentPlace = document.querySelector(`.trip-events`);
 const sortingPlace = document.querySelector(`.js-sorting`);
+
+let minDate = new Date();
+
+const points = new Array(EVENT_COUNT)
+  .fill()
+  .map(() => {
+    let point = generatePoint(minDate);
+    minDate = point.endTime;
+    return point;
+  });
 
 render(infoPlace, createInfoTemplate(), insertPosition.AFTER_BEGIN);
 render(infoPlace, createAddPointButtonTemplate(), insertPosition.BEFORE_END);
@@ -44,6 +55,6 @@ render(pointListPlace, createPointListTemplate(), insertPosition.BEFORE_END);
 const eventPlace = dayPlace.querySelector(`.trip-events__list`);
 
 render(eventPlace, createPointFormTemplate(), insertPosition.BEFORE_END);
-for (let i = 0; i < EVENT_COUNT; i++) {
-  render(eventPlace, createPointTemplate(), insertPosition.BEFORE_END);
-}
+points.forEach((point) => {
+  render(eventPlace, createPointTemplate(point), insertPosition.BEFORE_END);
+});
