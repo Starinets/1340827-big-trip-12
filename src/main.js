@@ -8,9 +8,6 @@ import {createFiltersTemplate} from './view/filters.js';
 import {createSortTemplate} from './view/sort.js';
 import {createDaysTemplate} from './view/days.js';
 import {createDayTemplate} from './view/day.js';
-import {createPointListTemplate} from './view/point-list.js';
-import {createPointTemplate} from './view/point.js';
-import {createPointFormTemplate} from './view/point-form.js';
 import {createAddPointButtonTemplate} from './view/add-point-button.js';
 import {generatePoint} from './mock/point.js';
 
@@ -69,13 +66,20 @@ render(sortingPlace, createSortTemplate(), insertPosition.AFTER_END);
 render(contentPlace, createDaysTemplate(), insertPosition.BEFORE_END);
 
 const dayPlace = contentPlace.querySelector(`.trip-days`);
-render(dayPlace, createDayTemplate(), insertPosition.BEFORE_END);
-const pointListPlace = contentPlace.querySelector(`.day`);
-render(pointListPlace, createPointListTemplate(), insertPosition.BEFORE_END);
 
-const eventPlace = dayPlace.querySelector(`.trip-events__list`);
+const result = points.reduce((acc, item) => {
+  const day = new Date(item.startTime);
+  day.setHours(23, 59, 59, 999);
+  acc[day] = acc[day] || [];
+  acc[day].push(item);
+  return acc;
+}, {});
 
-render(eventPlace, createPointFormTemplate(), insertPosition.BEFORE_END);
-points.forEach((point) => {
-  render(eventPlace, createPointTemplate(point), insertPosition.BEFORE_END);
-});
+let counter = 0;
+
+for (const day in result) {
+  if (result.hasOwnProperty(day)) {
+    counter++;
+    render(dayPlace, createDayTemplate(day, counter, result[day]), insertPosition.BEFORE_END);
+  }
+}

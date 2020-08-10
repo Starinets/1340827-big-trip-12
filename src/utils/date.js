@@ -5,12 +5,12 @@ const timeToString = (date = new Date()) => {
   return `${hours < 10 ? `0` + hours : hours}:${minutes < 10 ? `0` + minutes : minutes}`;
 };
 
-const timeToDateString = (date = new Date()) => {
+const timeToDateString = (date = new Date(), needShowTime = true) => {
   const year = date.getFullYear();
   const month = date.getMonth() + 1;
   const day = date.getDay();
 
-  return `${year}-${month < 10 ? `0` + month : month}-${day < 10 ? `0` + day : day}T${timeToString(date)}`;
+  return `${year}-${month < 10 ? `0` + month : month}-${day < 10 ? `0` + day : day}${needShowTime ? `T${timeToString(date)}` : ``}`;
 };
 
 const getDatesDifference = (startDate = new Date(), endDate = new Date()) => {
