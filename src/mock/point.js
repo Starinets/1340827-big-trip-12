@@ -110,6 +110,6 @@ const generateDestinationInfo = (infoCount) => new Array(infoCount)
 
 const generateDestinationPhotos = (photosCount) => new Array(photosCount)
   .fill()
-  .map(() => Math.random());
+  .map(() => `img/icons/${Math.random()}.png`);
 
 export {generatePoint};
