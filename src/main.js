@@ -66,13 +66,13 @@ render(contentPlace, createDaysTemplate(), insertPosition.BEFORE_END);
 
 const dayPlace = contentPlace.querySelector(`.trip-days`);
 
-const result = points.reduce((acc, item) => {
-  const day = new Date(item.startTime);
-  day.setHours(23, 59, 59, 999);
-  acc[day] = acc[day] || [];
-  acc[day].push(item);
-  return acc;
-}, {});
+const result = points
+  .sort((less, more) => less.startTime - more.startTime)
+  .reduce((acc, item) => {
+    acc[item.day] = acc[item.day] || [];
+    acc[item.day].push(item);
+    return acc;
+  }, {});
 
 let counter = 0;
 

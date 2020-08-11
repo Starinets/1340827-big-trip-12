@@ -1,3 +1,15 @@
+const MILLISECOND_IN_MINUTE = 60000;
+const MINUTES_IN_HOUR = 60;
+const HOURS_IN_DAY = 24;
+
+
+const addLeadingRank = (number) => {
+  if (number < 10) {
+    return `0` + number;
+  }
+  return number;
+};
+
 const timeToString = (date = new Date()) => {
   const hours = date.getHours();
   const minutes = date.getMinutes();
@@ -15,31 +27,32 @@ const timeToDateString = (date = new Date(), needShowTime = true) => {
 
 const getDatesDifference = (startDate = new Date(), endDate = new Date()) => {
   let difference = endDate - startDate;
-  difference -= difference % 60000;
-  difference = difference / 60000;
-  const minutes = difference % 60;
+  difference -= difference % MILLISECOND_IN_MINUTE;
+  difference = difference / MILLISECOND_IN_MINUTE;
+  const minutes = difference % MINUTES_IN_HOUR;
   difference -= minutes;
-  difference = difference / 60;
-  const hours = difference % 24;
+  difference = difference / MINUTES_IN_HOUR;
+  const hours = difference % HOURS_IN_DAY;
   difference -= hours;
-  const days = difference / 24;
+  const days = difference / HOURS_IN_DAY;
 
   let dateToString = ``;
 
   if (days > 0) {
-    dateToString = days + `D `;
+    dateToString = addLeadingRank(days) + `D `;
   }
 
   if (days > 0 || hours > 0) {
-    dateToString = dateToString + hours + `H `;
+    dateToString = dateToString + addLeadingRank(hours) + `H `;
   }
 
-  dateToString = dateToString + minutes + `M`;
+  dateToString = dateToString + addLeadingRank(minutes) + `M`;
 
   return dateToString;
 };
 
 export {
+  addLeadingRank,
   getDatesDifference,
   timeToDateString,
   timeToString

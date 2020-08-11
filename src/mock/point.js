@@ -2,6 +2,7 @@ import {
   getRandomInteger,
   getRandomDate
 } from '../utils/random.js';
+import {addLeadingRank} from '../utils/date';
 
 const OFFERS_COUNT = 5;
 const INFO_COUNT = 5;
@@ -93,6 +94,7 @@ const generatePoint = (minDate = new Date()) => {
 
   minDate = getRandomDate(minDate);
   point.startTime = minDate;
+  point.day = `${minDate.getFullYear()}-${addLeadingRank(minDate.getMonth() + 1)}-${addLeadingRank(minDate.getDate())}`;
   minDate = getRandomDate(minDate);
   point.endTime = minDate;
 
