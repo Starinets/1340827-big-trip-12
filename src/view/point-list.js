@@ -1,7 +1,7 @@
 import {createPointTemplate} from './point.js';
 
 const generatePointsTemplates = (points) => points
-  .map((point) => createPointTemplate(point))
+  .map((createPointTemplate))
   .join(``);
 
 const createPointListTemplate = (points) => `<ul class="trip-events__list">
