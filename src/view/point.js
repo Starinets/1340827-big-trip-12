@@ -1,21 +1,20 @@
-import {
-  PointTypeToImageName,
-  PointTypeToPretext
-} from '../utils/constants';
+import {PointTypeToPretext} from '../utils/constants';
 import {
   getDatesDifference,
   timeToString
 } from '../utils/date';
 import {generateOffersList} from './offers';
 
+const getHeaderText = (point) => `${PointTypeToPretext[point.type]} ${point.destination}`;
+
 const createPointTemplate = (point) => {
   return (
     `<li class="trip-events__item">
       <div class="event">
         <div class="event__type">
-          <img class="event__type-icon" width="42" height="42" src="img/icons/${PointTypeToImageName[point.type]}.png" alt="Event type icon">
+          <img class="event__type-icon" width="42" height="42" src="img/icons/${point.type}.png" alt="Event type icon">
         </div>
-        <h3 class="event__title">${point.type} ${PointTypeToPretext[point.type]} ${point.destination}</h3>
+        <h3 class="event__title">${getHeaderText(point)}</h3>
 
         <div class="event__schedule">
           <p class="event__time">
