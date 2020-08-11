@@ -20,6 +20,25 @@ const filtersPlace = infoPlace.querySelector(`.trip-controls`);
 const contentPlace = document.querySelector(`.trip-events`);
 const sortingPlace = document.querySelector(`.js-sorting`);
 
+const getTripCost = (points) => points.reduce((pointsPrice, point) =>
+  pointsPrice + point.price + point.offers.reduce((offersPrice, offer) =>
+    offersPrice + offer.price, 0), 0);
+
+const getTripPath = (points) => {
+  switch (points.length) {
+    case 0:
+      return ``;
+    case 1:
+      return `${points[0].destination}`;
+    case 2:
+      return `${points[0].destination} &mdash; ${points[points.length - 1].destination}`;
+    case 3:
+      return `${points[0].destination} &mdash; ${points[1].destination} &mdash; ${points[points.length - 1].destination}`;
+    default:
+      return `${points[0].destination} &mdash; ... &mdash; ${points[points.length - 1].destination}`;
+  }
+};
+
 let minDate = new Date();
 
 const points = new Array(EVENT_COUNT)
@@ -35,28 +54,8 @@ render(infoPlace, createAddPointButtonTemplate(), insertPosition.BEFORE_END);
 
 const infoMainPlace = infoPlace.querySelector(`.trip-info`);
 
-let tripInfo = ``;
-switch (points.length) {
-  case 0:
-    tripInfo = ``;
-    break;
-  case 1:
-    tripInfo = `${points[0].destination}`;
-    break;
-  case 2:
-    tripInfo = `${points[0].destination} &mdash; ${points[points.length - 1].destination}`;
-    break;
-  case 3:
-    tripInfo = `${points[0].destination} &mdash; ${points[1].destination} &mdash; ${points[points.length - 1].destination}`;
-    break;
-  default:
-    tripInfo = `${points[0].destination} &mdash; ... &mdash; ${points[points.length - 1].destination}`;
-}
-render(infoMainPlace, createMainInfoTemplate(tripInfo), insertPosition.BEFORE_END);
-
-const total = points.reduce((pointsPrice, point) => pointsPrice + point.price
-  + point.offers.reduce((offersPrice, offer) => offersPrice + offer.price, 0), 0);
-render(infoMainPlace, createCostInfoTemplate(total), insertPosition.BEFORE_END);
+render(infoMainPlace, createMainInfoTemplate(getTripPath(points)), insertPosition.BEFORE_END);
+render(infoMainPlace, createCostInfoTemplate(getTripCost(points)), insertPosition.BEFORE_END);
 
 
 render(menuPlace, createMenuTemplate(), insertPosition.AFTER_END);
