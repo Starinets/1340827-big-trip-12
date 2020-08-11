@@ -1,5 +1,7 @@
-import {render} from './utils/dom.js';
-import {insertPosition} from './utils/constants.js';
+import {
+  render,
+  InsertPosition
+} from './utils/dom.js';
 import {createInfoTemplate} from './view/info.js';
 import {createMainInfoTemplate} from './view/main-info.js';
 import {createCostInfoTemplate} from './view/cost-info.js';
@@ -49,20 +51,20 @@ const points = new Array(EVENT_COUNT)
     return point;
   });
 
-render(infoPlace, createInfoTemplate(), insertPosition.AFTER_BEGIN);
-render(infoPlace, createAddPointButtonTemplate(), insertPosition.BEFORE_END);
+render(infoPlace, createInfoTemplate(), InsertPosition.AFTER_BEGIN);
+render(infoPlace, createAddPointButtonTemplate(), InsertPosition.BEFORE_END);
 
 const infoMainPlace = infoPlace.querySelector(`.trip-info`);
 
-render(infoMainPlace, createMainInfoTemplate(getTripPath(points)), insertPosition.BEFORE_END);
-render(infoMainPlace, createCostInfoTemplate(getTripCost(points)), insertPosition.BEFORE_END);
+render(infoMainPlace, createMainInfoTemplate(getTripPath(points)), InsertPosition.BEFORE_END);
+render(infoMainPlace, createCostInfoTemplate(getTripCost(points)), InsertPosition.BEFORE_END);
 
 
-render(menuPlace, createMenuTemplate(), insertPosition.AFTER_END);
-render(filtersPlace, createFiltersTemplate(), insertPosition.BEFORE_END);
+render(menuPlace, createMenuTemplate(), InsertPosition.AFTER_END);
+render(filtersPlace, createFiltersTemplate(), InsertPosition.BEFORE_END);
 
-render(sortingPlace, createSortTemplate(), insertPosition.AFTER_END);
-render(contentPlace, createDaysTemplate(), insertPosition.BEFORE_END);
+render(sortingPlace, createSortTemplate(), InsertPosition.AFTER_END);
+render(contentPlace, createDaysTemplate(), InsertPosition.BEFORE_END);
 
 const dayPlace = contentPlace.querySelector(`.trip-days`);
 
@@ -79,6 +81,6 @@ let counter = 0;
 for (const day in result) {
   if (result.hasOwnProperty(day)) {
     counter++;
-    render(dayPlace, createDayTemplate(day, counter, result[day]), insertPosition.BEFORE_END);
+    render(dayPlace, createDayTemplate(day, counter, result[day]), InsertPosition.BEFORE_END);
   }
 }

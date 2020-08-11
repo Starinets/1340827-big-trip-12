@@ -36,19 +36,19 @@ const getDatesDifference = (startDate = new Date(), endDate = new Date()) => {
   difference -= hours;
   const days = difference / HOURS_IN_DAY;
 
-  let dateToString = ``;
+  let formattedTime = ``;
 
   if (days > 0) {
-    dateToString = addLeadingRank(days) + `D `;
+    formattedTime = addLeadingRank(days) + `D `;
   }
 
   if (days > 0 || hours > 0) {
-    dateToString = dateToString + addLeadingRank(hours) + `H `;
+    formattedTime = formattedTime + addLeadingRank(hours) + `H `;
   }
 
-  dateToString = dateToString + addLeadingRank(minutes) + `M`;
+  formattedTime = formattedTime + addLeadingRank(minutes) + `M`;
 
-  return dateToString;
+  return formattedTime;
 };
 
 export {

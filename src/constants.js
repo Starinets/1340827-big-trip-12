@@ -1,11 +1,4 @@
-const insertPosition = {
-  BEFORE_BEGIN: `beforebegin`,
-  AFTER_BEGIN: `afterbegin`,
-  BEFORE_END: `beforeend`,
-  AFTER_END: `afterend`
-};
-
-const pointTypeToPretext = {
+const PointTypeToPretext = {
   'taxi': `Taxi to`,
   'bus': `Bus to`,
   'train': `Train to`,
@@ -18,7 +11,4 @@ const pointTypeToPretext = {
   'restaurant': `Restaurant in`,
 };
 
-export {
-  insertPosition,
-  pointTypeToPretext
-};
+export {PointTypeToPretext};

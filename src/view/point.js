@@ -1,4 +1,4 @@
-import {PointTypeToPretext} from '../utils/constants';
+import {PointTypeToPretext} from '../constants';
 import {
   getDatesDifference,
   timeToString

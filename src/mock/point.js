@@ -1,7 +1,7 @@
 import {
   getRandomInteger,
   getRandomDate
-} from '../utils/random.js';
+} from './random.js';
 import {addLeadingRank} from '../utils/date';
 
 const OFFERS_COUNT = 5;
