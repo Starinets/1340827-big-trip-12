@@ -3,11 +3,8 @@ const MINUTES_IN_HOUR = 60;
 const HOURS_IN_DAY = 24;
 
 
-const addLeadingRank = (number) => {
-  if (number < 10) {
-    return `0` + number;
-  }
-  return number;
+const addLeadingRank = (value) => {
+  return String(value).padStart(2, `0`);
 };
 
 const timeToString = (date = new Date()) => {

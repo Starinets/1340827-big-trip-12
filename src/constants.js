@@ -1,4 +1,4 @@
-const PointTypeToPretext = {
+const pointTypeToPretext = {
   'taxi': `Taxi to`,
   'bus': `Bus to`,
   'train': `Train to`,
@@ -11,4 +11,4 @@ const PointTypeToPretext = {
   'restaurant': `Restaurant in`,
 };
 
-export {PointTypeToPretext};
+export {pointTypeToPretext};
