@@ -1,12 +1,16 @@
 import {createPointListTemplate} from './point-list';
-import {timeToDateString} from '../utils/date';
 
-const createDayTemplate = (day, counter, dayPoints) => {
+const formatMonthDate = new Intl.DateTimeFormat(`en-GB`, {
+  month: `short`,
+  day: `numeric`,
+}).format;
+
+const createDayTemplate = (dayDate, counter, dayPoints) => {
   return (
     `<li class="trip-days__item  day">
       <div class="day__info">
         <span class="day__counter">${counter}</span>
-        <time class="day__date" datetime="${timeToDateString(new Date(day), false)}">${(new Date(day).toLocaleString(`en-US`, {month: `short`, day: `numeric`}))}</time>
+        <time class="day__date" datetime="${dayDate.toISOString()}">${formatMonthDate(dayDate)}</time>
       </div>
       ${createPointListTemplate(dayPoints)}
     </li>`
