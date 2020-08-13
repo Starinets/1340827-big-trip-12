@@ -41,6 +41,33 @@ const getTripPath = (points) => {
   }
 };
 
+const formatDayDate = (date) => date.toISOString().slice(0, 10);
+
+const reducePointByDay = (days, point) => {
+  const dayDate = formatDayDate(point.startTime);
+
+  if (Array.isArray(days[dayDate])) {
+    days[dayDate].push(point);
+  } else {
+    days[dayDate] = [point];
+  }
+
+  return days;
+};
+
+const groupPointsByDays = (points) => points
+  .sort((less, more) => less.startTime - more.startTime)
+  .reduce(reducePointByDay, {});
+
+const renderGroupedPoints = (points) => {
+  const days = groupPointsByDays(points);
+
+  Object.entries(days)
+    .forEach(([date, dayPoints], counter) => {
+      render(dayPlace, createDayTemplate(new Date(date), counter + 1, dayPoints), InsertPosition.BEFORE_END);
+    });
+};
+
 let minDate = new Date();
 
 const points = new Array(EVENT_COUNT)
@@ -68,19 +95,4 @@ render(contentPlace, createDaysTemplate(), InsertPosition.BEFORE_END);
 
 const dayPlace = contentPlace.querySelector(`.trip-days`);
 
-const result = points
-  .sort((less, more) => less.startTime - more.startTime)
-  .reduce((acc, item) => {
-    acc[item.day] = acc[item.day] || [];
-    acc[item.day].push(item);
-    return acc;
-  }, {});
-
-let counter = 0;
-
-for (const day in result) {
-  if (result.hasOwnProperty(day)) {
-    counter++;
-    render(dayPlace, createDayTemplate(day, counter, result[day]), InsertPosition.BEFORE_END);
-  }
-}
+renderGroupedPoints(points);
