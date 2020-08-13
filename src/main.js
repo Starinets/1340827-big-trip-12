@@ -1,4 +1,7 @@
-import {render} from './utils/dom.js';
+import {
+  render,
+  InsertPosition
+} from './utils/dom.js';
 import {createInfoTemplate} from './view/info.js';
 import {createMainInfoTemplate} from './view/main-info.js';
 import {createCostInfoTemplate} from './view/cost-info.js';
@@ -7,12 +10,10 @@ import {createFiltersTemplate} from './view/filters.js';
 import {createSortTemplate} from './view/sort.js';
 import {createDaysTemplate} from './view/days.js';
 import {createDayTemplate} from './view/day.js';
-import {createPointListTemplate} from './view/point-list.js';
-import {createPointTemplate} from './view/point.js';
-import {createPointFormTemplate} from './view/point-form.js';
 import {createAddPointButtonTemplate} from './view/add-point-button.js';
+import {generatePoint} from './mock/point.js';
 
-const EVENT_COUNT = 3;
+const EVENT_COUNT = 30;
 
 const infoPlace = document.querySelector(`.trip-main`);
 const menuPlace = infoPlace.querySelector(`.js-menu`);
@@ -21,28 +22,77 @@ const filtersPlace = infoPlace.querySelector(`.trip-controls`);
 const contentPlace = document.querySelector(`.trip-events`);
 const sortingPlace = document.querySelector(`.js-sorting`);
 
-render(infoPlace, createInfoTemplate(), `afterbegin`);
-render(infoPlace, createAddPointButtonTemplate(), `beforeend`);
+const getTripCost = (points) => points.reduce((pointsPrice, point) =>
+  pointsPrice + point.price + point.offers.reduce((offersPrice, offer) =>
+    offersPrice + offer.price, 0), 0);
+
+const getTripPath = (points) => {
+  switch (points.length) {
+    case 0:
+      return ``;
+    case 1:
+      return `${points[0].destination}`;
+    case 2:
+      return `${points[0].destination} &mdash; ${points[points.length - 1].destination}`;
+    case 3:
+      return `${points[0].destination} &mdash; ${points[1].destination} &mdash; ${points[points.length - 1].destination}`;
+    default:
+      return `${points[0].destination} &mdash; ... &mdash; ${points[points.length - 1].destination}`;
+  }
+};
+
+const formatDayDate = (date) => date.toISOString().slice(0, 10);
+
+const reducePointByDay = (days, point) => {
+  const dayDate = formatDayDate(point.startTime);
+
+  if (Array.isArray(days[dayDate])) {
+    days[dayDate].push(point);
+  } else {
+    days[dayDate] = [point];
+  }
+
+  return days;
+};
+
+const groupPointsByDays = (points) => points
+  .sort((less, more) => less.startTime - more.startTime)
+  .reduce(reducePointByDay, {});
+
+const renderGroupedPoints = (points) => {
+  const days = groupPointsByDays(points);
+
+  Object.entries(days)
+    .forEach(([date, dayPoints], counter) => {
+      render(dayPlace, createDayTemplate(new Date(date), counter + 1, dayPoints), InsertPosition.BEFORE_END);
+    });
+};
+
+let minDate = new Date();
+
+const points = new Array(EVENT_COUNT)
+  .fill()
+  .map(() => {
+    let point = generatePoint(minDate);
+    minDate = point.endTime;
+    return point;
+  });
+
+render(infoPlace, createInfoTemplate(), InsertPosition.AFTER_BEGIN);
+render(infoPlace, createAddPointButtonTemplate(), InsertPosition.BEFORE_END);
 
 const infoMainPlace = infoPlace.querySelector(`.trip-info`);
-render(infoMainPlace, createMainInfoTemplate(), `beforeend`);
-render(infoMainPlace, createCostInfoTemplate(), `beforeend`);
+
+render(infoMainPlace, createMainInfoTemplate(getTripPath(points)), InsertPosition.BEFORE_END);
+render(infoMainPlace, createCostInfoTemplate(getTripCost(points)), InsertPosition.BEFORE_END);
 
 
-render(menuPlace, createMenuTemplate(), `afterend`);
-render(filtersPlace, createFiltersTemplate(), `beforeend`);
+render(menuPlace, createMenuTemplate(), InsertPosition.AFTER_END);
+render(filtersPlace, createFiltersTemplate(), InsertPosition.BEFORE_END);
 
-render(sortingPlace, createSortTemplate(), `afterend`);
-render(contentPlace, createDaysTemplate(), `beforeend`);
+render(sortingPlace, createSortTemplate(), InsertPosition.AFTER_END);
+render(contentPlace, createDaysTemplate(), InsertPosition.BEFORE_END);
 
 const dayPlace = contentPlace.querySelector(`.trip-days`);
-render(dayPlace, createDayTemplate(), `beforeend`);
-const pointListPlace = contentPlace.querySelector(`.day`);
-render(pointListPlace, createPointListTemplate(), `beforeend`);
 
-const eventPlace = dayPlace.querySelector(`.trip-events__list`);
-
-render(eventPlace, createPointFormTemplate(), `beforeend`);
-for (let i = 0; i < EVENT_COUNT; i++) {
-  render(eventPlace, createPointTemplate(), `beforeend`);
-}
+renderGroupedPoints(points);
