@@ -1,17 +1,16 @@
 import {createElement} from './../utils/dom';
-import {createOfferTemplate} from './offer';
+import Offer from './offer';
 
 const MAX_OFFERS_COUNT = 3;
 
-const generateOffersList = (offers) => {
-  return createOffersListTemplate(offers
-      .slice(0, MAX_OFFERS_COUNT)
-      .map(createOfferTemplate)
-      .join(``));
+const generateOffers = (container, offers) => {
+  offers.slice(0, MAX_OFFERS_COUNT)
+    .forEach((offer) => {
+      container.append(new Offer().getElement(offer));
+    });
 };
 
-const createOffersListTemplate = () => `<h4 class="visually-hidden">Offers:</h4>
-  <ul class="event__selected-offers"></ul>`;
+const createOffersListTemplate = () => `<ul class="event__selected-offers"></ul>`;
 
 export default class OffersList {
   constructor() {
@@ -27,6 +26,7 @@ export default class OffersList {
       this._element = createElement(this._getTemplate());
     }
 
+    generateOffers(this._element, offers);
     // ${offerTemplates}
 
     return this._element;
@@ -37,4 +37,4 @@ export default class OffersList {
   }
 }
 
-export {generateOffersList};
+export {generateOffers as generateOffersList};
