@@ -10,7 +10,7 @@ import {createFiltersTemplate} from './view/filters.js';
 import {createSortTemplate} from './view/sort.js';
 import {createDaysTemplate} from './view/days.js';
 import {createDayTemplate} from './view/day.js';
-import {createAddPointButtonTemplate} from './view/add-point-button.js';
+import AddPointButton from './view/add-point-button';
 import {generatePoint} from './mock/point.js';
 
 const EVENT_COUNT = 30;
@@ -79,7 +79,9 @@ const points = new Array(EVENT_COUNT)
   });
 
 infoPlace.prepend(new Info().getElement());
-render(infoPlace, createAddPointButtonTemplate(), InsertPosition.BEFORE_END);
+// render(infoPlace, createInfoTemplate(), InsertPosition.AFTER_BEGIN);
+infoPlace.append(new AddPointButton().getElement());
+// render(infoPlace, createAddPointButtonTemplate(), InsertPosition.BEFORE_END);
 
 const infoMainPlace = infoPlace.querySelector(`.trip-info`);
 
