@@ -4,7 +4,7 @@ import {
   getDatesDifference,
   timeToString
 } from './../utils/date';
-import {generateOffersList} from './offers';
+import OffersList from './offers-list';
 
 const formatPointTitle = (point) => `${pointTypeToPretext[point.type]} ${point.destination}`;
 
@@ -30,8 +30,6 @@ const createPointTemplate = (point) => {
           &euro;&nbsp;<span class="event__price-value">${point.price}</span>
         </p>
 
-        ${point.offers.length > 0 ? generateOffersList(point.offers) : ``}
-
         <button class="event__rollup-btn" type="button">
           <span class="visually-hidden">Open event</span>
         </button>
@@ -52,6 +50,12 @@ export default class Point {
   getElement(point) {
     if (!this._element) {
       this._element = createElement(this._getTemplate(point));
+    }
+
+    if (point.offers.length > 0) {
+      const pointPrice = this._element.querySelector(`.event__price`);
+      pointPrice.after(new OffersList().getElement(point.offers));
+      // ${point.offers.length > 0 ? generateOffersList(point.offers) : ``}
     }
 
     return this._element;
