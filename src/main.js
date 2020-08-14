@@ -3,7 +3,7 @@ import {
   InsertPosition
 } from './utils/dom';
 import Info from './view/info';
-import {createMainInfoTemplate} from './view/main-info.js';
+import MainInfo from './view/main-info';
 import {createCostInfoTemplate} from './view/cost-info.js';
 import {createMenuTemplate} from './view/menu.js';
 import {createFiltersTemplate} from './view/filters.js';
@@ -85,7 +85,8 @@ infoPlace.append(new AddPointButton().getElement());
 
 const infoMainPlace = infoPlace.querySelector(`.trip-info`);
 
-render(infoMainPlace, createMainInfoTemplate(getTripPath(points)), InsertPosition.BEFORE_END);
+infoMainPlace.append(new MainInfo().getElement(getTripPath(points)));
+// render(infoMainPlace, createMainInfoTemplate(getTripPath(points)), InsertPosition.BEFORE_END);
 render(infoMainPlace, createCostInfoTemplate(getTripCost(points)), InsertPosition.BEFORE_END);
 
 

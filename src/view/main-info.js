@@ -1,3 +1,5 @@
+import {createElement} from './../utils/dom';
+
 const createMainInfoTemplate = (tripInfo) => {
   return (
     `<div class="trip-info__main">
@@ -7,5 +9,27 @@ const createMainInfoTemplate = (tripInfo) => {
     </div>`
   );
 };
+
+export default class MainInfo {
+  constructor() {
+    this._element = null;
+  }
+
+  _getTemplate(tripInfo) {
+    return createMainInfoTemplate(tripInfo);
+  }
+
+  getElement(tripInfo) {
+    if (!this._element) {
+      this._element = createElement(this._getTemplate(tripInfo));
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
 
 export {createMainInfoTemplate};
