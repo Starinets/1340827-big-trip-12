@@ -90,12 +90,12 @@ infoMainPlace.append(new MainInfo().getElement(getTripPath(points)));
 infoMainPlace.append(new CostInfo().getElement(getTripCost(points)));
 // render(infoMainPlace, createCostInfoTemplate(getTripCost(points)), InsertPosition.BEFORE_END);
 
-menuPlace.append(new Menu().getElement());
+menuPlace.after(new Menu().getElement());
 // render(menuPlace, createMenuTemplate(), InsertPosition.AFTER_END);
 filtersPlace.append(new Filters().getElement());
 // render(filtersPlace, createFiltersTemplate(), InsertPosition.BEFORE_END);
 
-sortingPlace.append(new Sort().getElement());
+sortingPlace.after(new Sort().getElement());
 // render(sortingPlace, createSortTemplate(), InsertPosition.AFTER_END);
 render(contentPlace, createDaysTemplate(), InsertPosition.BEFORE_END);
 
