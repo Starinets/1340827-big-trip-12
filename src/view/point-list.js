@@ -1,14 +1,14 @@
 import {createElement} from './../utils/dom';
-import {createPointTemplate} from './point.js';
+import Point from './point';
 
-const generatePointsTemplates = (points) => points
-  .map(createPointTemplate)
-  .join(``);
+const generatePoints = (container, points) =>
+  points.forEach((point) => {
+    container.append(new Point().getElement(point));
+  });
 
-const createPointListTemplate = (points) => {
-  return `<ul class="trip-events__list">
-    ${generatePointsTemplates(points)}
-  </ul>`;
+const createPointListTemplate = () => {
+  return `<ul class="trip-events__list"></ul>`;
+  // ${generatePointsTemplates(points)}
 };
 
 export default class PointList {
@@ -16,14 +16,18 @@ export default class PointList {
     this._element = null;
   }
 
-  _getTemplate(dayPoints) {
-    return createPointListTemplate(dayPoints);
+  _getTemplate() {
+    return createPointListTemplate();
   }
 
   getElement(dayPoints) {
     if (!this._element) {
-      this._element = createElement(this._getTemplate(dayPoints));
+      this._element = createElement(this._getTemplate());
     }
+
+    generatePoints(this._element, dayPoints);
+    // this._element.append(new PointList().getElement(dayPoints));
+    // ${generatePointsTemplates(points)}
 
     return this._element;
   }

@@ -1,8 +1,9 @@
-import {pointTypeToPretext} from '../constants';
+import {createElement} from './../utils/dom';
+import {pointTypeToPretext} from './../constants';
 import {
   getDatesDifference,
   timeToString
-} from '../utils/date';
+} from './../utils/date';
 import {generateOffersList} from './offers';
 
 const formatPointTitle = (point) => `${pointTypeToPretext[point.type]} ${point.destination}`;
@@ -38,5 +39,27 @@ const createPointTemplate = (point) => {
     </li>`
   );
 };
+
+export default class Point {
+  constructor() {
+    this._element = null;
+  }
+
+  _getTemplate(point) {
+    return createPointTemplate(point);
+  }
+
+  getElement(point) {
+    if (!this._element) {
+      this._element = createElement(this._getTemplate(point));
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
 
 export {createPointTemplate};
