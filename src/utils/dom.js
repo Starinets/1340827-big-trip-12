@@ -5,6 +5,13 @@ const InsertPosition = {
   AFTER_END: `afterend`
 };
 
+export const createElement = (template) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = template;
+
+  return newElement.firstChild;
+};
+
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
