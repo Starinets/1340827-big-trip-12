@@ -14,6 +14,7 @@ import AddPointButton from './view/add-point-button';
 import {generatePoint} from './mock/point.js';
 
 const EVENT_COUNT = 30;
+const MINUTES_IN_TIME_ZONE_OFFSET = 60;
 
 const infoPlace = document.querySelector(`.trip-main`);
 const menuPlace = infoPlace.querySelector(`.js-menu`);
@@ -41,7 +42,13 @@ const getTripPath = (points) => {
   }
 };
 
-const formatDayDate = (date) => date.toISOString().slice(0, 10);
+const formatDayDate = (date) => {
+  const formattedDate = new Date(date);
+
+  formattedDate.setHours(formattedDate.getHours() - formattedDate.getTimezoneOffset() / MINUTES_IN_TIME_ZONE_OFFSET);
+
+  return formattedDate.toISOString().slice(0, 10);
+};
 
 const reducePointByDay = (days, point) => {
   const dayDate = formatDayDate(point.startTime);
