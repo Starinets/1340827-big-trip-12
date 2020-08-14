@@ -8,7 +8,7 @@ import CostInfo from './view/cost-info';
 import Menu from './view/menu';
 import Filters from './view/filters';
 import Sort from './view/sort';
-import {createDaysTemplate} from './view/days.js';
+import Days from './view/days';
 import {createDayTemplate} from './view/day.js';
 import AddPointButton from './view/add-point-button';
 import {generatePoint} from './mock/point.js';
@@ -97,7 +97,8 @@ filtersPlace.append(new Filters().getElement());
 
 sortingPlace.after(new Sort().getElement());
 // render(sortingPlace, createSortTemplate(), InsertPosition.AFTER_END);
-render(contentPlace, createDaysTemplate(), InsertPosition.BEFORE_END);
+contentPlace.append(new Days().getElement());
+// render(contentPlace, createDaysTemplate(), InsertPosition.BEFORE_END);
 
 const dayPlace = contentPlace.querySelector(`.trip-days`);
 
