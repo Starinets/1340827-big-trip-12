@@ -4,7 +4,7 @@ import {
 } from './utils/dom';
 import Info from './view/info';
 import MainInfo from './view/main-info';
-import {createCostInfoTemplate} from './view/cost-info.js';
+import CostInfo from './view/cost-info';
 import {createMenuTemplate} from './view/menu.js';
 import {createFiltersTemplate} from './view/filters.js';
 import {createSortTemplate} from './view/sort.js';
@@ -87,7 +87,8 @@ const infoMainPlace = infoPlace.querySelector(`.trip-info`);
 
 infoMainPlace.append(new MainInfo().getElement(getTripPath(points)));
 // render(infoMainPlace, createMainInfoTemplate(getTripPath(points)), InsertPosition.BEFORE_END);
-render(infoMainPlace, createCostInfoTemplate(getTripCost(points)), InsertPosition.BEFORE_END);
+infoMainPlace.append(new CostInfo().getElement(getTripCost(points)));
+// render(infoMainPlace, createCostInfoTemplate(getTripCost(points)), InsertPosition.BEFORE_END);
 
 
 render(menuPlace, createMenuTemplate(), InsertPosition.AFTER_END);
