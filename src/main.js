@@ -1,8 +1,8 @@
 import {
   render,
   InsertPosition
-} from './utils/dom.js';
-import {createInfoTemplate} from './view/info.js';
+} from './utils/dom';
+import Info from './view/info';
 import {createMainInfoTemplate} from './view/main-info.js';
 import {createCostInfoTemplate} from './view/cost-info.js';
 import {createMenuTemplate} from './view/menu.js';
@@ -78,7 +78,7 @@ const points = new Array(EVENT_COUNT)
     return point;
   });
 
-render(infoPlace, createInfoTemplate(), InsertPosition.AFTER_BEGIN);
+infoPlace.prepend(new Info().getElement());
 render(infoPlace, createAddPointButtonTemplate(), InsertPosition.BEFORE_END);
 
 const infoMainPlace = infoPlace.querySelector(`.trip-info`);
