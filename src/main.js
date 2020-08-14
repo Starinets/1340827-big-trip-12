@@ -6,7 +6,7 @@ import Info from './view/info';
 import MainInfo from './view/main-info';
 import CostInfo from './view/cost-info';
 import Menu from './view/menu';
-import {createFiltersTemplate} from './view/filters.js';
+import Filters from './view/filters';
 import {createSortTemplate} from './view/sort.js';
 import {createDaysTemplate} from './view/days.js';
 import {createDayTemplate} from './view/day.js';
@@ -92,7 +92,8 @@ infoMainPlace.append(new CostInfo().getElement(getTripCost(points)));
 
 menuPlace.append(new Menu().getElement());
 // render(menuPlace, createMenuTemplate(), InsertPosition.AFTER_END);
-render(filtersPlace, createFiltersTemplate(), InsertPosition.BEFORE_END);
+filtersPlace.append(new Filters().getElement());
+// render(filtersPlace, createFiltersTemplate(), InsertPosition.BEFORE_END);
 
 render(sortingPlace, createSortTemplate(), InsertPosition.AFTER_END);
 render(contentPlace, createDaysTemplate(), InsertPosition.BEFORE_END);
