@@ -1,3 +1,4 @@
+import {createElement} from './../utils/dom';
 import {createPointListTemplate} from './point-list';
 
 const formatMonthDate = new Intl.DateTimeFormat(`en-GB`, {
@@ -16,5 +17,27 @@ const createDayTemplate = (dayDate, counter, dayPoints) => {
     </li>`
   );
 };
+
+export default class Day {
+  constructor() {
+    this._element = null;
+  }
+
+  _getTemplate(dayDate, counter, dayPoints) {
+    return createDayTemplate(dayDate, counter, dayPoints);
+  }
+
+  getElement(dayDate, counter, dayPoints) {
+    if (!this._element) {
+      this._element = createElement(this._getTemplate(dayDate, counter, dayPoints));
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
 
 export {createDayTemplate};

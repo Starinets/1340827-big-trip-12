@@ -9,7 +9,7 @@ import Menu from './view/menu';
 import Filters from './view/filters';
 import Sort from './view/sort';
 import Days from './view/days';
-import {createDayTemplate} from './view/day.js';
+import Day from './view/day';
 import AddPointButton from './view/add-point-button';
 import {generatePoint} from './mock/point.js';
 
@@ -64,7 +64,8 @@ const renderGroupedPoints = (points) => {
 
   Object.entries(days)
     .forEach(([date, dayPoints], counter) => {
-      render(dayPlace, createDayTemplate(new Date(date), counter + 1, dayPoints), InsertPosition.BEFORE_END);
+      dayPlace.append(new Day().getElement(new Date(date), counter + 1, dayPoints));
+      // render(dayPlace, createDayTemplate(new Date(date), counter + 1, dayPoints), InsertPosition.BEFORE_END);
     });
 };
 
