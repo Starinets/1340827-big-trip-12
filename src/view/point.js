@@ -55,7 +55,6 @@ export default class Point {
     if (point.offers.length > 0) {
       const pointPrice = this._element.querySelector(`.event__price`);
       pointPrice.after(new OffersList().getElement(point.offers));
-      // ${point.offers.length > 0 ? generateOffersList(point.offers) : ``}
     }
 
     return this._element;
@@ -65,5 +64,3 @@ export default class Point {
     this._element = null;
   }
 }
-
-export {createPointTemplate};

@@ -1,7 +1,3 @@
-import {
-  render,
-  InsertPosition
-} from './utils/dom';
 import Info from './view/info';
 import MainInfo from './view/main-info';
 import CostInfo from './view/cost-info';
@@ -11,7 +7,7 @@ import Sort from './view/sort';
 import Days from './view/days';
 import Day from './view/day';
 import AddPointButton from './view/add-point-button';
-import {generatePoint} from './mock/point.js';
+import {generatePoint} from './mock/point';
 
 const EVENT_COUNT = 30;
 const MINUTES_IN_TIME_ZONE_OFFSET = 60;
@@ -72,7 +68,6 @@ const renderGroupedPoints = (points) => {
   Object.entries(days)
     .forEach(([date, dayPoints], counter) => {
       dayPlace.append(new Day().getElement(new Date(date), counter + 1, dayPoints));
-      // render(dayPlace, createDayTemplate(new Date(date), counter + 1, dayPoints), InsertPosition.BEFORE_END);
     });
 };
 
@@ -87,26 +82,18 @@ const points = new Array(EVENT_COUNT)
   });
 
 infoPlace.prepend(new Info().getElement());
-// render(infoPlace, createInfoTemplate(), InsertPosition.AFTER_BEGIN);
 infoPlace.append(new AddPointButton().getElement());
-// render(infoPlace, createAddPointButtonTemplate(), InsertPosition.BEFORE_END);
 
 const infoMainPlace = infoPlace.querySelector(`.trip-info`);
 
 infoMainPlace.append(new MainInfo().getElement(getTripPath(points)));
-// render(infoMainPlace, createMainInfoTemplate(getTripPath(points)), InsertPosition.BEFORE_END);
 infoMainPlace.append(new CostInfo().getElement(getTripCost(points)));
-// render(infoMainPlace, createCostInfoTemplate(getTripCost(points)), InsertPosition.BEFORE_END);
 
 menuPlace.after(new Menu().getElement());
-// render(menuPlace, createMenuTemplate(), InsertPosition.AFTER_END);
 filtersPlace.append(new Filters().getElement());
-// render(filtersPlace, createFiltersTemplate(), InsertPosition.BEFORE_END);
 
 sortingPlace.after(new Sort().getElement());
-// render(sortingPlace, createSortTemplate(), InsertPosition.AFTER_END);
 contentPlace.append(new Days().getElement());
-// render(contentPlace, createDaysTemplate(), InsertPosition.BEFORE_END);
 
 const dayPlace = contentPlace.querySelector(`.trip-days`);
 

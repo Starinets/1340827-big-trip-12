@@ -8,7 +8,6 @@ const generatePoints = (container, points) =>
 
 const createPointListTemplate = () => {
   return `<ul class="trip-events__list"></ul>`;
-  // ${generatePointsTemplates(points)}
 };
 
 export default class PointList {
@@ -26,8 +25,6 @@ export default class PointList {
     }
 
     generatePoints(this._element, dayPoints);
-    // this._element.append(new PointList().getElement(dayPoints));
-    // ${generatePointsTemplates(points)}
 
     return this._element;
   }
@@ -36,5 +33,3 @@ export default class PointList {
     this._element = null;
   }
 }
-
-export {createPointListTemplate};

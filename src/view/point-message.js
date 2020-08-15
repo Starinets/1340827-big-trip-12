@@ -27,5 +27,3 @@ export default class PointMessage {
     this._element = null;
   }
 }
-
-export {createPointMessageTemplate};

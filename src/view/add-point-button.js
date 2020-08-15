@@ -27,5 +27,3 @@ export default class AddPointButton {
     this._element = null;
   }
 }
-
-export {createAddPointButtonTemplate};

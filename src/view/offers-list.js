@@ -27,7 +27,6 @@ export default class OffersList {
     }
 
     generateOffers(this._element, offers);
-    // ${offerTemplates}
 
     return this._element;
   }
@@ -36,5 +35,3 @@ export default class OffersList {
     this._element = null;
   }
 }
-
-export {generateOffers as generateOffersList};

@@ -29,5 +29,3 @@ export default class CostInfo {
     this._element = null;
   }
 }
-
-export {createCostInfoTemplate};

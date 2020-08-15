@@ -27,5 +27,3 @@ export default class Days {
     this._element = null;
   }
 }
-
-export {createDaysTemplate};

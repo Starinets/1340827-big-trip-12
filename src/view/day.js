@@ -14,7 +14,6 @@ const createDayTemplate = (dayDate, counter) => {
         <time class="day__date" datetime="${dayDate.toISOString()}">${formatMonthDate(dayDate)}</time>
       </div>
     </li>`
-    // ${createPointListTemplate(dayPoints)}
   );
 };
 
@@ -41,5 +40,3 @@ export default class Day {
     this._element = null;
   }
 }
-
-export {createDayTemplate};

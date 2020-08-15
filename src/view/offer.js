@@ -27,5 +27,3 @@ export default class Offer {
     this._element = null;
   }
 }
-
-export {createOfferTemplate};

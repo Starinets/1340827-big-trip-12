@@ -30,5 +30,3 @@ export default class Menu {
     this._element = null;
   }
 }
-
-export {createMenuTemplate};

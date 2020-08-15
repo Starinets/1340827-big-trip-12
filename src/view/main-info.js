@@ -31,5 +31,3 @@ export default class MainInfo {
     this._element = null;
   }
 }
-
-export {createMainInfoTemplate};

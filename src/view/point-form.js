@@ -199,5 +199,3 @@ export default class PointForm {
     this._element = null;
   }
 }
-
-export {createPointFormTemplate};

@@ -41,5 +41,3 @@ export default class Statistics {
     this._element = null;
   }
 }
-
-export {createStatisticsTemplate};

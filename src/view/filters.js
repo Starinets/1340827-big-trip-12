@@ -44,5 +44,3 @@ export default class Filters {
     this._element = null;
   }
 }
-
-export {createFiltersTemplate};
