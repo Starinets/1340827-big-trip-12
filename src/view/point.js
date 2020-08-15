@@ -8,6 +8,12 @@ import OffersList from './offers-list';
 
 const formatPointTitle = (point) => `${pointTypeToPretext[point.type]} ${point.destination}`;
 
+const generateOffers = (container, offers) => {
+  if (offers.length > 0) {
+    container.after(new OffersList().getElement(offers));
+  }
+};
+
 const createPointTemplate = (point) => {
   return (
     `<li class="trip-events__item">
@@ -52,10 +58,8 @@ export default class Point {
       this._element = createElement(this._getTemplate(point));
     }
 
-    if (point.offers.length > 0) {
-      const pointPrice = this._element.querySelector(`.event__price`);
-      pointPrice.after(new OffersList().getElement(point.offers));
-    }
+    const pointPrice = this._element.querySelector(`.event__price`);
+    generateOffers(pointPrice, point.offers);
 
     return this._element;
   }
