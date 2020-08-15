@@ -28,9 +28,9 @@ export default class OffersList {
   getElement(offers) {
     if (!this._element) {
       this._element = createElement(this._getTemplate());
-    }
 
-    generateOffers(this._element, offers);
+      generateOffers(this._element, offers);
+    }
 
     return this._element;
   }

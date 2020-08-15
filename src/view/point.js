@@ -61,10 +61,10 @@ export default class Point {
   getElement(point) {
     if (!this._element) {
       this._element = createElement(this._getTemplate(point));
-    }
 
-    const pointPrice = this._element.querySelector(`.event__price`);
-    generateOffers(pointPrice, point.offers);
+      const pointPrice = this._element.querySelector(`.event__price`);
+      generateOffers(pointPrice, point.offers);
+    }
 
     return this._element;
   }

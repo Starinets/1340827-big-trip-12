@@ -4,10 +4,31 @@ import {
   RenderPosition
 } from './../utils/dom';
 import Point from './point';
+import PointForm from './point-form';
 
 const generatePoints = (container, points) =>
   points.forEach((point) => {
-    render(container, new Point().getElement(point), RenderPosition.BEFORE_END);
+    const pointForRender = new Point().getElement(point);
+    const formForRender = new PointForm().getElement(point);
+
+    const replacePointToForm = () => {
+      container.replaceChild(formForRender, pointForRender);
+    };
+
+    const replaceFormToPoint = () => {
+      container.replaceChild(pointForRender, formForRender);
+    };
+
+    pointForRender.querySelector(`.event__rollup-btn`).addEventListener(`click`, () => {
+      replacePointToForm();
+    });
+
+    formForRender.querySelector(`form`).addEventListener(`submit`, (evt) => {
+      evt.preventDefault();
+      replaceFormToPoint();
+    });
+
+    render(container, pointForRender, RenderPosition.BEFORE_END);
   });
 
 const createPointListTemplate = () => {
@@ -26,9 +47,9 @@ export default class PointList {
   getElement(dayPoints) {
     if (!this._element) {
       this._element = createElement(this._getTemplate());
-    }
 
-    generatePoints(this._element, dayPoints);
+      generatePoints(this._element, dayPoints);
+    }
 
     return this._element;
   }

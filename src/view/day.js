@@ -34,9 +34,9 @@ export default class Day {
   getElement(dayDate, counter, dayPoints) {
     if (!this._element) {
       this._element = createElement(this._getTemplate(dayDate, counter, dayPoints));
-    }
 
-    render(this._element, new PointList().getElement(dayPoints), RenderPosition.BEFORE_END);
+      render(this._element, new PointList().getElement(dayPoints), RenderPosition.BEFORE_END);
+    }
 
     return this._element;
   }
