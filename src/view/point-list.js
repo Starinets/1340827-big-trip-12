@@ -1,9 +1,13 @@
-import {createElement} from './../utils/dom';
+import {
+  render,
+  createElement,
+  RenderPosition
+} from './../utils/dom';
 import Point from './point';
 
 const generatePoints = (container, points) =>
   points.forEach((point) => {
-    container.append(new Point().getElement(point));
+    render(container, new Point().getElement(point), RenderPosition.BEFORE_END);
   });
 
 const createPointListTemplate = () => {

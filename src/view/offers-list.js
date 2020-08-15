@@ -1,4 +1,8 @@
-import {createElement} from './../utils/dom';
+import {
+  render,
+  createElement,
+  RenderPosition
+} from './../utils/dom';
 import Offer from './offer';
 
 const MAX_OFFERS_COUNT = 3;
@@ -6,7 +10,7 @@ const MAX_OFFERS_COUNT = 3;
 const generateOffers = (container, offers) => {
   offers.slice(0, MAX_OFFERS_COUNT)
     .forEach((offer) => {
-      container.append(new Offer().getElement(offer));
+      render(container, new Offer().getElement(offer), RenderPosition.BEFORE_END);
     });
 };
 

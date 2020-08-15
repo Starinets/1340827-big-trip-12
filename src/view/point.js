@@ -1,4 +1,8 @@
-import {createElement} from './../utils/dom';
+import {
+  render,
+  createElement,
+  RenderPosition
+} from './../utils/dom';
 import {pointTypeToPretext} from './../constants';
 import {
   getDatesDifference,
@@ -10,7 +14,7 @@ const formatPointTitle = (point) => `${pointTypeToPretext[point.type]} ${point.d
 
 const generateOffers = (container, offers) => {
   if (offers.length > 0) {
-    container.after(new OffersList().getElement(offers));
+    render(container, new OffersList().getElement(offers), RenderPosition.AFTER_END);
   }
 };
 

@@ -1,4 +1,8 @@
-import {createElement} from './../utils/dom';
+import {
+  render,
+  createElement,
+  RenderPosition
+} from './../utils/dom';
 import PointList from './point-list';
 
 const formatMonthDate = new Intl.DateTimeFormat(`en-GB`, {
@@ -31,7 +35,7 @@ export default class Day {
       this._element = createElement(this._getTemplate(dayDate, counter, dayPoints));
     }
 
-    this._element.append(new PointList().getElement(dayPoints));
+    render(this._element, new PointList().getElement(dayPoints), RenderPosition.BEFORE_END);
 
     return this._element;
   }

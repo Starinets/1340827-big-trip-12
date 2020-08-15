@@ -1,3 +1,7 @@
+import {
+  render,
+  RenderPosition
+} from './utils/dom';
 import Info from './view/info';
 import MainInfo from './view/main-info';
 import CostInfo from './view/cost-info';
@@ -67,7 +71,7 @@ const renderGroupedPoints = (points) => {
 
   Object.entries(days)
     .forEach(([date, dayPoints], counter) => {
-      dayPlace.append(new Day().getElement(new Date(date), counter + 1, dayPoints));
+      render(dayPlace, new Day().getElement(new Date(date), counter + 1, dayPoints), RenderPosition.BEFORE_END);
     });
 };
 
@@ -81,19 +85,19 @@ const points = new Array(EVENT_COUNT)
     return point;
   });
 
-infoPlace.prepend(new Info().getElement());
-infoPlace.append(new AddPointButton().getElement());
+render(infoPlace, new Info().getElement(), RenderPosition.AFTER_BEGIN);
+render(infoPlace, new AddPointButton().getElement(), RenderPosition.BEFORE_END);
 
 const infoMainPlace = infoPlace.querySelector(`.trip-info`);
 
-infoMainPlace.append(new MainInfo().getElement(getTripPath(points)));
-infoMainPlace.append(new CostInfo().getElement(getTripCost(points)));
+render(infoMainPlace, new MainInfo().getElement(getTripPath(points)), RenderPosition.BEFORE_END);
+render(infoMainPlace, new CostInfo().getElement(getTripCost(points)), RenderPosition.BEFORE_END);
 
-menuPlace.after(new Menu().getElement());
-filtersPlace.append(new Filters().getElement());
+render(menuPlace, new Menu().getElement(), RenderPosition.AFTER_END);
+render(filtersPlace, new Filters().getElement(), RenderPosition.BEFORE_END);
 
-sortingPlace.after(new Sort().getElement());
-contentPlace.append(new Days().getElement());
+render(sortingPlace, new Sort().getElement(), RenderPosition.AFTER_END);
+render(contentPlace, new Days().getElement(), RenderPosition.BEFORE_END);
 
 const dayPlace = contentPlace.querySelector(`.trip-days`);
 
