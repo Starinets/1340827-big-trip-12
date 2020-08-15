@@ -6,7 +6,8 @@ import {
 import {pointTypeToPretext} from './../constants';
 import {
   getDatesDifference,
-  timeToString
+  timeToString,
+  formatDateToISOString
 } from './../utils/date';
 import OffersList from './offers-list';
 
@@ -29,9 +30,9 @@ const createPointTemplate = (point) => {
 
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${point.startTime.toISOString()}">${timeToString(point.startTime)}</time>
+            <time class="event__start-time" datetime="${formatDateToISOString(point.startTime)}">${timeToString(point.startTime)}</time>
             &mdash;
-            <time class="event__end-time" datetime="${point.endTime.toISOString()}">${timeToString(point.endTime)}</time>
+            <time class="event__end-time" datetime="${formatDateToISOString(point.endTime)}">${timeToString(point.endTime)}</time>
             </p>
           <p class="event__duration">${getDatesDifference(point.startTime, point.endTime)}</p>
         </div>

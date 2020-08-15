@@ -3,6 +3,7 @@ import {
   createElement,
   RenderPosition
 } from './../utils/dom';
+import {formatDateToISOString} from './../utils/date';
 import PointList from './point-list';
 
 const formatMonthDate = new Intl.DateTimeFormat(`en-GB`, {
@@ -15,7 +16,7 @@ const createDayTemplate = (dayDate, counter) => {
     `<li class="trip-days__item  day">
       <div class="day__info">
         <span class="day__counter">${counter}</span>
-        <time class="day__date" datetime="${dayDate.toISOString()}">${formatMonthDate(dayDate)}</time>
+        <time class="day__date" datetime="${formatDateToISOString(dayDate)}">${formatMonthDate(dayDate)}</time>
       </div>
     </li>`
   );
