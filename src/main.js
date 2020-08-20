@@ -63,7 +63,7 @@ const reducePointByDay = (days, point) => {
 const generateOffers = (container, offers) => {
   offers.slice(0, MAX_OFFERS_COUNT)
     .forEach((offer) => {
-      render(container, new Offer().getElement(offer), RenderPosition.BEFORE_END);
+      render(container, new Offer(offer).getElement(), RenderPosition.BEFORE_END);
     });
 };
 

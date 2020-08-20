@@ -7,17 +7,19 @@ const createOfferTemplate = (offer) => `<li class="event__offer">
   </li>`;
 
 export default class Offer {
-  constructor() {
+  constructor(offer) {
     this._element = null;
+
+    this._offer = offer;
   }
 
-  _getTemplate(offer) {
-    return createOfferTemplate(offer);
+  _getTemplate() {
+    return createOfferTemplate(this._offer);
   }
 
-  getElement(offer) {
+  getElement() {
     if (!this._element) {
-      this._element = createElement(this._getTemplate(offer));
+      this._element = createElement(this._getTemplate());
     }
 
     return this._element;
