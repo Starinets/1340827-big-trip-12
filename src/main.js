@@ -14,6 +14,7 @@ import Day from './view/day';
 import PointList from './view/point-list';
 import Point from './view/point';
 import PointForm from './view/point-form';
+import OffersList from './view/offers-list';
 import AddPointButton from './view/add-point-button';
 import {generatePoint} from './mock/point';
 
@@ -57,29 +58,38 @@ const reducePointByDay = (days, point) => {
   return days;
 };
 
+const generateOffers = (container, offers) => {
+  if (offers.length > 0) {
+    render(container, new OffersList().getElement(offers), RenderPosition.AFTER_END);
+  }
+};
+
 const generatePoints = (container, points) =>
   points.forEach((point) => {
-    const pointForRender = new Point().getElement(point);
-    const formForRender = new PointForm().getElement(point);
+    const pointElement = new Point(point).getElement();
+    const pointFormElement = new PointForm(point).getElement();
 
     const replacePointToForm = () => {
-      container.replaceChild(formForRender, pointForRender);
+      container.replaceChild(pointFormElement, pointElement);
     };
 
     const replaceFormToPoint = () => {
-      container.replaceChild(pointForRender, formForRender);
+      container.replaceChild(pointElement, pointFormElement);
     };
 
-    pointForRender.querySelector(`.event__rollup-btn`).addEventListener(`click`, () => {
+    pointElement.querySelector(`.event__rollup-btn`).addEventListener(`click`, () => {
       replacePointToForm();
     });
 
-    formForRender.querySelector(`form`).addEventListener(`submit`, (evt) => {
+    pointFormElement.querySelector(`form`).addEventListener(`submit`, (evt) => {
       evt.preventDefault();
       replaceFormToPoint();
     });
 
-    render(container, pointForRender, RenderPosition.BEFORE_END);
+    render(container, pointElement, RenderPosition.BEFORE_END);
+
+    const pointPrice = pointElement.querySelector(`.event__price`);
+    generateOffers(pointPrice, point.offers);
   });
 
 const groupPointsByDays = (points) => points
@@ -94,10 +104,10 @@ const renderGroupedPoints = (points) => {
       const dayElement = new Day(new Date(date), counter + 1).getElement();
       render(dayPlace, dayElement, RenderPosition.BEFORE_END);
 
-      const pointList = new PointList().getElement();
-      render(dayElement, pointList, RenderPosition.BEFORE_END);
+      const pointListElement = new PointList().getElement();
+      render(dayElement, pointListElement, RenderPosition.BEFORE_END);
 
-      generatePoints(pointList, dayPoints);
+      generatePoints(pointListElement, dayPoints);
     });
 };
 

@@ -1,23 +1,12 @@
-import {
-  render,
-  createElement,
-  RenderPosition
-} from './../utils/dom';
+import {createElement} from './../utils/dom';
 import {pointTypeToPretext} from './../constants';
 import {
   getDatesDifference,
   timeToString,
   formatDateToISOString
 } from './../utils/date';
-import OffersList from './offers-list';
 
 const formatPointTitle = (point) => `${pointTypeToPretext[point.type]} ${point.destination}`;
-
-const generateOffers = (container, offers) => {
-  if (offers.length > 0) {
-    render(container, new OffersList().getElement(offers), RenderPosition.AFTER_END);
-  }
-};
 
 const createPointTemplate = (point) => {
   return (
@@ -50,20 +39,19 @@ const createPointTemplate = (point) => {
 };
 
 export default class Point {
-  constructor() {
+  constructor(point) {
     this._element = null;
+
+    this._point = point;
   }
 
-  _getTemplate(point) {
-    return createPointTemplate(point);
+  _getTemplate() {
+    return createPointTemplate(this._point);
   }
 
-  getElement(point) {
+  getElement() {
     if (!this._element) {
-      this._element = createElement(this._getTemplate(point));
-
-      const pointPrice = this._element.querySelector(`.event__price`);
-      generateOffers(pointPrice, point.offers);
+      this._element = createElement(this._getTemplate());
     }
 
     return this._element;

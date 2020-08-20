@@ -179,8 +179,10 @@ const createPointFormTemplate = () => {
 };
 
 export default class PointForm {
-  constructor() {
+  constructor(point) {
     this._element = null;
+
+    this._point = point;
   }
 
   _getTemplate() {
