@@ -1,9 +1,10 @@
-import {pointTypeToPretext} from '../constants';
+import {createElement} from './../utils/dom';
+import {pointTypeToPretext} from './../constants';
 import {
   getDatesDifference,
-  timeToString
-} from '../utils/date';
-import {generateOffersList} from './offers';
+  timeToString,
+  formatDateToISOString
+} from './../utils/date';
 
 const formatPointTitle = (point) => `${pointTypeToPretext[point.type]} ${point.destination}`;
 
@@ -18,9 +19,9 @@ const createPointTemplate = (point) => {
 
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${point.startTime.toISOString()}">${timeToString(point.startTime)}</time>
+            <time class="event__start-time" datetime="${formatDateToISOString(point.startTime)}">${timeToString(point.startTime)}</time>
             &mdash;
-            <time class="event__end-time" datetime="${point.endTime.toISOString()}">${timeToString(point.endTime)}</time>
+            <time class="event__end-time" datetime="${formatDateToISOString(point.endTime)}">${timeToString(point.endTime)}</time>
             </p>
           <p class="event__duration">${getDatesDifference(point.startTime, point.endTime)}</p>
         </div>
@@ -28,8 +29,6 @@ const createPointTemplate = (point) => {
         <p class="event__price">
           &euro;&nbsp;<span class="event__price-value">${point.price}</span>
         </p>
-
-        ${point.offers.length > 0 ? generateOffersList(point.offers) : ``}
 
         <button class="event__rollup-btn" type="button">
           <span class="visually-hidden">Open event</span>
@@ -39,4 +38,26 @@ const createPointTemplate = (point) => {
   );
 };
 
-export {createPointTemplate};
+export default class Point {
+  constructor(point) {
+    this._element = null;
+
+    this._point = point;
+  }
+
+  _getTemplate() {
+    return createPointTemplate(this._point);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this._getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

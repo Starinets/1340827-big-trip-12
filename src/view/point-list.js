@@ -1,13 +1,27 @@
-import {createPointTemplate} from './point.js';
+import {createElement} from './../utils/dom';
 
-const generatePointsTemplates = (points) => points
-  .map(createPointTemplate)
-  .join(``);
-
-const createPointListTemplate = (points) => {
-  return `<ul class="trip-events__list">
-    ${generatePointsTemplates(points)}
-  </ul>`;
+const createPointListTemplate = () => {
+  return `<ul class="trip-events__list"></ul>`;
 };
 
-export {createPointListTemplate};
+export default class PointList {
+  constructor() {
+    this._element = null;
+  }
+
+  _getTemplate() {
+    return createPointListTemplate();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this._getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

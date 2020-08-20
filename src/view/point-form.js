@@ -1,3 +1,5 @@
+import {createElement} from './../utils/dom';
+
 const createPointFormTemplate = () => {
   return (
     `<li class="trip-events__item">
@@ -176,4 +178,26 @@ const createPointFormTemplate = () => {
   );
 };
 
-export {createPointFormTemplate};
+export default class PointForm {
+  constructor(point) {
+    this._element = null;
+
+    this._point = point;
+  }
+
+  _getTemplate() {
+    return createPointFormTemplate();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this._getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

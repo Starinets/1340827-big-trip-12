@@ -1,18 +1,14 @@
 import {createElement} from './../utils/dom';
 
-const createPointMessageTemplate = () => {
-  return (
-    `<p class="trip-events__msg">Click New Event to create your first point</p>`
-  );
-};
+const createOffersListTemplate = () => `<ul class="event__selected-offers"></ul>`;
 
-export default class PointMessage {
+export default class OffersList {
   constructor() {
     this._element = null;
   }
 
   _getTemplate() {
-    return createPointMessageTemplate();
+    return createOffersListTemplate();
   }
 
   getElement() {

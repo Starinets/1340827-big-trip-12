@@ -1,3 +1,5 @@
+import {createElement} from './../utils/dom';
+
 const createCostInfoTemplate = (total) => {
   return (
     `<p class="trip-info__cost">
@@ -6,4 +8,26 @@ const createCostInfoTemplate = (total) => {
   );
 };
 
-export {createCostInfoTemplate};
+export default class CostInfo {
+  constructor(total) {
+    this._element = null;
+
+    this._total = total;
+  }
+
+  _getTemplate() {
+    return createCostInfoTemplate(this._total);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this._getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

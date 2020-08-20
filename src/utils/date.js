@@ -14,6 +14,15 @@ const timeToString = (date = new Date()) => {
   return `${hours < 10 ? `0` + hours : hours}:${minutes < 10 ? `0` + minutes : minutes}`;
 };
 
+const formatDateToISOString = (date) => {
+  const formattedDate = new Date(date);
+  formattedDate.setHours(formattedDate.getHours() - formattedDate.getTimezoneOffset() / MINUTES_IN_HOUR);
+
+  return formattedDate.toISOString();
+};
+
+const formatDayDate = (date) => formatDateToISOString(date).slice(0, 10);
+
 const getDatesDifference = (startDate = new Date(), endDate = new Date()) => {
   let difference = endDate - startDate;
   difference -= difference % MILLISECOND_IN_MINUTE;
@@ -43,5 +52,7 @@ const getDatesDifference = (startDate = new Date(), endDate = new Date()) => {
 export {
   addLeadingRank,
   getDatesDifference,
-  timeToString
+  timeToString,
+  formatDateToISOString,
+  formatDayDate
 };
