@@ -1,10 +1,5 @@
-import {
-  render,
-  createElement,
-  RenderPosition
-} from './../utils/dom';
+import {createElement} from './../utils/dom';
 import {formatDateToISOString} from './../utils/date';
-import PointList from './point-list';
 
 const formatMonthDate = new Intl.DateTimeFormat(`en-GB`, {
   month: `short`,
@@ -23,19 +18,20 @@ const createDayTemplate = (dayDate, counter) => {
 };
 
 export default class Day {
-  constructor() {
+  constructor(dayDate, counter) {
     this._element = null;
+
+    this._dayDate = dayDate;
+    this._counter = counter;
   }
 
-  _getTemplate(dayDate, counter, dayPoints) {
-    return createDayTemplate(dayDate, counter, dayPoints);
+  _getTemplate() {
+    return createDayTemplate(this._dayDate, this._counter);
   }
 
-  getElement(dayDate, counter, dayPoints) {
+  getElement() {
     if (!this._element) {
-      this._element = createElement(this._getTemplate(dayDate, counter, dayPoints));
-
-      render(this._element, new PointList().getElement(dayPoints), RenderPosition.BEFORE_END);
+      this._element = createElement(this._getTemplate());
     }
 
     return this._element;

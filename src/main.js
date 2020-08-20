@@ -11,6 +11,7 @@ import Filters from './view/filters';
 import Sort from './view/sort';
 import Days from './view/days';
 import Day from './view/day';
+import PointList from './view/point-list';
 import AddPointButton from './view/add-point-button';
 import {generatePoint} from './mock/point';
 
@@ -63,7 +64,10 @@ const renderGroupedPoints = (points) => {
 
   Object.entries(days)
     .forEach(([date, dayPoints], counter) => {
-      render(dayPlace, new Day().getElement(new Date(date), counter + 1, dayPoints), RenderPosition.BEFORE_END);
+      const dayElement = new Day(new Date(date), counter + 1).getElement();
+      render(dayPlace, dayElement, RenderPosition.BEFORE_END);
+
+      render(dayElement, new PointList().getElement(dayPoints), RenderPosition.BEFORE_END);
     });
 };
 
