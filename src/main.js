@@ -12,6 +12,8 @@ import Sort from './view/sort';
 import Days from './view/days';
 import Day from './view/day';
 import PointList from './view/point-list';
+import Point from './view/point';
+import PointForm from './view/point-form';
 import AddPointButton from './view/add-point-button';
 import {generatePoint} from './mock/point';
 
@@ -55,6 +57,31 @@ const reducePointByDay = (days, point) => {
   return days;
 };
 
+const generatePoints = (container, points) =>
+  points.forEach((point) => {
+    const pointForRender = new Point().getElement(point);
+    const formForRender = new PointForm().getElement(point);
+
+    const replacePointToForm = () => {
+      container.replaceChild(formForRender, pointForRender);
+    };
+
+    const replaceFormToPoint = () => {
+      container.replaceChild(pointForRender, formForRender);
+    };
+
+    pointForRender.querySelector(`.event__rollup-btn`).addEventListener(`click`, () => {
+      replacePointToForm();
+    });
+
+    formForRender.querySelector(`form`).addEventListener(`submit`, (evt) => {
+      evt.preventDefault();
+      replaceFormToPoint();
+    });
+
+    render(container, pointForRender, RenderPosition.BEFORE_END);
+  });
+
 const groupPointsByDays = (points) => points
   .sort((less, more) => less.startTime - more.startTime)
   .reduce(reducePointByDay, {});
@@ -67,7 +94,10 @@ const renderGroupedPoints = (points) => {
       const dayElement = new Day(new Date(date), counter + 1).getElement();
       render(dayPlace, dayElement, RenderPosition.BEFORE_END);
 
-      render(dayElement, new PointList().getElement(dayPoints), RenderPosition.BEFORE_END);
+      const pointList = new PointList().getElement();
+      render(dayElement, pointList, RenderPosition.BEFORE_END);
+
+      generatePoints(pointList, dayPoints);
     });
 };
 
