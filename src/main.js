@@ -15,10 +15,12 @@ import PointList from './view/point-list';
 import Point from './view/point';
 import PointForm from './view/point-form';
 import OffersList from './view/offers-list';
+import Offer from './view/offer';
 import AddPointButton from './view/add-point-button';
 import {generatePoint} from './mock/point';
 
 const EVENT_COUNT = 30;
+const MAX_OFFERS_COUNT = 3;
 
 const infoPlace = document.querySelector(`.trip-main`);
 const menuPlace = infoPlace.querySelector(`.js-menu`);
@@ -59,8 +61,18 @@ const reducePointByDay = (days, point) => {
 };
 
 const generateOffers = (container, offers) => {
+  offers.slice(0, MAX_OFFERS_COUNT)
+    .forEach((offer) => {
+      render(container, new Offer().getElement(offer), RenderPosition.BEFORE_END);
+    });
+};
+
+const generateOffersList = (container, offers) => {
   if (offers.length > 0) {
-    render(container, new OffersList().getElement(offers), RenderPosition.AFTER_END);
+    const offerListElement = new OffersList().getElement();
+    render(container, offerListElement, RenderPosition.AFTER_END);
+
+    generateOffers(offerListElement, offers);
   }
 };
 
@@ -89,7 +101,7 @@ const generatePoints = (container, points) =>
     render(container, pointElement, RenderPosition.BEFORE_END);
 
     const pointPrice = pointElement.querySelector(`.event__price`);
-    generateOffers(pointPrice, point.offers);
+    generateOffersList(pointPrice, point.offers);
   });
 
 const groupPointsByDays = (points) => points
