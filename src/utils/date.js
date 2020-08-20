@@ -21,6 +21,8 @@ const formatDateToISOString = (date) => {
   return formattedDate.toISOString();
 };
 
+const formatDayDate = (date) => formatDateToISOString(date).slice(0, 10);
+
 const getDatesDifference = (startDate = new Date(), endDate = new Date()) => {
   let difference = endDate - startDate;
   difference -= difference % MILLISECOND_IN_MINUTE;
@@ -51,5 +53,6 @@ export {
   addLeadingRank,
   getDatesDifference,
   timeToString,
-  formatDateToISOString
+  formatDateToISOString,
+  formatDayDate
 };

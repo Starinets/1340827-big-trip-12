@@ -2,7 +2,7 @@ import {
   render,
   RenderPosition
 } from './utils/dom';
-import {formatDateToISOString} from './utils/date';
+import {formatDayDate} from './utils/date';
 import Info from './view/info';
 import MainInfo from './view/main-info';
 import CostInfo from './view/cost-info';
@@ -49,7 +49,7 @@ const getTripPath = (points) => {
 };
 
 const reducePointByDay = (days, point) => {
-  const dayDate = formatDateToISOString(point.startTime).slice(0, 10);
+  const dayDate = formatDayDate(point.startTime);
 
   if (Array.isArray(days[dayDate])) {
     days[dayDate].push(point);
