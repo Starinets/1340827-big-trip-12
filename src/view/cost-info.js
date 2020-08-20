@@ -9,17 +9,19 @@ const createCostInfoTemplate = (total) => {
 };
 
 export default class CostInfo {
-  constructor() {
+  constructor(total) {
     this._element = null;
+
+    this._total = total;
   }
 
-  _getTemplate(total) {
-    return createCostInfoTemplate(total);
+  _getTemplate() {
+    return createCostInfoTemplate(this._total);
   }
 
-  getElement(total) {
+  getElement() {
     if (!this._element) {
-      this._element = createElement(this._getTemplate(total));
+      this._element = createElement(this._getTemplate());
     }
 
     return this._element;

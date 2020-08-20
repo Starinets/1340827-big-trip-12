@@ -139,7 +139,7 @@ render(infoPlace, new AddPointButton().getElement(), RenderPosition.BEFORE_END);
 const infoMainPlace = infoPlace.querySelector(`.trip-info`);
 
 render(infoMainPlace, new MainInfo(getTripPath(points)).getElement(), RenderPosition.BEFORE_END);
-render(infoMainPlace, new CostInfo().getElement(getTripCost(points)), RenderPosition.BEFORE_END);
+render(infoMainPlace, new CostInfo(getTripCost(points)).getElement(), RenderPosition.BEFORE_END);
 
 render(menuPlace, new Menu().getElement(), RenderPosition.AFTER_END);
 render(filtersPlace, new Filters().getElement(), RenderPosition.BEFORE_END);
