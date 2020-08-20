@@ -3,20 +3,20 @@ import {
   RenderPosition
 } from './utils/dom';
 import {formatDayDate} from './utils/date';
-import Info from './view/info';
-import MainInfo from './view/main-info';
-import CostInfo from './view/cost-info';
-import Menu from './view/menu';
-import Filters from './view/filters';
-import Sort from './view/sort';
-import Days from './view/days';
+import InfoView from './view/info';
+import MainInfoView from './view/main-info';
+import CostInfoView from './view/cost-info';
+import MenuView from './view/menu';
+import FiltersView from './view/filters';
+import SortView from './view/sort';
+import DaysView from './view/days';
 import DayView from './view/day';
-import PointList from './view/point-list';
-import Point from './view/point';
-import PointForm from './view/point-form';
-import OffersList from './view/offers-list';
-import Offer from './view/offer';
-import AddPointButton from './view/add-point-button';
+import PointListView from './view/point-list';
+import PointView from './view/point';
+import PointFormView from './view/point-form';
+import OffersListView from './view/offers-list';
+import OfferView from './view/offer';
+import AddPointButtonView from './view/add-point-button';
 import {generatePoint} from './mock/point';
 
 const EVENT_COUNT = 30;
@@ -63,44 +63,44 @@ const reducePointByDay = (days, point) => {
 const generateOffers = (container, offers) => {
   offers.slice(0, MAX_OFFERS_COUNT)
     .forEach((offer) => {
-      render(container, new Offer(offer).getElement(), RenderPosition.BEFORE_END);
+      render(container, new OfferView(offer).getElement(), RenderPosition.BEFORE_END);
     });
 };
 
 const generateOffersList = (container, offers) => {
   if (offers.length > 0) {
-    const offerListElement = new OffersList().getElement();
-    render(container, offerListElement, RenderPosition.AFTER_END);
+    const offerListView = new OffersListView().getElement();
+    render(container, offerListView, RenderPosition.AFTER_END);
 
-    generateOffers(offerListElement, offers);
+    generateOffers(offerListView, offers);
   }
 };
 
 const generatePoints = (container, points) =>
   points.forEach((point) => {
-    const pointElement = new Point(point).getElement();
-    const pointFormElement = new PointForm(point).getElement();
+    const pointView = new PointView(point).getElement();
+    const pointFormView = new PointFormView(point).getElement();
 
     const replacePointToForm = () => {
-      container.replaceChild(pointFormElement, pointElement);
+      container.replaceChild(pointFormView, pointView);
     };
 
     const replaceFormToPoint = () => {
-      container.replaceChild(pointElement, pointFormElement);
+      container.replaceChild(pointView, pointFormView);
     };
 
-    pointElement.querySelector(`.event__rollup-btn`).addEventListener(`click`, () => {
+    pointView.querySelector(`.event__rollup-btn`).addEventListener(`click`, () => {
       replacePointToForm();
     });
 
-    pointFormElement.querySelector(`form`).addEventListener(`submit`, (evt) => {
+    pointFormView.querySelector(`form`).addEventListener(`submit`, (evt) => {
       evt.preventDefault();
       replaceFormToPoint();
     });
 
-    render(container, pointElement, RenderPosition.BEFORE_END);
+    render(container, pointView, RenderPosition.BEFORE_END);
 
-    const pointPrice = pointElement.querySelector(`.event__price`);
+    const pointPrice = pointView.querySelector(`.event__price`);
     generateOffersList(pointPrice, point.offers);
   });
 
@@ -113,13 +113,13 @@ const renderGroupedPoints = (points) => {
 
   Object.entries(days)
     .forEach(([date, dayPoints], counter) => {
-      const dayElement = new DayView(new Date(date), counter + 1).getElement();
-      render(dayPlace, dayElement, RenderPosition.BEFORE_END);
+      const dayView = new DayView(new Date(date), counter + 1).getElement();
+      render(dayPlace, dayView, RenderPosition.BEFORE_END);
 
-      const pointListElement = new PointList().getElement();
-      render(dayElement, pointListElement, RenderPosition.BEFORE_END);
+      const pointListView = new PointListView().getElement();
+      render(dayView, pointListView, RenderPosition.BEFORE_END);
 
-      generatePoints(pointListElement, dayPoints);
+      generatePoints(pointListView, dayPoints);
     });
 };
 
@@ -133,19 +133,19 @@ const points = new Array(EVENT_COUNT)
     return point;
   });
 
-render(infoPlace, new Info().getElement(), RenderPosition.AFTER_BEGIN);
-render(infoPlace, new AddPointButton().getElement(), RenderPosition.BEFORE_END);
+render(infoPlace, new InfoView().getElement(), RenderPosition.AFTER_BEGIN);
+render(infoPlace, new AddPointButtonView().getElement(), RenderPosition.BEFORE_END);
 
 const infoMainPlace = infoPlace.querySelector(`.trip-info`);
 
-render(infoMainPlace, new MainInfo(getTripPath(points)).getElement(), RenderPosition.BEFORE_END);
-render(infoMainPlace, new CostInfo(getTripCost(points)).getElement(), RenderPosition.BEFORE_END);
+render(infoMainPlace, new MainInfoView(getTripPath(points)).getElement(), RenderPosition.BEFORE_END);
+render(infoMainPlace, new CostInfoView(getTripCost(points)).getElement(), RenderPosition.BEFORE_END);
 
-render(menuPlace, new Menu().getElement(), RenderPosition.AFTER_END);
-render(filtersPlace, new Filters().getElement(), RenderPosition.BEFORE_END);
+render(menuPlace, new MenuView().getElement(), RenderPosition.AFTER_END);
+render(filtersPlace, new FiltersView().getElement(), RenderPosition.BEFORE_END);
 
-render(sortingPlace, new Sort().getElement(), RenderPosition.AFTER_END);
-render(contentPlace, new Days().getElement(), RenderPosition.BEFORE_END);
+render(sortingPlace, new SortView().getElement(), RenderPosition.AFTER_END);
+render(contentPlace, new DaysView().getElement(), RenderPosition.BEFORE_END);
 
 const dayPlace = contentPlace.querySelector(`.trip-days`);
 
