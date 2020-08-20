@@ -10,7 +10,7 @@ import Menu from './view/menu';
 import Filters from './view/filters';
 import Sort from './view/sort';
 import Days from './view/days';
-import Day from './view/day';
+import DayView from './view/day';
 import PointList from './view/point-list';
 import Point from './view/point';
 import PointForm from './view/point-form';
@@ -113,7 +113,7 @@ const renderGroupedPoints = (points) => {
 
   Object.entries(days)
     .forEach(([date, dayPoints], counter) => {
-      const dayElement = new Day(new Date(date), counter + 1).getElement();
+      const dayElement = new DayView(new Date(date), counter + 1).getElement();
       render(dayPlace, dayElement, RenderPosition.BEFORE_END);
 
       const pointListElement = new PointList().getElement();
