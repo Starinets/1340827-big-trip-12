@@ -79,7 +79,8 @@ const generateOffersList = (container, offers) => {
 
 const generatePoints = (container, points) =>
   points.forEach((point) => {
-    const pointView = new PointView(point).getElement();
+    const pointComponent = new PointView(point);
+    const pointView = pointComponent.getElement();
     const pointFormView = new PointFormView(point).getElement();
 
     const onKeydown = (evt) => {
@@ -111,8 +112,8 @@ const generatePoints = (container, points) =>
     render(container, pointView, RenderPosition.BEFORE_END);
 
     if (point.offers.length > 0) {
-      const pointPrice = pointView.querySelector(`.event__price`);
-      generateOffersList(pointPrice, point.offers);
+      const pointContainer = pointComponent.getContainer();
+      generateOffersList(pointContainer, point.offers);
     }
   });
 

@@ -60,4 +60,8 @@ export default class Point {
   removeElement() {
     this._element = null;
   }
+
+  getContainer() {
+    return this.getElement().querySelector(`.event__price`);
+  }
 }
