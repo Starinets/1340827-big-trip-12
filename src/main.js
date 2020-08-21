@@ -2,6 +2,7 @@ import {
   render,
   RenderPosition
 } from './utils/dom';
+import {isEscapeEvent} from './utils/service';
 import {formatDayDate} from './utils/date';
 import InfoView from './view/info';
 import MainInfoView from './view/main-info';
@@ -79,16 +80,25 @@ const generatePoints = (container, points) =>
     const pointView = new PointView(point).getElement();
     const pointFormView = new PointFormView(point).getElement();
 
+    const onKeydown = (evt) => {
+      if (isEscapeEvent(evt)) {
+        replaceFormToPoint();
+      }
+    };
+
     const replacePointToForm = () => {
       container.replaceChild(pointFormView, pointView);
     };
 
     const replaceFormToPoint = () => {
       container.replaceChild(pointView, pointFormView);
+      document.removeEventListener(`keydown`, onKeydown);
     };
 
     pointView.querySelector(`.event__rollup-btn`).addEventListener(`click`, () => {
       replacePointToForm();
+
+      document.addEventListener(`keydown`, onKeydown);
     });
 
     pointFormView.querySelector(`form`).addEventListener(`submit`, (evt) => {
