@@ -2,7 +2,7 @@ import {
   render,
   RenderPosition
 } from './utils/dom';
-import {isEscapeEvent} from './utils/service';
+import {isEscapeEvent} from './utils/dom-event';
 import {formatDayDate} from './utils/date';
 import InfoView from './view/info';
 import MainInfoView from './view/main-info';
