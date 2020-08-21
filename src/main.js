@@ -89,6 +89,17 @@ const generatePoints = (container, points) =>
       }
     };
 
+    const onRollupButtonClick = () => {
+      replacePointToForm();
+
+      document.addEventListener(`keydown`, onKeydown);
+    };
+
+    const onPointFormViewSubmit = (evt) => {
+      evt.preventDefault();
+      replaceFormToPoint();
+    };
+
     const replacePointToForm = () => {
       container.replaceChild(pointFormView, pointView);
     };
@@ -98,16 +109,9 @@ const generatePoints = (container, points) =>
       document.removeEventListener(`keydown`, onKeydown);
     };
 
-    pointComponent.getRollupButton().addEventListener(`click`, () => {
-      replacePointToForm();
-
-      document.addEventListener(`keydown`, onKeydown);
-    });
-
-    pointFormView.addEventListener(`submit`, (evt) => {
-      evt.preventDefault();
-      replaceFormToPoint();
-    });
+    const rollupButton = pointComponent.getRollupButton();
+    rollupButton.addEventListener(`click`, onRollupButtonClick);
+    pointFormView.addEventListener(`submit`, onPointFormViewSubmit);
 
     render(container, pointView, RenderPosition.BEFORE_END);
 
