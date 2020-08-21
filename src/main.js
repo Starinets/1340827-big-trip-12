@@ -68,12 +68,10 @@ const generateOffers = (container, offers) => {
 };
 
 const generateOffersList = (container, offers) => {
-  if (offers.length > 0) {
-    const offerListView = new OffersListView().getElement();
-    render(container, offerListView, RenderPosition.AFTER_END);
+  const offerListView = new OffersListView().getElement();
+  render(container, offerListView, RenderPosition.AFTER_END);
 
-    generateOffers(offerListView, offers);
-  }
+  generateOffers(offerListView, offers);
 };
 
 const generatePoints = (container, points) =>
@@ -100,8 +98,10 @@ const generatePoints = (container, points) =>
 
     render(container, pointView, RenderPosition.BEFORE_END);
 
-    const pointPrice = pointView.querySelector(`.event__price`);
-    generateOffersList(pointPrice, point.offers);
+    if (point.offers.length > 0) {
+      const pointPrice = pointView.querySelector(`.event__price`);
+      generateOffersList(pointPrice, point.offers);
+    }
   });
 
 const groupPointsByDays = (points) => points
