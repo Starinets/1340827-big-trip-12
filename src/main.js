@@ -98,13 +98,13 @@ const generatePoints = (container, points) =>
       document.removeEventListener(`keydown`, onKeydown);
     };
 
-    pointView.querySelector(`.event__rollup-btn`).addEventListener(`click`, () => {
+    pointComponent.getRollupButton().addEventListener(`click`, () => {
       replacePointToForm();
 
       document.addEventListener(`keydown`, onKeydown);
     });
 
-    pointFormView.querySelector(`form`).addEventListener(`submit`, (evt) => {
+    pointFormView.addEventListener(`submit`, (evt) => {
       evt.preventDefault();
       replaceFormToPoint();
     });

@@ -64,4 +64,8 @@ export default class Point {
   getContainer() {
     return this.getElement().querySelector(`.event__price`);
   }
+
+  getRollupButton() {
+    return this.getElement().querySelector(`.event__rollup-btn`);
+  }
 }
