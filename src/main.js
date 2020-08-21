@@ -158,12 +158,12 @@ render(menuPlace, new MenuView().getElement(), RenderPosition.AFTER_END);
 render(filtersPlace, new FiltersView().getElement(), RenderPosition.BEFORE_END);
 
 if (points.length > 0) {
+  const dayView = new DaysView().getElement();
+
   render(sortingPlace, new SortView().getElement(), RenderPosition.AFTER_END);
-  render(contentPlace, new DaysView().getElement(), RenderPosition.BEFORE_END);
+  render(contentPlace, dayView, RenderPosition.BEFORE_END);
 
-  const dayPlace = contentPlace.querySelector(`.trip-days`);
-
-  renderGroupedPoints(dayPlace, points);
+  renderGroupedPoints(dayView, points);
 } else {
   render(contentPlace, new PointMessage(EMPTY_POINTS_LIST_MESSAGE).getElement(), RenderPosition.BEFORE_END);
 }
