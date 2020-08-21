@@ -146,13 +146,13 @@ const points = new Array(EVENT_COUNT)
     return point;
   });
 
-render(infoPlace, new InfoView().getElement(), RenderPosition.AFTER_BEGIN);
+const infoView = new InfoView().getElement();
+
+render(infoPlace, infoView, RenderPosition.AFTER_BEGIN);
 render(infoPlace, new AddPointButtonView().getElement(), RenderPosition.BEFORE_END);
 
-const infoMainPlace = infoPlace.querySelector(`.trip-info`);
-
-render(infoMainPlace, new MainInfoView(getTripPath(points)).getElement(), RenderPosition.BEFORE_END);
-render(infoMainPlace, new CostInfoView(getTripCost(points)).getElement(), RenderPosition.BEFORE_END);
+render(infoView, new MainInfoView(getTripPath(points)).getElement(), RenderPosition.BEFORE_END);
+render(infoView, new CostInfoView(getTripCost(points)).getElement(), RenderPosition.BEFORE_END);
 
 render(menuPlace, new MenuView().getElement(), RenderPosition.AFTER_END);
 render(filtersPlace, new FiltersView().getElement(), RenderPosition.BEFORE_END);
