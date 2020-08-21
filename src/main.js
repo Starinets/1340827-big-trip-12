@@ -18,10 +18,12 @@ import PointFormView from './view/point-form';
 import OffersListView from './view/offers-list';
 import OfferView from './view/offer';
 import AddPointButtonView from './view/add-point-button';
+import PointMessage from './view/point-message';
 import {generatePoint} from './mock/point';
 
 const EVENT_COUNT = 30;
 const MAX_OFFERS_COUNT = 3;
+const EMPTY_POINTS_LIST_MESSAGE = `Click New Event to create your first point`;
 
 const infoPlace = document.querySelector(`.trip-main`);
 const menuPlace = infoPlace.querySelector(`.js-menu`);
@@ -118,7 +120,7 @@ const groupPointsByDays = (points) => points
   .sort((less, more) => less.startTime - more.startTime)
   .reduce(reducePointByDay, {});
 
-const renderGroupedPoints = (points) => {
+const renderGroupedPoints = (dayPlace, points) => {
   const days = groupPointsByDays(points);
 
   Object.entries(days)
@@ -154,9 +156,13 @@ render(infoMainPlace, new CostInfoView(getTripCost(points)).getElement(), Render
 render(menuPlace, new MenuView().getElement(), RenderPosition.AFTER_END);
 render(filtersPlace, new FiltersView().getElement(), RenderPosition.BEFORE_END);
 
-render(sortingPlace, new SortView().getElement(), RenderPosition.AFTER_END);
-render(contentPlace, new DaysView().getElement(), RenderPosition.BEFORE_END);
+if (points.length > 0) {
+  render(sortingPlace, new SortView().getElement(), RenderPosition.AFTER_END);
+  render(contentPlace, new DaysView().getElement(), RenderPosition.BEFORE_END);
 
-const dayPlace = contentPlace.querySelector(`.trip-days`);
+  const dayPlace = contentPlace.querySelector(`.trip-days`);
 
-renderGroupedPoints(points);
+  renderGroupedPoints(dayPlace, points);
+} else {
+  render(contentPlace, new PointMessage(EMPTY_POINTS_LIST_MESSAGE).getElement(), RenderPosition.BEFORE_END);
+}
