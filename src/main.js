@@ -132,8 +132,8 @@ const renderGroupedPoints = (dayPlace, points) => {
   // Если передавать "date", время которой смещено на 00:00:00, то в formatDateToISOString
   // "костыль" смещает дату на день раньше, в случае отрицательного GMT. Поэтому
   // будем использовать начальное время первой точки дня.
-  Object.entries(days)
-    .forEach(([date, dayPoints], counter) => {
+  Object.values(days)
+    .forEach((dayPoints, counter) => {
       const dayView = new DayView(new Date(dayPoints[0].startTime), counter + 1).getElement();
       render(dayPlace, dayView, RenderPosition.BEFORE_END);
 
