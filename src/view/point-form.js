@@ -4,7 +4,7 @@ import {dateToString} from './../utils/date';
 
 const createOptionsListTemplate = (destinations) => {
   return destinations
-    .map((item) => `<option value="${item.name}"></option>`)
+    .map(({name}) => `<option value="${name}"></option>`)
     .join(``);
 };
 
