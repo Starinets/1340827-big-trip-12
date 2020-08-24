@@ -20,6 +20,7 @@ import OfferView from './view/offer';
 import AddPointButtonView from './view/add-point-button';
 import PointMessage from './view/point-message';
 import {generatePoint} from './mock/point';
+import {generateDestinationsInfo} from './mock/destinations';
 
 const EVENT_COUNT = 30;
 const MAX_OFFERS_COUNT = 3;
@@ -81,7 +82,7 @@ const generatePoints = (container, points) =>
   points.forEach((point) => {
     const pointComponent = new PointView(point);
     const pointView = pointComponent.getElement();
-    const pointFormView = new PointFormView(point).getElement();
+    const pointFormView = new PointFormView(point, destinations).getElement();
 
     const onKeydown = (evt) => {
       if (isEscapeEvent(evt)) {
@@ -149,6 +150,8 @@ const points = new Array(EVENT_COUNT)
     minDate = point.endTime;
     return point;
   });
+
+const destinations = generateDestinationsInfo();
 
 const infoView = new InfoView().getElement();
 

@@ -5,12 +5,9 @@ import {
 import {addLeadingRank} from '../utils/date';
 import {
   OFFERS_COUNT,
-  INFO_COUNT,
-  PHOTOS_COUNT,
   OFFERS,
   POINT_TYPES,
-  DESTINATIONS,
-  INFOS
+  DESTINATIONS
 } from './constants';
 
 const Price = {
@@ -24,10 +21,7 @@ const generatePoint = (minDate = new Date()) => {
     type: POINT_TYPES[getRandomInteger(0, POINT_TYPES.length - 1)],
     destination: DESTINATIONS[getRandomInteger(0, DESTINATIONS.length - 1)],
     offers: generateOffers(getRandomInteger(0, OFFERS_COUNT)),
-    destinationInfo: {
-      text: generateDestinationInfo(getRandomInteger(1, INFO_COUNT)),
-      photos: generateDestinationPhotos(getRandomInteger(1, PHOTOS_COUNT)),
-    },
+    isFavorite: Boolean(getRandomInteger(0, 1)),
     price: getRandomInteger(Price.min, Price.max) * Price.multiplicity,
   };
 
@@ -43,14 +37,5 @@ const generatePoint = (minDate = new Date()) => {
 const generateOffers = (offersCount) => new Array(offersCount)
   .fill()
   .map(() => OFFERS[getRandomInteger(0, OFFERS.length - 1)]);
-
-const generateDestinationInfo = (infoCount) => new Array(infoCount)
-  .fill()
-  .map(() => INFOS[getRandomInteger(0, INFOS.length - 1)])
-  .join(` `);
-
-const generateDestinationPhotos = (photosCount) => new Array(photosCount)
-  .fill()
-  .map(() => `img/icons/${Math.random()}.png`);
 
 export {generatePoint};
