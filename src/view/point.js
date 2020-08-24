@@ -60,4 +60,12 @@ export default class Point {
   removeElement() {
     this._element = null;
   }
+
+  getContainer() {
+    return this.getElement().querySelector(`.event__price`);
+  }
+
+  getRollupButton() {
+    return this.getElement().querySelector(`.event__rollup-btn`);
+  }
 }

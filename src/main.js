@@ -2,6 +2,7 @@ import {
   render,
   RenderPosition
 } from './utils/dom';
+import {isEscapeEvent} from './utils/dom-event';
 import {formatDayDate} from './utils/date';
 import InfoView from './view/info';
 import MainInfoView from './view/main-info';
@@ -17,10 +18,13 @@ import PointFormView from './view/point-form';
 import OffersListView from './view/offers-list';
 import OfferView from './view/offer';
 import AddPointButtonView from './view/add-point-button';
+import PointMessage from './view/point-message';
 import {generatePoint} from './mock/point';
+import {generateDestinationsInfo} from './mock/destinations';
 
 const EVENT_COUNT = 30;
 const MAX_OFFERS_COUNT = 3;
+const EMPTY_POINTS_LIST_MESSAGE = `Click New Event to create your first point`;
 
 const infoPlace = document.querySelector(`.trip-main`);
 const menuPlace = infoPlace.querySelector(`.js-menu`);
@@ -68,18 +72,34 @@ const generateOffers = (container, offers) => {
 };
 
 const generateOffersList = (container, offers) => {
-  if (offers.length > 0) {
-    const offerListView = new OffersListView().getElement();
-    render(container, offerListView, RenderPosition.AFTER_END);
+  const offerListView = new OffersListView().getElement();
+  render(container, offerListView, RenderPosition.AFTER_END);
 
-    generateOffers(offerListView, offers);
-  }
+  generateOffers(offerListView, offers);
 };
 
 const generatePoints = (container, points) =>
   points.forEach((point) => {
-    const pointView = new PointView(point).getElement();
-    const pointFormView = new PointFormView(point).getElement();
+    const pointComponent = new PointView(point);
+    const pointView = pointComponent.getElement();
+    const pointFormView = new PointFormView(point, destinations).getElement();
+
+    const onKeydown = (evt) => {
+      if (isEscapeEvent(evt)) {
+        replaceFormToPoint();
+      }
+    };
+
+    const onRollupButtonClick = () => {
+      replacePointToForm();
+
+      document.addEventListener(`keydown`, onKeydown);
+    };
+
+    const onPointFormViewSubmit = (evt) => {
+      evt.preventDefault();
+      replaceFormToPoint();
+    };
 
     const replacePointToForm = () => {
       container.replaceChild(pointFormView, pointView);
@@ -87,33 +107,34 @@ const generatePoints = (container, points) =>
 
     const replaceFormToPoint = () => {
       container.replaceChild(pointView, pointFormView);
+      document.removeEventListener(`keydown`, onKeydown);
     };
 
-    pointView.querySelector(`.event__rollup-btn`).addEventListener(`click`, () => {
-      replacePointToForm();
-    });
-
-    pointFormView.querySelector(`form`).addEventListener(`submit`, (evt) => {
-      evt.preventDefault();
-      replaceFormToPoint();
-    });
+    const rollupButton = pointComponent.getRollupButton();
+    rollupButton.addEventListener(`click`, onRollupButtonClick);
+    pointFormView.addEventListener(`submit`, onPointFormViewSubmit);
 
     render(container, pointView, RenderPosition.BEFORE_END);
 
-    const pointPrice = pointView.querySelector(`.event__price`);
-    generateOffersList(pointPrice, point.offers);
+    if (point.offers.length > 0) {
+      const pointContainer = pointComponent.getContainer();
+      generateOffersList(pointContainer, point.offers);
+    }
   });
 
 const groupPointsByDays = (points) => points
   .sort((less, more) => less.startTime - more.startTime)
   .reduce(reducePointByDay, {});
 
-const renderGroupedPoints = (points) => {
+const renderGroupedPoints = (dayPlace, points) => {
   const days = groupPointsByDays(points);
 
+  // Если передавать "date", время которой смещено на 00:00:00, то в formatDateToISOString
+  // "костыль" смещает дату на день раньше, в случае отрицательного GMT. Поэтому
+  // будем использовать начальное время первой точки дня.
   Object.entries(days)
     .forEach(([date, dayPoints], counter) => {
-      const dayView = new DayView(new Date(date), counter + 1).getElement();
+      const dayView = new DayView(new Date(dayPoints[0].startTime), counter + 1).getElement();
       render(dayPlace, dayView, RenderPosition.BEFORE_END);
 
       const pointListView = new PointListView().getElement();
@@ -133,20 +154,26 @@ const points = new Array(EVENT_COUNT)
     return point;
   });
 
-render(infoPlace, new InfoView().getElement(), RenderPosition.AFTER_BEGIN);
+const destinations = generateDestinationsInfo();
+
+const infoView = new InfoView().getElement();
+
+render(infoPlace, infoView, RenderPosition.AFTER_BEGIN);
 render(infoPlace, new AddPointButtonView().getElement(), RenderPosition.BEFORE_END);
 
-const infoMainPlace = infoPlace.querySelector(`.trip-info`);
-
-render(infoMainPlace, new MainInfoView(getTripPath(points)).getElement(), RenderPosition.BEFORE_END);
-render(infoMainPlace, new CostInfoView(getTripCost(points)).getElement(), RenderPosition.BEFORE_END);
+render(infoView, new MainInfoView(getTripPath(points)).getElement(), RenderPosition.BEFORE_END);
+render(infoView, new CostInfoView(getTripCost(points)).getElement(), RenderPosition.BEFORE_END);
 
 render(menuPlace, new MenuView().getElement(), RenderPosition.AFTER_END);
 render(filtersPlace, new FiltersView().getElement(), RenderPosition.BEFORE_END);
 
-render(sortingPlace, new SortView().getElement(), RenderPosition.AFTER_END);
-render(contentPlace, new DaysView().getElement(), RenderPosition.BEFORE_END);
+if (points.length > 0) {
+  const dayView = new DaysView().getElement();
 
-const dayPlace = contentPlace.querySelector(`.trip-days`);
+  render(sortingPlace, new SortView().getElement(), RenderPosition.AFTER_END);
+  render(contentPlace, dayView, RenderPosition.BEFORE_END);
 
-renderGroupedPoints(points);
+  renderGroupedPoints(dayView, points);
+} else {
+  render(contentPlace, new PointMessage(EMPTY_POINTS_LIST_MESSAGE).getElement(), RenderPosition.BEFORE_END);
+}

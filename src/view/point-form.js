@@ -1,6 +1,16 @@
 import {createElement} from './../utils/dom';
+import {pointTypeToPretext} from './../constants';
+import {dateToString} from './../utils/date';
 
-const createPointFormTemplate = () => {
+const createOptionsListTemplate = (destinations) => {
+  return destinations
+    .map((item) => `<option value="${item.name}"></option>`)
+    .join(``);
+};
+
+const createPointFormTemplate = (point, destinations) => {
+  const optionsListTemplate = createOptionsListTemplate(destinations);
+
   return (
     `<li class="trip-events__item">
     <form class="event  event--edit" action="#" method="post">
@@ -8,7 +18,7 @@ const createPointFormTemplate = () => {
         <div class="event__type-wrapper">
           <label class="event__type  event__type-btn" for="event-type-toggle-1">
             <span class="visually-hidden">Choose event type</span>
-            <img class="event__type-icon" width="17" height="17" src="img/icons/flight.png" alt="Event type icon">
+            <img class="event__type-icon" width="17" height="17" src="img/icons/${point.type}.png" alt="Event type icon">
           </label>
           <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
@@ -75,13 +85,11 @@ const createPointFormTemplate = () => {
 
         <div class="event__field-group  event__field-group--destination">
           <label class="event__label  event__type-output" for="event-destination-1">
-            Flight to
+            ${pointTypeToPretext[point.type]}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="Chamonix" list="destination-list-1">
+          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${point.destination}" list="destination-list-1">
           <datalist id="destination-list-1">
-            <option value="Amsterdam"></option>
-            <option value="Geneva"></option>
-            <option value="Chamonix"></option>
+            ${optionsListTemplate}
           </datalist>
         </div>
 
@@ -89,12 +97,12 @@ const createPointFormTemplate = () => {
           <label class="visually-hidden" for="event-start-time-1">
             From
           </label>
-          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="18/03/19 12:25">
+          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${dateToString(point.startTime)}">
           —
           <label class="visually-hidden" for="event-end-time-1">
             To
           </label>
-          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="18/03/19 13:35">
+          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${dateToString(point.endTime)}">
         </div>
 
         <div class="event__field-group  event__field-group--price">
@@ -102,13 +110,13 @@ const createPointFormTemplate = () => {
             <span class="visually-hidden">Price</span>
             €
           </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="160">
+          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${point.price}">
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
         <button class="event__reset-btn" type="reset">Delete</button>
 
-        <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" checked="">
+        <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${point.isFavorite ? `checked` : ``}>
         <label class="event__favorite-btn" for="event-favorite-1">
           <span class="visually-hidden">Add to favorite</span>
           <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
@@ -179,14 +187,15 @@ const createPointFormTemplate = () => {
 };
 
 export default class PointForm {
-  constructor(point) {
+  constructor(point, destinations) {
     this._element = null;
 
     this._point = point;
+    this._destinations = destinations;
   }
 
   _getTemplate() {
-    return createPointFormTemplate();
+    return createPointFormTemplate(this._point, this._destinations);
   }
 
   getElement() {

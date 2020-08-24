@@ -7,11 +7,19 @@ const addLeadingRank = (value) => {
   return String(value).padStart(2, `0`);
 };
 
-const timeToString = (date = new Date()) => {
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
+const dateToString = (date) => {
+  const year = addLeadingRank(date.getFullYear().toString().substr(-2));
+  const month = addLeadingRank(date.getMonth());
+  const day = addLeadingRank(date.getDate());
 
-  return `${hours < 10 ? `0` + hours : hours}:${minutes < 10 ? `0` + minutes : minutes}`;
+  return `${day}/${month}/${year} ${timeToString(date)}`;
+};
+
+const timeToString = (date = new Date()) => {
+  const hours = addLeadingRank(date.getHours());
+  const minutes = addLeadingRank(date.getMinutes());
+
+  return `${hours}:${minutes}`;
 };
 
 const formatDateToISOString = (date) => {
@@ -52,6 +60,7 @@ const getDatesDifference = (startDate = new Date(), endDate = new Date()) => {
 export {
   addLeadingRank,
   getDatesDifference,
+  dateToString,
   timeToString,
   formatDateToISOString,
   formatDayDate
