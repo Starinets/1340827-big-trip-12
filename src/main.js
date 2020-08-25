@@ -82,7 +82,8 @@ const generatePoints = (container, points) =>
   points.forEach((point) => {
     const pointComponent = new PointView(point);
     const pointView = pointComponent.getElement();
-    const pointFormView = new PointFormView(point, destinations).getElement();
+    const pointFormComponent = new PointFormView(point, destinations);
+    const pointFormView = pointFormComponent.getElement();
 
     const onKeydown = (evt) => {
       if (isEscapeEvent(evt)) {
@@ -96,8 +97,7 @@ const generatePoints = (container, points) =>
       document.addEventListener(`keydown`, onKeydown);
     };
 
-    const onPointFormViewSubmit = (evt) => {
-      evt.preventDefault();
+    const onPointFormSubmit = () => {
       replaceFormToPoint();
     };
 
@@ -111,7 +111,7 @@ const generatePoints = (container, points) =>
     };
 
     pointComponent.setRollupButtonClickHandler(onRollupButtonClick);
-    pointFormView.addEventListener(`submit`, onPointFormViewSubmit);
+    pointFormComponent.setFormSubmitHandler(onPointFormSubmit);
 
     render(container, pointView, RenderPosition.BEFORE_END);
 

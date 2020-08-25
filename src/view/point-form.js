@@ -192,9 +192,23 @@ export default class PointForm extends Abstract {
 
     this._point = point;
     this._destinations = destinations;
+
+    this._onSubmit = this._onSubmit.bind(this);
   }
 
   _getTemplate() {
     return createPointFormTemplate(this._point, this._destinations);
+  }
+
+  _onSubmit(evt) {
+    evt.preventDefault();
+    this._callback.submit();
+  }
+
+  setFormSubmitHandler(callback) {
+    this._callback = {};
+    this._callback.submit = callback;
+    this.getElement()
+      .addEventListener(`submit`, this._onSubmit);
   }
 }
