@@ -1,4 +1,4 @@
-import {createElement} from './../utils/dom';
+import Abstract from './abstract';
 
 const createInfoTemplate = () => {
   return (
@@ -7,24 +7,8 @@ const createInfoTemplate = () => {
   );
 };
 
-export default class Info {
-  constructor() {
-    this._element = null;
-  }
-
+export default class Info extends Abstract {
   _getTemplate() {
     return createInfoTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
