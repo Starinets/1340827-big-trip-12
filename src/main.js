@@ -110,8 +110,7 @@ const generatePoints = (container, points) =>
       document.removeEventListener(`keydown`, onKeydown);
     };
 
-    const rollupButton = pointComponent.getRollupButton();
-    rollupButton.addEventListener(`click`, onRollupButtonClick);
+    pointComponent.setRollupButtonClickHandler(onRollupButtonClick);
     pointFormView.addEventListener(`submit`, onPointFormViewSubmit);
 
     render(container, pointView, RenderPosition.BEFORE_END);

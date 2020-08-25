@@ -43,6 +43,7 @@ export default class Point extends Abstract {
     super();
 
     this._point = point;
+    this._onRollupButtonClick = this._onRollupButtonClick.bind(this);
   }
 
   _getTemplate() {
@@ -53,7 +54,15 @@ export default class Point extends Abstract {
     return this.getElement().querySelector(`.event__price`);
   }
 
-  getRollupButton() {
-    return this.getElement().querySelector(`.event__rollup-btn`);
+  _onRollupButtonClick() {
+    this._callback.click();
+  }
+
+  setRollupButtonClickHandler(callback) {
+    this._callback = {};
+    this._callback.click = callback;
+    this.getElement()
+      .querySelector(`.event__rollup-btn`)
+      .addEventListener(`click`, this._onRollupButtonClick);
   }
 }
