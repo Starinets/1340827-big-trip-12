@@ -1,4 +1,4 @@
-import {createElement} from './../utils/dom';
+import Abstract from './abstract';
 
 const createOfferTemplate = (offer) => `<li class="event__offer">
     <span class="event__offer-title">${offer.name}</span>
@@ -6,26 +6,14 @@ const createOfferTemplate = (offer) => `<li class="event__offer">
     &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
   </li>`;
 
-export default class Offer {
+export default class Offer extends Abstract {
   constructor(offer) {
-    this._element = null;
+    super();
 
     this._offer = offer;
   }
 
   _getTemplate() {
     return createOfferTemplate(this._offer);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
