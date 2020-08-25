@@ -1,3 +1,5 @@
+import Abstract from "../view/abstract.js";
+
 const RenderPosition = {
   BEFORE_BEGIN: `beforebegin`,
   AFTER_BEGIN: `afterbegin`,
@@ -12,19 +14,27 @@ const createElement = (template) => {
   return newElement.firstChild;
 };
 
-const render = (container, element, place) => {
+const render = (container, child, place) => {
+  if (container instanceof Abstract) {
+    container = container.getElement();
+  }
+
+  if (child instanceof Abstract) {
+    child = child.getElement();
+  }
+
   switch (place) {
     case RenderPosition.BEFORE_BEGIN:
-      container.before(element);
+      container.before(child);
       break;
     case RenderPosition.AFTER_BEGIN:
-      container.prepend(element);
+      container.prepend(child);
       break;
     case RenderPosition.BEFORE_END:
-      container.append(element);
+      container.append(child);
       break;
     case RenderPosition.AFTER_END:
-      container.after(element);
+      container.after(child);
       break;
   }
 };
