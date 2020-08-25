@@ -1,6 +1,6 @@
-import {createElement} from './../utils/dom';
 import {pointTypeToPretext} from './../constants';
 import {dateToString} from './../utils/date';
+import Abstract from './abstract';
 
 const createOptionsListTemplate = (destinations) => {
   return destinations
@@ -186,9 +186,9 @@ const createPointFormTemplate = (point, destinations) => {
   );
 };
 
-export default class PointForm {
+export default class PointForm extends Abstract {
   constructor(point, destinations) {
-    this._element = null;
+    super();
 
     this._point = point;
     this._destinations = destinations;
@@ -196,17 +196,5 @@ export default class PointForm {
 
   _getTemplate() {
     return createPointFormTemplate(this._point, this._destinations);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
