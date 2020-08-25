@@ -1,4 +1,4 @@
-import {createElement} from './../utils/dom';
+import Abstract from './abstract';
 
 const createAddPointButtonTemplate = () => {
   return (
@@ -6,24 +6,8 @@ const createAddPointButtonTemplate = () => {
   );
 };
 
-export default class AddPointButton {
-  constructor() {
-    this._element = null;
-  }
-
+export default class AddPointButton extends Abstract {
   _getTemplate() {
     return createAddPointButtonTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
