@@ -1,4 +1,4 @@
-import {createElement} from './../utils/dom';
+import Abstract from "./abstract";
 
 const createStatisticsTemplate = () => {
   return (
@@ -20,24 +20,8 @@ const createStatisticsTemplate = () => {
   );
 };
 
-export default class Statistics {
-  constructor() {
-    this._element = null;
-  }
-
+export default class Statistics extends Abstract {
   _getTemplate() {
     return createStatisticsTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
