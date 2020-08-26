@@ -7,6 +7,8 @@ export default class Abstract {
     }
 
     this._element = null;
+
+    this._callback = {};
   }
 
   _getTemplate() {
@@ -14,7 +16,7 @@ export default class Abstract {
   }
 
   getElement() {
-    if (!this._element) {
+    if (this._element === null) {
       this._element = createElement(this._getTemplate());
     }
 

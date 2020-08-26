@@ -2,9 +2,9 @@ import {
   render,
   RenderPosition
 } from './utils/dom';
-import InfoView from './view/info';
+import TripInfoView from './view/trip-info';
 import MainInfoView from './view/main-info';
-import CostInfoView from './view/cost-info';
+import TriCostView from './view/trip-cost';
 import MenuView from './view/menu';
 import FiltersView from './view/filters';
 import SortView from './view/sort';
@@ -53,13 +53,13 @@ const points = new Array(EVENT_COUNT)
 
 const destinations = generateDestinationsInfo();
 
-const infoView = new InfoView().getElement();
+const infoView = new TripInfoView().getElement();
 
 render(infoPlace, infoView, RenderPosition.AFTER_BEGIN);
 render(infoPlace, new AddPointButtonView().getElement(), RenderPosition.BEFORE_END);
 
 render(infoView, new MainInfoView(getTripPath(points)).getElement(), RenderPosition.BEFORE_END);
-render(infoView, new CostInfoView(getTripCost(points)).getElement(), RenderPosition.BEFORE_END);
+render(infoView, new TriCostView(getTripCost(points)).getElement(), RenderPosition.BEFORE_END);
 
 render(menuPlace, new MenuView().getElement(), RenderPosition.AFTER_END);
 render(filtersPlace, new FiltersView().getElement(), RenderPosition.BEFORE_END);

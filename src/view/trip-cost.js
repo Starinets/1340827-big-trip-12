@@ -8,7 +8,7 @@ const createCostInfoTemplate = (total) => {
   );
 };
 
-export default class CostInfo extends Abstract {
+export default class TripCost extends Abstract {
   constructor(total) {
     super();
 

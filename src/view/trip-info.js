@@ -7,7 +7,7 @@ const createInfoTemplate = () => {
   );
 };
 
-export default class Info extends Abstract {
+export default class TripInfo extends Abstract {
   _getTemplate() {
     return createInfoTemplate();
   }

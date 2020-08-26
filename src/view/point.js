@@ -55,12 +55,11 @@ export default class Point extends Abstract {
   }
 
   _onRollupButtonClick() {
-    this._callback.click();
+    this._callback.rollupButtonClick();
   }
 
   setRollupButtonClickHandler(callback) {
-    this._callback = {};
-    this._callback.click = callback;
+    this._callback.rollupButtonClick = callback;
     this.getElement()
       .querySelector(`.event__rollup-btn`)
       .addEventListener(`click`, this._onRollupButtonClick);

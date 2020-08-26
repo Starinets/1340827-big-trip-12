@@ -1,5 +1,5 @@
-import {pointTypeToPretext} from './../constants';
-import {dateToString} from './../utils/date';
+import {pointTypeToPretext} from '../constants';
+import {dateToString} from '../utils/date';
 import Abstract from './abstract';
 
 const createOptionsListTemplate = (destinations) => {
@@ -186,7 +186,7 @@ const createPointFormTemplate = (point, destinations) => {
   );
 };
 
-export default class PointForm extends Abstract {
+export default class PointEdit extends Abstract {
   constructor(point, destinations) {
     super();
 
@@ -195,8 +195,6 @@ export default class PointForm extends Abstract {
 
     this._onRollupButtonClick = this._onRollupButtonClick.bind(this);
     this._onSubmit = this._onSubmit.bind(this);
-
-    this._callback = {};
   }
 
   _getTemplate() {
@@ -204,7 +202,7 @@ export default class PointForm extends Abstract {
   }
 
   _onRollupButtonClick() {
-    this._callback.click();
+    this._callback.rollupButtonClick();
   }
 
   _onSubmit(evt) {
@@ -213,7 +211,7 @@ export default class PointForm extends Abstract {
   }
 
   setRollupButtonClickHandler(callback) {
-    this._callback.click = callback;
+    this._callback.rollupButtonClick = callback;
     this.getElement()
       .querySelector(`.event__rollup-btn`)
       .addEventListener(`click`, this._onRollupButtonClick);

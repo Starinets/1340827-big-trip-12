@@ -9,8 +9,8 @@ import DaysView from './../view/days';
 import DayView from './../view/day';
 import PointListView from './../view/point-list';
 import PointView from './../view/point';
-import PointFormView from './../view/point-form';
-import OffersListView from './../view/offers-list';
+import PointEditView from '../view/point-edit';
+import OfferListView from '../view/offer-list';
 import OfferView from './../view/offer';
 
 const EMPTY_POINTS_LIST_MESSAGE = `Click New Event to create your first point`;
@@ -32,10 +32,12 @@ const groupPointsByDays = (points) => points
   .sort((less, more) => less.startTime - more.startTime)
   .reduce(reducePointByDay, {});
 
-export default class trip {
+export default class Trip {
   constructor(container, destinations) {
     this._container = container;
     this._destinations = [...destinations];
+
+    this._points = [];
 
     this._pointMessage = new PointMessage(EMPTY_POINTS_LIST_MESSAGE);
     this._daysView = new DaysView();
@@ -83,47 +85,38 @@ export default class trip {
     dayPoints.forEach((point) => {
       const pointComponent = new PointView(point);
       const pointView = pointComponent.getElement();
-      const pointFormComponent = new PointFormView(point, this._destinations);
-      const pointFormView = pointFormComponent.getElement();
+      const pointEditComponent = new PointEditView(point, this._destinations);
+      const pointEditView = pointEditComponent.getElement();
+
+      const replace = (newChild, oldChild) => {
+        pointListView.getElement().replaceChild(newChild, oldChild);
+      };
 
       const onEscapeKeydown = (evt) => {
         if (isEscapeEvent(evt)) {
-          replaceFormToPoint();
+          replace(pointView, pointEditView);
         }
       };
 
-      const onPointRollupButtonClick = () => {
-        replacePointToForm();
+      const handlePointRollupButtonClick = () => {
+        replace(pointEditView, pointView);
 
         document.addEventListener(`keydown`, onEscapeKeydown);
       };
 
-      const onPointFormRollupButtonClick = () => {
-        replaceFormToPoint();
+      const handlePointFormRollupButtonClick = () => {
+        replace(pointView, pointEditView);
 
         document.removeEventListener(`keydown`, onEscapeKeydown);
       };
 
-      const onPointFormSubmit = () => {
-        replaceFormToPoint();
+      const handlePointFormSubmit = () => {
+        replace(pointView, pointEditView);
       };
 
-      const replacePointToForm = () => {
-        pointListView
-          .getElement()
-          .replaceChild(pointFormView, pointView);
-      };
-
-      const replaceFormToPoint = () => {
-        pointListView
-          .getElement()
-          .replaceChild(pointView, pointFormView);
-        document.removeEventListener(`keydown`, onEscapeKeydown);
-      };
-
-      pointComponent.setRollupButtonClickHandler(onPointRollupButtonClick);
-      pointFormComponent.setRollupButtonClickHandler(onPointFormRollupButtonClick);
-      pointFormComponent.setFormSubmitHandler(onPointFormSubmit);
+      pointComponent.setRollupButtonClickHandler(handlePointRollupButtonClick);
+      pointEditComponent.setRollupButtonClickHandler(handlePointFormRollupButtonClick);
+      pointEditComponent.setFormSubmitHandler(handlePointFormSubmit);
 
       render(pointListView, pointView, RenderPosition.BEFORE_END);
 
@@ -135,7 +128,7 @@ export default class trip {
   }
 
   _renderOffersList(offersContainer, offers) {
-    const offerListView = new OffersListView();
+    const offerListView = new OfferListView();
     render(offersContainer, offerListView, RenderPosition.AFTER_END);
 
     this._renderOffers(offerListView, offers);
