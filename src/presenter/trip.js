@@ -1,5 +1,6 @@
 import {
   render,
+  replace,
   RenderPosition
 } from './../utils/dom';
 import {formatDayDate} from './../utils/date';
@@ -86,32 +87,35 @@ export default class Trip {
       const pointComponent = new PointView(point);
       const pointView = pointComponent.getElement();
       const pointEditComponent = new PointEditView(point, this._destinations);
-      const pointEditView = pointEditComponent.getElement();
 
-      const replace = (newChild, oldChild) => {
-        pointListView.getElement().replaceChild(newChild, oldChild);
+      const replaceCardToForm = () => {
+        replace(pointEditComponent, pointComponent);
+      };
+
+      const replaceFormToCard = () => {
+        replace(pointComponent, pointEditComponent);
       };
 
       const onEscapeKeydown = (evt) => {
         if (isEscapeEvent(evt)) {
-          replace(pointView, pointEditView);
+          replaceFormToCard();
         }
       };
 
       const handlePointRollupButtonClick = () => {
-        replace(pointEditView, pointView);
+        replaceCardToForm();
 
         document.addEventListener(`keydown`, onEscapeKeydown);
       };
 
       const handlePointFormRollupButtonClick = () => {
-        replace(pointView, pointEditView);
+        replaceFormToCard();
 
         document.removeEventListener(`keydown`, onEscapeKeydown);
       };
 
       const handlePointFormSubmit = () => {
-        replace(pointView, pointEditView);
+        replaceFormToCard();
       };
 
       pointComponent.setRollupButtonClickHandler(handlePointRollupButtonClick);
