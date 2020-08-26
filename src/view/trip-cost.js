@@ -1,4 +1,4 @@
-import {createElement} from './../utils/dom';
+import Abstract from './abstract';
 
 const createCostInfoTemplate = (total) => {
   return (
@@ -8,26 +8,14 @@ const createCostInfoTemplate = (total) => {
   );
 };
 
-export default class CostInfo {
+export default class TripCost extends Abstract {
   constructor(total) {
-    this._element = null;
+    super();
 
     this._total = total;
   }
 
   _getTemplate() {
     return createCostInfoTemplate(this._total);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

@@ -1,10 +1,10 @@
-import {createElement} from './../utils/dom';
 import {pointTypeToPretext} from './../constants';
 import {
   getDatesDifference,
   timeToString,
   formatDateToISOString
 } from './../utils/date';
+import Abstract from './abstract';
 
 const formatPointTitle = (point) => `${pointTypeToPretext[point.type]} ${point.destination}`;
 
@@ -38,34 +38,30 @@ const createPointTemplate = (point) => {
   );
 };
 
-export default class Point {
+export default class Point extends Abstract {
   constructor(point) {
-    this._element = null;
+    super();
 
     this._point = point;
+    this._onRollupButtonClick = this._onRollupButtonClick.bind(this);
   }
 
   _getTemplate() {
     return createPointTemplate(this._point);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
-
   getContainer() {
     return this.getElement().querySelector(`.event__price`);
   }
 
-  getRollupButton() {
-    return this.getElement().querySelector(`.event__rollup-btn`);
+  _onRollupButtonClick() {
+    this._callback.rollupButtonClick();
+  }
+
+  setRollupButtonClickHandler(callback) {
+    this._callback.rollupButtonClick = callback;
+    this.getElement()
+      .querySelector(`.event__rollup-btn`)
+      .addEventListener(`click`, this._onRollupButtonClick);
   }
 }

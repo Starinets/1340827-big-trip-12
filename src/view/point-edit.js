@@ -1,10 +1,10 @@
-import {createElement} from './../utils/dom';
-import {pointTypeToPretext} from './../constants';
-import {dateToString} from './../utils/date';
+import {pointTypeToPretext} from '../constants';
+import {dateToString} from '../utils/date';
+import Abstract from './abstract';
 
 const createOptionsListTemplate = (destinations) => {
   return destinations
-    .map((item) => `<option value="${item.name}"></option>`)
+    .map(({name}) => `<option value="${name}"></option>`)
     .join(``);
 };
 
@@ -186,27 +186,40 @@ const createPointFormTemplate = (point, destinations) => {
   );
 };
 
-export default class PointForm {
+export default class PointEdit extends Abstract {
   constructor(point, destinations) {
-    this._element = null;
+    super();
 
     this._point = point;
     this._destinations = destinations;
+
+    this._onRollupButtonClick = this._onRollupButtonClick.bind(this);
+    this._onSubmit = this._onSubmit.bind(this);
   }
 
   _getTemplate() {
     return createPointFormTemplate(this._point, this._destinations);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate());
-    }
-
-    return this._element;
+  _onRollupButtonClick() {
+    this._callback.rollupButtonClick();
   }
 
-  removeElement() {
-    this._element = null;
+  _onSubmit(evt) {
+    evt.preventDefault();
+    this._callback.submit();
+  }
+
+  setRollupButtonClickHandler(callback) {
+    this._callback.rollupButtonClick = callback;
+    this.getElement()
+      .querySelector(`.event__rollup-btn`)
+      .addEventListener(`click`, this._onRollupButtonClick);
+  }
+
+  setFormSubmitHandler(callback) {
+    this._callback.submit = callback;
+    this.getElement()
+      .addEventListener(`submit`, this._onSubmit);
   }
 }

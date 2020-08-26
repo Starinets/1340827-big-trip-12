@@ -1,5 +1,5 @@
-import {createElement} from './../utils/dom';
 import {formatDateToISOString} from './../utils/date';
+import Abstract from './abstract';
 
 const formatMonthDate = new Intl.DateTimeFormat(`en-GB`, {
   month: `short`,
@@ -17,9 +17,9 @@ const createDayTemplate = (dayDate, counter) => {
   );
 };
 
-export default class Day {
+export default class Day extends Abstract {
   constructor(dayDate, counter) {
-    this._element = null;
+    super();
 
     this._dayDate = dayDate;
     this._counter = counter;
@@ -27,17 +27,5 @@ export default class Day {
 
   _getTemplate() {
     return createDayTemplate(this._dayDate, this._counter);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
