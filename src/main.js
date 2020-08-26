@@ -10,6 +10,7 @@ import FiltersView from './view/filters';
 import SortView from './view/sort';
 import AddPointButtonView from './view/add-point-button';
 import {generatePoint} from './mock/point';
+import {generateDestinationsInfo} from './mock/destinations';
 import TripPresenter from './presenter/trip';
 
 const EVENT_COUNT = 30;
@@ -50,6 +51,8 @@ const points = new Array(EVENT_COUNT)
     return point;
   });
 
+const destinations = generateDestinationsInfo();
+
 const infoView = new InfoView().getElement();
 
 render(infoPlace, infoView, RenderPosition.AFTER_BEGIN);
@@ -63,5 +66,5 @@ render(filtersPlace, new FiltersView().getElement(), RenderPosition.BEFORE_END);
 
 render(sortingPlace, new SortView().getElement(), RenderPosition.AFTER_END);
 
-const tripPresenter = new TripPresenter(contentPlace);
+const tripPresenter = new TripPresenter(contentPlace, destinations);
 tripPresenter.init(points);

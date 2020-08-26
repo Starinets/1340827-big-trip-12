@@ -4,7 +4,6 @@ import {
 } from './../utils/dom';
 import {formatDayDate} from './../utils/date';
 import {isEscapeEvent} from './../utils/dom-event';
-import {generateDestinationsInfo} from './../mock/destinations';
 import PointMessage from './../view/point-message';
 import DaysView from './../view/days';
 import DayView from './../view/day';
@@ -16,8 +15,6 @@ import OfferView from './../view/offer';
 
 const EMPTY_POINTS_LIST_MESSAGE = `Click New Event to create your first point`;
 const MAX_OFFERS_COUNT = 3;
-
-const destinations = generateDestinationsInfo();
 
 const reducePointByDay = (days, point) => {
   const dayDate = formatDayDate(point.startTime);
@@ -36,8 +33,9 @@ const groupPointsByDays = (points) => points
   .reduce(reducePointByDay, {});
 
 export default class trip {
-  constructor(container) {
+  constructor(container, destinations) {
     this._container = container;
+    this._destinations = [...destinations];
 
     this._pointMessage = new PointMessage(EMPTY_POINTS_LIST_MESSAGE);
     this._daysView = new DaysView();
@@ -85,7 +83,7 @@ export default class trip {
     dayPoints.forEach((point) => {
       const pointComponent = new PointView(point);
       const pointView = pointComponent.getElement();
-      const pointFormComponent = new PointFormView(point, destinations);
+      const pointFormComponent = new PointFormView(point, this._destinations);
       const pointFormView = pointFormComponent.getElement();
 
       const onEscapeKeydown = (evt) => {
