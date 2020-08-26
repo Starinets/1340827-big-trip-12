@@ -193,11 +193,18 @@ export default class PointForm extends Abstract {
     this._point = point;
     this._destinations = destinations;
 
+    this._onRollupButtonClick = this._onRollupButtonClick.bind(this);
     this._onSubmit = this._onSubmit.bind(this);
+
+    this._callback = {};
   }
 
   _getTemplate() {
     return createPointFormTemplate(this._point, this._destinations);
+  }
+
+  _onRollupButtonClick() {
+    this._callback.click();
   }
 
   _onSubmit(evt) {
@@ -205,8 +212,14 @@ export default class PointForm extends Abstract {
     this._callback.submit();
   }
 
+  setRollupButtonClickHandler(callback) {
+    this._callback.click = callback;
+    this.getElement()
+      .querySelector(`.event__rollup-btn`)
+      .addEventListener(`click`, this._onRollupButtonClick);
+  }
+
   setFormSubmitHandler(callback) {
-    this._callback = {};
     this._callback.submit = callback;
     this.getElement()
       .addEventListener(`submit`, this._onSubmit);

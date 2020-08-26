@@ -88,16 +88,22 @@ export default class trip {
       const pointFormComponent = new PointFormView(point, destinations);
       const pointFormView = pointFormComponent.getElement();
 
-      const onKeydown = (evt) => {
+      const onEscapeKeydown = (evt) => {
         if (isEscapeEvent(evt)) {
           replaceFormToPoint();
         }
       };
 
-      const onRollupButtonClick = () => {
+      const onPointRollupButtonClick = () => {
         replacePointToForm();
 
-        document.addEventListener(`keydown`, onKeydown);
+        document.addEventListener(`keydown`, onEscapeKeydown);
+      };
+
+      const onPointFormRollupButtonClick = () => {
+        replaceFormToPoint();
+
+        document.removeEventListener(`keydown`, onEscapeKeydown);
       };
 
       const onPointFormSubmit = () => {
@@ -114,10 +120,11 @@ export default class trip {
         pointListView
           .getElement()
           .replaceChild(pointView, pointFormView);
-        document.removeEventListener(`keydown`, onKeydown);
+        document.removeEventListener(`keydown`, onEscapeKeydown);
       };
 
-      pointComponent.setRollupButtonClickHandler(onRollupButtonClick);
+      pointComponent.setRollupButtonClickHandler(onPointRollupButtonClick);
+      pointFormComponent.setRollupButtonClickHandler(onPointFormRollupButtonClick);
       pointFormComponent.setFormSubmitHandler(onPointFormSubmit);
 
       render(pointListView, pointView, RenderPosition.BEFORE_END);
