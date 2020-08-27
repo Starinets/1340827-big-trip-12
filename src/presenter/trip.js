@@ -59,6 +59,7 @@ export default class Trip {
     }
 
     this._renderSort();
+    this._sortPoints(this._currentSortType);
     this._renderDaysList();
   }
 
