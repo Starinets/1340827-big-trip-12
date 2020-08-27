@@ -10,8 +10,8 @@ const createDayTemplate = (dayDate, counter) => {
   return (
     `<li class="trip-days__item  day">
       <div class="day__info">
-        <span class="day__counter">${counter}</span>
-        <time class="day__date" datetime="${formatDateToISOString(dayDate)}">${formatMonthDate(dayDate)}</time>
+        ${counter !== 0 ? `<span class="day__counter">${counter}</span>
+        <time class="day__date" datetime="${formatDateToISOString(dayDate)}">${formatMonthDate(dayDate)}</time>` : ``}
       </div>
     </li>`
   );

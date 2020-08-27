@@ -2,6 +2,7 @@ import {SortType} from './../constants';
 import {
   render,
   replace,
+  remove,
   RenderPosition
 } from './../utils/dom';
 import {formatDayDate} from './../utils/date';
@@ -60,12 +61,20 @@ export default class Trip {
     this._renderDaysList();
   }
 
+  _sortPoints(sortType) {
+    this._currentSortType = sortType;
+  }
+
   _renderSort() {
 
     const handlerSortClick = (sortType) => {
       if (this._currentSortType === sortType) {
         return;
       }
+
+      this._sortPoints(sortType);
+      remove(this._daysView);
+      this._renderDaysList();
 
     };
 
@@ -84,15 +93,24 @@ export default class Trip {
   }
 
   _renderDays() {
-    const days = groupPointsByDays(this._points);
+    if (this._currentSortType === SortType.TIME) {
+      const days = groupPointsByDays(this._points);
 
-    Object.values(days)
-    .forEach((dayPoints, counter) => {
-      const dayView = new DayView(new Date(dayPoints[0].startTime), counter + 1);
+      Object.values(days)
+        .forEach((dayPoints, counter) => {
+          const dayView = new DayView(new Date(dayPoints[0].startTime), counter + 1);
+
+          render(this._daysView, dayView, RenderPosition.BEFORE_END);
+          this._renderPointsList(dayView, dayPoints);
+        });
+
+    } else {
+
+      const dayView = new DayView(new Date(), 0);
 
       render(this._daysView, dayView, RenderPosition.BEFORE_END);
-      this._renderPointsList(dayView, dayPoints);
-    });
+      this._renderPointsList(dayView, this._points);
+    }
   }
 
   _renderPointsList(dayView, dayPoints) {
