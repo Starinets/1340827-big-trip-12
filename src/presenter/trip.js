@@ -5,6 +5,7 @@ import {
   remove,
   RenderPosition
 } from './../utils/dom';
+import {sortEvent, sortTime, sortPrice} from "./../utils/task.js";
 import {formatDayDate} from './../utils/date';
 import {isEscapeEvent} from './../utils/dom-event';
 import SortView from './../view/sort';
@@ -62,6 +63,18 @@ export default class Trip {
   }
 
   _sortPoints(sortType) {
+    switch (sortType) {
+      case SortType.PRICE:
+        this._points.sort(sortPrice);
+        break;
+      case SortType.EVENT:
+        this._points.sort(sortEvent);
+        break;
+      case SortType.TIME:
+      default:
+        this._points.sort(sortTime);
+    }
+
     this._currentSortType = sortType;
   }
 
