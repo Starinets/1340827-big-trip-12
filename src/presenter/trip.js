@@ -60,6 +60,13 @@ export default class Trip {
   }
 
   _renderSort() {
+
+    const handlerSortClick = (evt) => {
+
+    };
+
+    this._sort.setSortClickHandler(handlerSortClick);
+
     render(this._container, this._sort, RenderPosition.BEFORE_END);
   }
 

@@ -36,7 +36,27 @@ const createSortTemplate = () => {
 };
 
 export default class Sort extends Abstract {
+  constructor() {
+    super();
+
+    this._onSortItemClick = this._onSortItemClick.bind(this);
+  }
+
   _getTemplate() {
     return createSortTemplate();
+  }
+
+  _onSortItemClick(evt) {
+    if (evt.target.tagName !== `INPUT`) {
+      return;
+    }
+
+    this._callback.sortClick(evt);
+  }
+
+  setSortClickHandler(callback) {
+    this._callback.sortClick = callback;
+    this.getElement()
+      .addEventListener(`click`, this._onSortItemClick);
   }
 }
