@@ -1,3 +1,4 @@
+import {SortType} from './../constants';
 import {
   render,
   replace,
@@ -5,6 +6,7 @@ import {
 } from './../utils/dom';
 import {formatDayDate} from './../utils/date';
 import {isEscapeEvent} from './../utils/dom-event';
+import SortView from './../view/sort';
 import PointMessage from './../view/point-message';
 import DaysView from './../view/days';
 import DayView from './../view/day';
@@ -41,6 +43,7 @@ export default class Trip {
     this._points = [];
 
     this._pointMessage = new PointMessage(EMPTY_POINTS_LIST_MESSAGE);
+    this._sort = new SortView();
     this._daysView = new DaysView();
   }
 
@@ -52,7 +55,12 @@ export default class Trip {
       return;
     }
 
+    this._renderSort();
     this._renderDaysList();
+  }
+
+  _renderSort() {
+    render(this._container, this._sort, RenderPosition.BEFORE_END);
   }
 
   _renderNoPointMessage() {

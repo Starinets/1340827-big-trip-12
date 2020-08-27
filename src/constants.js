@@ -11,4 +11,13 @@ const pointTypeToPretext = {
   'restaurant': `Restaurant in`,
 };
 
-export {pointTypeToPretext};
+const SortType = {
+  EVENT: `event`,
+  TIME: `time`,
+  PRICE: `price`
+};
+
+export {
+  pointTypeToPretext,
+  SortType
+};
