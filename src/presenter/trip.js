@@ -41,6 +41,7 @@ export default class Trip {
     this._destinations = [...destinations];
 
     this._points = [];
+    this._currentSortType = SortType.TIME;
 
     this._pointMessage = new PointMessage(EMPTY_POINTS_LIST_MESSAGE);
     this._sort = new SortView();
@@ -61,7 +62,10 @@ export default class Trip {
 
   _renderSort() {
 
-    const handlerSortClick = (evt) => {
+    const handlerSortClick = (sortType) => {
+      if (this._currentSortType === sortType) {
+        return;
+      }
 
     };
 
