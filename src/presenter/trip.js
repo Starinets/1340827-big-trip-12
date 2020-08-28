@@ -5,7 +5,7 @@ import {
   remove,
   RenderPosition
 } from './../utils/dom';
-import {sortEvent, sortTime, sortPrice} from "./../utils/task.js";
+import {sortTime, sortPrice} from "../utils/trip";
 import {formatDayDate} from './../utils/date';
 import {isEscapeEvent} from './../utils/dom-event';
 import SortView from './../view/sort';
@@ -20,6 +20,7 @@ import OfferView from './../view/offer';
 
 const EMPTY_POINTS_LIST_MESSAGE = `Click New Event to create your first point`;
 const MAX_OFFERS_COUNT = 3;
+const UNGROUPED_LIST = 0;
 
 const reducePointByDay = (days, point) => {
   const dayDate = formatDayDate(point.startTime);
@@ -42,8 +43,8 @@ export default class Trip {
     this._container = container;
     this._destinations = [...destinations];
 
-    this._points = [];
-    this._currentSortType = SortType.TIME;
+    this._points = this._unsortedPoints = [];
+    this._currentSortType = SortType.EVENT;
 
     this._pointMessage = new PointMessage(EMPTY_POINTS_LIST_MESSAGE);
     this._sort = new SortView();
@@ -51,7 +52,7 @@ export default class Trip {
   }
 
   init(points) {
-    this._points = [...points];
+    this._points = this._unsortedPoints = [...points];
 
     if (points.length === 0) {
       this._renderNoPointMessage(EMPTY_POINTS_LIST_MESSAGE);
@@ -68,12 +69,11 @@ export default class Trip {
       case SortType.PRICE:
         this._points.sort(sortPrice);
         break;
-      case SortType.EVENT:
-        this._points.sort(sortEvent);
-        break;
       case SortType.TIME:
-      default:
         this._points.sort(sortTime);
+        break;
+      default:
+        this._points = [...this._unsortedPoints];
     }
 
     this._currentSortType = sortType;
@@ -92,7 +92,7 @@ export default class Trip {
 
     };
 
-    this._sort.setSortClickHandler(handlerSortClick);
+    this._sort.handlerTypeClick(handlerSortClick);
 
     render(this._container, this._sort, RenderPosition.BEFORE_END);
   }
@@ -107,7 +107,7 @@ export default class Trip {
   }
 
   _renderDays() {
-    if (this._currentSortType === SortType.TIME) {
+    if (this._currentSortType === SortType.EVENT) {
       const days = groupPointsByDays(this._points);
 
       Object.values(days)
@@ -120,7 +120,7 @@ export default class Trip {
 
     } else {
 
-      const dayView = new DayView(new Date(), 0);
+      const dayView = new DayView(new Date(), UNGROUPED_LIST);
 
       render(this._daysView, dayView, RenderPosition.BEFORE_END);
       this._renderPointsList(dayView, this._points);
