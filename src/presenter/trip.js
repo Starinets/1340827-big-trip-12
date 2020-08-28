@@ -5,7 +5,10 @@ import {
   remove,
   RenderPosition
 } from './../utils/dom';
-import {sortTime, sortPrice} from "../utils/trip";
+import {
+  sortPointByTime,
+  sortPointByPrice
+} from "../utils/trip";
 import {formatDayDate} from './../utils/date';
 import {isEscapeEvent} from './../utils/dom-event';
 import SortView from './../view/sort';
@@ -67,10 +70,10 @@ export default class Trip {
   _sortPoints(sortType) {
     switch (sortType) {
       case SortType.PRICE:
-        this._points.sort(sortPrice);
+        this._points.sort(sortPointByPrice);
         break;
       case SortType.TIME:
-        this._points.sort(sortTime);
+        this._points.sort(sortPointByTime);
         break;
       default:
         this._points = [...this._unsortedPoints];
