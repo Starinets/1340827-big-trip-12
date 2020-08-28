@@ -48,16 +48,12 @@ export default class Sort extends Abstract {
   }
 
   _onTypeClick(evt) {
-    if (evt.target.tagName !== `INPUT`) {
-      return;
-    }
-
     this._callback.typeClick(evt.target.value);
   }
 
   setClickHandler(callback) {
     this._callback.typeClick = callback;
     this.getElement()
-      .addEventListener(`click`, this._onTypeClick);
+      .addEventListener(`change`, this._onTypeClick);
   }
 }
