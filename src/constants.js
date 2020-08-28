@@ -11,4 +11,41 @@ const pointTypeToPretext = {
   'restaurant': `Restaurant in`,
 };
 
-export {pointTypeToPretext};
+const TYPE_GROUP_ACTIVITY = [`taxi`, `bus`, `train`, `ship`, `transport`, `drive`, `flight`];
+const TYPE_GROUP_TRANSFER = [`check-in`, `sightseeing`, `restaurant`];
+const OfferList = {
+  'luggage': {
+    text: `Add luggage`,
+    price: 30,
+  },
+  'comfort': {
+    text: `Switch to comfort class`,
+    price: 100,
+  },
+  'meal': {
+    text: `Add meal`,
+    price: 15,
+  },
+  'seats': {
+    text: `Choose seats`,
+    price: 5,
+  },
+  'train': {
+    text: `Travel by train`,
+    price: 40,
+  }
+};
+
+const SortType = {
+  EVENT: `event`,
+  TIME: `time`,
+  PRICE: `price`
+};
+
+export {
+  pointTypeToPretext,
+  TYPE_GROUP_ACTIVITY,
+  TYPE_GROUP_TRANSFER,
+  OfferList,
+  SortType
+};

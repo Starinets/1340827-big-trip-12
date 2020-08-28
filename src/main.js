@@ -4,10 +4,9 @@ import {
 } from './utils/dom';
 import TripInfoView from './view/trip-info';
 import MainInfoView from './view/main-info';
-import TriCostView from './view/trip-cost';
+import TripCostView from './view/trip-cost';
 import MenuView from './view/menu';
 import FiltersView from './view/filters';
-import SortView from './view/sort';
 import AddPointButtonView from './view/add-point-button';
 import {generatePoint} from './mock/point';
 import {generateDestinationsInfo} from './mock/destinations';
@@ -20,7 +19,6 @@ const menuPlace = infoPlace.querySelector(`.js-menu`);
 const filtersPlace = infoPlace.querySelector(`.trip-controls`);
 
 const contentPlace = document.querySelector(`.trip-events`);
-const sortingPlace = document.querySelector(`.js-sorting`);
 
 const getTripCost = (points) => points.reduce((pointsPrice, point) =>
   pointsPrice + point.price + point.offers.reduce((offersPrice, offer) =>
@@ -59,12 +57,10 @@ render(infoPlace, infoView, RenderPosition.AFTER_BEGIN);
 render(infoPlace, new AddPointButtonView().getElement(), RenderPosition.BEFORE_END);
 
 render(infoView, new MainInfoView(getTripPath(points)).getElement(), RenderPosition.BEFORE_END);
-render(infoView, new TriCostView(getTripCost(points)).getElement(), RenderPosition.BEFORE_END);
+render(infoView, new TripCostView(getTripCost(points)).getElement(), RenderPosition.BEFORE_END);
 
 render(menuPlace, new MenuView().getElement(), RenderPosition.AFTER_END);
 render(filtersPlace, new FiltersView().getElement(), RenderPosition.BEFORE_END);
-
-render(sortingPlace, new SortView().getElement(), RenderPosition.AFTER_END);
 
 const tripPresenter = new TripPresenter(contentPlace, destinations);
 tripPresenter.init(points);
