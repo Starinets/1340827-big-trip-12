@@ -55,7 +55,7 @@ export default class Sort extends Abstract {
     this._callback.typeClick(evt.target.value);
   }
 
-  handlerTypeClick(callback) {
+  setClickHandler(callback) {
     this._callback.typeClick = callback;
     this.getElement()
       .addEventListener(`click`, this._onTypeClick);

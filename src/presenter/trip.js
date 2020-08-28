@@ -84,7 +84,7 @@ export default class Trip {
 
   _renderSort() {
 
-    const handlerSortClick = (sortType) => {
+    const handleSortClick = (sortType) => {
       if (this._currentSortType === sortType) {
         return;
       }
@@ -95,7 +95,7 @@ export default class Trip {
 
     };
 
-    this._sort.handlerTypeClick(handlerSortClick);
+    this._sort.setClickHandler(handleSortClick);
 
     render(this._container, this._sort, RenderPosition.BEFORE_END);
   }
