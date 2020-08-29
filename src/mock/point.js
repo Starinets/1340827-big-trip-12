@@ -1,6 +1,7 @@
 import {
   getRandomInteger,
-  getRandomDate
+  getRandomDate,
+  getNewID
 } from './random.js';
 import {addLeadingRank} from '../utils/date';
 import {
@@ -18,6 +19,7 @@ const Price = {
 
 const generatePoint = (minDate = new Date()) => {
   let point = {
+    id: getNewID(),
     type: POINT_TYPES[getRandomInteger(0, POINT_TYPES.length - 1)],
     destination: DESTINATIONS[getRandomInteger(0, DESTINATIONS.length - 1)],
     offers: generateOffers(getRandomInteger(0, OFFERS_COUNT)),

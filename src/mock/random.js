@@ -26,7 +26,10 @@ const getRandomDate = (minDate = new Date()) => {
   return new Date(randomDate);
 };
 
+const getNewID = () => `f${(~~(Math.random() * 1e8)).toString(16)}`;
+
 export {
   getRandomInteger,
-  getRandomDate
+  getRandomDate,
+  getNewID
 };
