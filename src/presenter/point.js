@@ -18,6 +18,7 @@ export default class Point {
     this._handlePointRollupButtonClick = this._handlePointRollupButtonClick.bind(this);
     this._handlePointFormRollupButtonClick = this._handlePointFormRollupButtonClick.bind(this);
     this._handlePointFormSubmit = this._handlePointFormSubmit.bind(this);
+    this._onEscapeKeydown = this._onEscapeKeydown.bind(this);
   }
 
   init(point) {
