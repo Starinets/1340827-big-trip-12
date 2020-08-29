@@ -8,6 +8,7 @@ import {
   sortPointByTime,
   sortPointByPrice
 } from "../utils/trip";
+import {updateItem} from "../utils/data";
 import {formatDayDate} from './../utils/date';
 import SortView from './../view/sort';
 import PointMessage from './../view/point-message';
@@ -50,6 +51,8 @@ export default class Trip {
     this._pointMessage = new PointMessage(EMPTY_POINTS_LIST_MESSAGE);
     this._sort = new SortView();
     this._daysView = new DaysView();
+
+    this._handlePointChange = this._handlePointChange.bind(this);
   }
 
   init(points) {
@@ -63,6 +66,12 @@ export default class Trip {
     this._renderSort();
     this._sortPoints(this._currentSortType);
     this._renderDaysList();
+  }
+
+  _handlePointChange(updatedPoint) {
+    this._points = updateItem(this._points, updatedPoint);
+    this._unsortedPoints = updateItem(this._unsortedPoints, updatedPoint);
+    this._taskPresenter[updatedPoint.id].init(updatedPoint);
   }
 
   _sortPoints(sortType) {
