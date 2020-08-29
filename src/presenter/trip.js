@@ -41,7 +41,9 @@ export default class Trip {
     this._destinations = [...destinations]; //
 
     this._points = this._unsortedPoints = [];
+    this._pointPresenter = {};
     this._currentSortType = SortType.EVENT;
+    this._days = [];
 
     this._pointMessage = new PointMessage(EMPTY_POINTS_LIST_MESSAGE);
     this._sort = new SortView();
@@ -98,6 +100,18 @@ export default class Trip {
     render(this._container, this._pointMessage, RenderPosition.BEFORE_END);
   }
 
+  _clearPointList() {
+    Object
+      .values(this._pointPresenter)
+      .forEach((presenter) => presenter.destroy());
+    this._pointPresenter = {};
+
+    this._days.forEach((day) => remove(day));
+    this._days.length = 0;
+
+    remove(this._daysView);
+  }
+
   _renderDaysList() {
     render(this._container, this._daysView, RenderPosition.BEFORE_END);
     this._renderDays();
@@ -110,6 +124,11 @@ export default class Trip {
       Object.values(days)
         .forEach((dayPoints, counter) => {
           const dayView = new DayView(new Date(dayPoints[0].startTime), counter + 1);
+          // так как все точки сгруппированы по дням, то при "умном" удалении точек,
+          // так же надо удалить дни и контейнер дней. Не придумал ничего лучшего,
+          // кроме как сохранять дни в массив, и в случае необходимости вызывать
+          // метод removeElement().
+          this._days.push(dayView);
 
           render(this._daysView, dayView, RenderPosition.BEFORE_END);
           this._renderPointsList(dayView, dayPoints);
@@ -118,6 +137,8 @@ export default class Trip {
     } else {
 
       const dayView = new DayView(new Date(), UNGROUPED_LIST);
+
+      this._days.push(dayView);
 
       render(this._daysView, dayView, RenderPosition.BEFORE_END);
       this._renderPointsList(dayView, this._points);
@@ -134,6 +155,8 @@ export default class Trip {
     dayPoints.forEach((point) => {
       const pointPresenter = new PointPresenter(pointListView, this._destinations);
       pointPresenter.init(point);
+
+      this._pointPresenter[point.id] = pointPresenter;
     });
   }
 }
