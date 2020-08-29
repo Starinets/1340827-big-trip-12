@@ -71,7 +71,7 @@ export default class Trip {
   _handlePointChange(updatedPoint) {
     this._points = updateItem(this._points, updatedPoint);
     this._unsortedPoints = updateItem(this._unsortedPoints, updatedPoint);
-    this._taskPresenter[updatedPoint.id].init(updatedPoint);
+    this._pointPresenter[updatedPoint.id].init(updatedPoint);
   }
 
   _sortPoints(sortType) {
@@ -164,7 +164,7 @@ export default class Trip {
 
   _renderPoints(pointListView, dayPoints) {
     dayPoints.forEach((point) => {
-      const pointPresenter = new PointPresenter(pointListView, this._destinations);
+      const pointPresenter = new PointPresenter(pointListView, this._destinations, this._handlePointChange);
       pointPresenter.init(point);
 
       this._pointPresenter[point.id] = pointPresenter;

@@ -158,7 +158,7 @@ export default class PointEdit extends Abstract {
 
   _onSubmit(evt) {
     evt.preventDefault();
-    this._callback.submit();
+    this._callback.submit(this._point);
   }
 
   setRollupButtonClickHandler(callback) {

@@ -8,9 +8,10 @@ import OfferView from './../view/offer';
 const MAX_OFFERS_COUNT = 3;
 
 export default class Point {
-  constructor(pointListContainer, destinations) {
+  constructor(pointListContainer, destinations, changeData) {
     this._pointListContainer = pointListContainer;
     this._destinations = destinations;
+    this._changeData = changeData;
 
     this._pointComponent = null;
     this._pointEditComponent = null;
@@ -87,7 +88,8 @@ export default class Point {
     document.removeEventListener(`keydown`, this._onEscapeKeydown);
   }
 
-  _handlePointFormSubmit() {
+  _handlePointFormSubmit(editedPoint) {
+    this._changeData(editedPoint);
     this._replaceFormToCard();
   }
 
