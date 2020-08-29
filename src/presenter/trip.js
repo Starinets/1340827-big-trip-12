@@ -91,7 +91,7 @@ export default class Trip {
 
   _renderSort() {
 
-    const handleSortClick = (sortType) => {
+    const handleSortChange = (sortType) => {
       if (this._currentSortType === sortType) {
         return;
       }
@@ -102,7 +102,7 @@ export default class Trip {
 
     };
 
-    this._sort.setClickHandler(handleSortClick);
+    this._sort.setChangeHandler(handleSortChange);
 
     render(this._container, this._sort, RenderPosition.BEFORE_END);
   }
