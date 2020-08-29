@@ -38,7 +38,9 @@ const groupPointsByDays = (points) => points
 export default class Trip {
   constructor(container, destinations) {
     this._container = container;
-    this._destinations = [...destinations]; //
+    // Если этот массив нужен только для генерации Options для формы редактирования,
+    // тогда не нужно его копировать
+    this._destinations = destinations;
 
     this._points = this._unsortedPoints = [];
     this._pointPresenter = {};
