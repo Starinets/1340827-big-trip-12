@@ -1,6 +1,6 @@
 import PointView from "../view/point";
 import PointEditView from "../view/point-edit";
-import {render, RenderPosition, replace} from "../utils/dom";
+import {render, RenderPosition, replace, remove} from "../utils/dom";
 import {isEscapeEvent} from './../utils/dom-event';
 import OfferListView from '../view/offer-list';
 import OfferView from './../view/offer';
@@ -24,6 +24,9 @@ export default class Point {
   init(point) {
     this._point = point;
 
+    const previousPointComponent = this._pointComponent;
+    const previousPointEditComponent = this._pointEditComponent;
+
     this._pointComponent = new PointView(point);
     this._pointEditComponent = new PointEditView(point, this._destinations);
 
@@ -31,12 +34,31 @@ export default class Point {
     this._pointEditComponent.setRollupButtonClickHandler(this._handlePointFormRollupButtonClick);
     this._pointEditComponent.setFormSubmitHandler(this._handlePointFormSubmit);
 
-    render(this._pointListContainer, this._pointComponent, RenderPosition.BEFORE_END);
-
     if (point.offers.length > 0) {
       const offersContainer = this._pointComponent.getContainer();
       this._renderOffersList(offersContainer, point.offers);
     }
+
+    if (previousPointComponent === null || previousPointEditComponent === null) {
+      render(this._pointListContainer, this._pointComponent, RenderPosition.BEFORE_END);
+      return;
+    }
+
+    if (this._pointListContainer.getElement().contains(previousPointComponent.getElement())) {
+      replace(this._pointComponent, previousPointComponent);
+    }
+
+    if (this._pointListContainer.getElement().contains(previousPointEditComponent.getElement())) {
+      replace(this._pointEditComponent, previousPointEditComponent);
+    }
+
+    remove(previousPointComponent);
+    remove(previousPointEditComponent);
+  }
+
+  destroy() {
+    remove(this._pointComponent);
+    remove(this._pointEditComponent);
   }
 
   _replaceCardToForm() {
