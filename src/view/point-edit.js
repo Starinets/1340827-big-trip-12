@@ -158,6 +158,9 @@ export default class PointEdit extends Abstract {
 
   _onSubmit(evt) {
     evt.preventDefault();
+
+    this._point.isFavorite = this.getElement().querySelector(`.event__favorite-checkbox`).checked;
+
     this._callback.submit(this._point);
   }
 
