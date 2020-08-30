@@ -154,9 +154,12 @@ export default class PointEdit extends Abstract {
     this._data = PointEdit.parsePointToData(point);
     this._destinations = destinations;
 
-    this._rollupButtonHandler = this._rollupButtonHandler.bind(this);
-    this._submitHandler = this._submitHandler.bind(this);
-    this._onFavoriteChange = this._onFavoriteChange.bind(this);
+    this._rollupButtonClickHandler = this._rollupButtonClickHandler.bind(this);
+    this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._favoriteCheckboxChangeHandler = this._favoriteCheckboxChangeHandler.bind(this);
+    this._priceChangeHandler = this._priceChangeHandler.bind(this);
+    this._destinationChangeHandler = this._destinationChangeHandler.bind(this);
+    this._typeListChangeHandler = this._typeListChangeHandler.bind(this);
 
     this._setInnerHandlers();
   }
@@ -201,41 +204,66 @@ export default class PointEdit extends Abstract {
     this._setInnerHandlers();
 
     this.setRollupButtonClickHandler(this._callback.rollupButtonClick);
-    this.setFormSubmitHandler(this._callback.submit);
+    this.setFormSubmitHandler(this._callback.formSubmit);
   }
 
   _setInnerHandlers() {
-    this.getElement()
-      .querySelector(`.event__favorite-checkbox`)
-      .addEventListener(`change`, this._onFavoriteChange);
+    const element = this.getElement();
+
+    element.querySelector(`.event__favorite-checkbox`)
+      .addEventListener(`change`, this._favoriteCheckboxChangeHandler);
+    element.querySelector(`.event__input--price`)
+      .addEventListener(`change`, this._priceChangeHandler);
+    element.querySelector(`.event__input--destination`)
+      .addEventListener(`change`, this._destinationChangeHandler);
+    element.querySelector(`.event__type-list`)
+      .addEventListener(`change`, this._typeListChangeHandler);
   }
 
-  _rollupButtonHandler() {
+  _rollupButtonClickHandler() {
     this._callback.rollupButtonClick();
   }
 
-  _submitHandler(evt) {
+  _formSubmitHandler(evt) {
     evt.preventDefault();
-    this._callback.submit(PointEdit.parseDataToPoint(this._data));
+    this._callback.formSubmit(PointEdit.parseDataToPoint(this._data));
   }
 
-  _onFavoriteChange() {
+  _favoriteCheckboxChangeHandler() {
     this.updateData({
       isFavorite: !this._data.isFavorite
     }, true);
+  }
+
+  _priceChangeHandler(evt) {
+    this.updateData({
+      price: Number(evt.target.value),
+    }, true);
+  }
+
+  _destinationChangeHandler(evt) {
+    this.updateData({
+      destination: evt.target.value
+    });
+  }
+
+  _typeListChangeHandler(evt) {
+    this.updateData({
+      type: evt.target.value
+    });
   }
 
   setRollupButtonClickHandler(callback) {
     this._callback.rollupButtonClick = callback;
     this.getElement()
       .querySelector(`.event__rollup-btn`)
-      .addEventListener(`click`, this._rollupButtonHandler);
+      .addEventListener(`click`, this._rollupButtonClickHandler);
   }
 
   setFormSubmitHandler(callback) {
-    this._callback.submit = callback;
+    this._callback.formSubmit = callback;
     this.getElement()
-      .addEventListener(`submit`, this._submitHandler);
+      .addEventListener(`submit`, this._formSubmitHandler);
   }
 
   static parsePointToData(point) {
