@@ -6,15 +6,21 @@ import OfferListView from '../view/offer-list';
 import OfferView from './../view/offer';
 
 const MAX_OFFERS_COUNT = 3;
+const Mode = {
+  DEFAULT: `DEFAULT`,
+  EDITING: `EDITING`
+};
 
 export default class Point {
-  constructor(pointListContainer, destinations, changeData) {
+  constructor(pointListContainer, destinations, changeData, changeMode) {
     this._pointListContainer = pointListContainer;
     this._destinations = destinations;
     this._changeData = changeData;
+    this._changeMode = changeMode;
 
     this._pointComponent = null;
     this._pointEditComponent = null;
+    this._mode = Mode.DEFAULT;
 
     this._handlePointRollupButtonClick = this._handlePointRollupButtonClick.bind(this);
     this._handlePointFormRollupButtonClick = this._handlePointFormRollupButtonClick.bind(this);
@@ -45,11 +51,11 @@ export default class Point {
       return;
     }
 
-    if (this._pointListContainer.getElement().contains(previousPointComponent.getElement())) {
+    if (this._mode === Mode.DEFAULT) {
       replace(this._pointComponent, previousPointComponent);
     }
 
-    if (this._pointListContainer.getElement().contains(previousPointEditComponent.getElement())) {
+    if (this._mode === Mode.EDITING) {
       replace(this._pointEditComponent, previousPointEditComponent);
     }
 
@@ -62,13 +68,22 @@ export default class Point {
     remove(this._pointEditComponent);
   }
 
+  resetView() {
+    if (this._mode !== Mode.DEFAULT) {
+      this._replaceFormToCard();
+    }
+  }
+
   _replaceCardToForm() {
     replace(this._pointEditComponent, this._pointComponent);
     this._pointEditComponent.reset(this._point);
+    this._changeMode();
+    this._mode = Mode.EDITING;
   }
 
   _replaceFormToCard() {
     replace(this._pointComponent, this._pointEditComponent);
+    this._mode = Mode.DEFAULT;
   }
 
   _onEscapeKeydown(evt) {

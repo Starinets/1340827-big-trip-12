@@ -53,6 +53,7 @@ export default class Trip {
     this._daysView = new DaysView();
 
     this._handlePointChange = this._handlePointChange.bind(this);
+    this._handleModeChange = this._handleModeChange.bind(this);
   }
 
   init(points) {
@@ -66,6 +67,12 @@ export default class Trip {
     this._renderSort();
     this._sortPoints(this._currentSortType);
     this._renderDaysList();
+  }
+
+  _handleModeChange() {
+    Object
+      .values(this._pointPresenter)
+      .forEach((presenter) => presenter.resetView());
   }
 
   _handlePointChange(updatedPoint) {
@@ -164,7 +171,7 @@ export default class Trip {
 
   _renderPoints(pointListView, dayPoints) {
     dayPoints.forEach((point) => {
-      const pointPresenter = new PointPresenter(pointListView, this._destinations, this._handlePointChange);
+      const pointPresenter = new PointPresenter(pointListView, this._destinations, this._handlePointChange, this._handleModeChange);
       pointPresenter.init(point);
 
       this._pointPresenter[point.id] = pointPresenter;
