@@ -11,6 +11,8 @@ import Abstract from './abstract';
 const BLANK_POINT = {
   type: ``,
   destination: ``,
+  startTime: new Date(),
+  endTime: new Date(),
   offers: [],
   isFavorite: false,
   price: 0,
@@ -214,8 +216,7 @@ export default class PointEdit extends Abstract {
 
   _submitHandler(evt) {
     evt.preventDefault();
-    const point = PointEdit.parseDataToPoint(this._data);
-    this._callback.submit(point);
+    this._callback.submit(PointEdit.parseDataToPoint(this._data));
   }
 
   _onFavoriteChange() {
