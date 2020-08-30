@@ -26,6 +26,30 @@ const createOptionsListTemplate = (destinations) => {
     .join(``);
 };
 
+const createPhotoContainerTemplate = (data, destinations) => {
+  const destination = destinations.find((item) => item.name === data.destination);
+
+  return (
+    `<section class="event__section  event__section--destination">
+    <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+    <p class="event__destination-description">${destination.description}</p>
+
+    <div class="event__photos-container">
+      <div class="event__photos-tape">
+
+        ${createPhotoListTemplate(data, destination.photos)}
+
+      </div>
+    </div>
+  </section>`
+  );
+};
+
+const createPhotoListTemplate = (data, photos) =>
+  photos.map((photo) =>
+    `<img class="event__photo" src="${photo.href}" alt="${photo.description}">`);
+
+
 const createEventListTemplate = (data, pointTypeList) => {
   return (
     pointTypeList.map((pointTypeItem) => {
@@ -36,6 +60,22 @@ const createEventListTemplate = (data, pointTypeList) => {
         </div>`
       );
     }).join(``)
+  );
+};
+
+const createOfferContainerTemplate = (data) => {
+  return (
+    `<section class="event__details">
+    <section class="event__section  event__section--offers">
+      <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+
+      <div class="event__available-offers">
+
+      ${createOfferListTemplate(data)}
+
+      </div>
+    </section>
+  </section>`
   );
 };
 
@@ -131,17 +171,10 @@ const createPointFormTemplate = (data, destinations) => {
         </button>
       </header>
 
-      <section class="event__details">
-        <section class="event__section  event__section--offers">
-          <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+      ${createOfferContainerTemplate(data)}
 
-          <div class="event__available-offers">
+      ${createPhotoContainerTemplate(data, destinations)}
 
-          ${createOfferListTemplate(data)}
-
-          </div>
-        </section>
-      </section>
     </form>
     </li>`
   );

@@ -6,6 +6,9 @@ import {
   DESTINATIONS
 } from './constants';
 
+const MIN_PHOTO_PATH_NUMBER = 1;
+const MAX_PHOTO_PATH_NUMBER = 5;
+
 const generateDestinationInfo = (infoCount) => new Array(infoCount)
   .fill()
   .map(() => INFOS[getRandomInteger(0, INFOS.length - 1)])
@@ -15,7 +18,7 @@ const generateDestinationPhotos = (photosCount) => new Array(photosCount)
   .fill()
   .map(() => {
     return {
-      href: `img/icons/${Math.random()}.png`,
+      href: `img/photos/${getRandomInteger(MIN_PHOTO_PATH_NUMBER, MAX_PHOTO_PATH_NUMBER)}.jpg`,
       description: generateDestinationInfo(getRandomInteger(1, INFO_COUNT)),
     };
   });
