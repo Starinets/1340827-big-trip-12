@@ -152,8 +152,13 @@ export default class PointEdit extends Abstract {
     this._data = PointEdit.parsePointToData(point);
     this._destinations = destinations;
 
-    this._onRollupButtonClick = this._onRollupButtonClick.bind(this);
-    this._onSubmit = this._onSubmit.bind(this);
+    this._rollupButtonHandler = this._rollupButtonHandler.bind(this);
+    this._submitHandler = this._submitHandler.bind(this);
+    this._onFavoriteChange = this._onFavoriteChange.bind(this);
+
+    this.getElement()
+      .querySelector(`.event__favorite-checkbox`)
+      .addEventListener(`change`, this._onFavoriteChange);
   }
 
   _getTemplate() {
@@ -186,30 +191,33 @@ export default class PointEdit extends Abstract {
     previousElement = null;
   }
 
-  _onRollupButtonClick() {
+  _rollupButtonHandler() {
     this._callback.rollupButtonClick();
   }
 
-  _onSubmit(evt) {
+  _submitHandler(evt) {
     evt.preventDefault();
-
-    this._data.isFavorite = this.getElement().querySelector(`.event__favorite-checkbox`).checked;
-
     const point = PointEdit.parseDataToPoint(this._data);
     this._callback.submit(point);
+  }
+
+  _onFavoriteChange() {
+    this.updateData({
+      isFavorite: !this._data.isFavorite
+    });
   }
 
   setRollupButtonClickHandler(callback) {
     this._callback.rollupButtonClick = callback;
     this.getElement()
       .querySelector(`.event__rollup-btn`)
-      .addEventListener(`click`, this._onRollupButtonClick);
+      .addEventListener(`click`, this._rollupButtonHandler);
   }
 
   setFormSubmitHandler(callback) {
     this._callback.submit = callback;
     this.getElement()
-      .addEventListener(`submit`, this._onSubmit);
+      .addEventListener(`submit`, this._submitHandler);
   }
 
   static parsePointToData(point) {
