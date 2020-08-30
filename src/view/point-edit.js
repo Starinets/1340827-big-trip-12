@@ -160,6 +160,20 @@ export default class PointEdit extends Abstract {
     return createPointFormTemplate(this._data, this._destinations);
   }
 
+  updateData(update) {
+    if (!update) {
+      return;
+    }
+
+    this._data = Object.assign(
+        {},
+        this._data,
+        update
+    );
+
+    this.updateElement();
+  }
+
   updateElement() {
     let previousElement = this.getElement();
     const parent = previousElement.parentElement;
