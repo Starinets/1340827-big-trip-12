@@ -163,7 +163,7 @@ export default class PointEdit extends Abstract {
     return createPointFormTemplate(this._data, this._destinations);
   }
 
-  updateData(update) {
+  updateData(update, justDataUpdating) {
     if (!update) {
       return;
     }
@@ -173,6 +173,10 @@ export default class PointEdit extends Abstract {
         this._data,
         update
     );
+
+    if (justDataUpdating) {
+      return;
+    }
 
     this.updateElement();
   }
@@ -217,7 +221,7 @@ export default class PointEdit extends Abstract {
   _onFavoriteChange() {
     this.updateData({
       isFavorite: !this._data.isFavorite
-    });
+    }, true);
   }
 
   setRollupButtonClickHandler(callback) {
