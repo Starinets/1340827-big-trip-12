@@ -160,6 +160,18 @@ export default class PointEdit extends Abstract {
     return createPointFormTemplate(this._data, this._destinations);
   }
 
+  updateElement() {
+    let previousElement = this.getElement();
+    const parent = previousElement.parentElement;
+
+    this.removeElement();
+
+    const newElement = this.getElement();
+
+    parent.replaceChild(newElement, previousElement);
+    previousElement = null;
+  }
+
   _onRollupButtonClick() {
     this._callback.rollupButtonClick();
   }
