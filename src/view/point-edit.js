@@ -6,7 +6,7 @@ import {
 } from '../constants';
 import {setFirstCharToUpperCase} from './../utils/general';
 import {dateToString} from '../utils/date';
-import Abstract from './abstract';
+import SmartView from "./smart";
 
 const BLANK_POINT = {
   type: ``,
@@ -147,7 +147,7 @@ const createPointFormTemplate = (data, destinations) => {
   );
 };
 
-export default class PointEdit extends Abstract {
+export default class PointEdit extends SmartView {
   constructor(point = BLANK_POINT, destinations) {
     super();
 
@@ -166,38 +166,6 @@ export default class PointEdit extends Abstract {
 
   _getTemplate() {
     return createPointFormTemplate(this._data, this._destinations);
-  }
-
-  updateData(update, justDataUpdating) {
-    if (!update) {
-      return;
-    }
-
-    this._data = Object.assign(
-        {},
-        this._data,
-        update
-    );
-
-    if (justDataUpdating) {
-      return;
-    }
-
-    this.updateElement();
-  }
-
-  updateElement() {
-    let previousElement = this.getElement();
-    const parent = previousElement.parentElement;
-
-    this.removeElement();
-
-    const newElement = this.getElement();
-
-    parent.replaceChild(newElement, previousElement);
-    previousElement = null;
-
-    this.restoreHandlers();
   }
 
   restoreHandlers() {
