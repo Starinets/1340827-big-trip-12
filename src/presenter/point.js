@@ -64,6 +64,7 @@ export default class Point {
 
   _replaceCardToForm() {
     replace(this._pointEditComponent, this._pointComponent);
+    this._pointEditComponent.reset(this._point);
   }
 
   _replaceFormToCard() {
