@@ -156,9 +156,7 @@ export default class PointEdit extends Abstract {
     this._submitHandler = this._submitHandler.bind(this);
     this._onFavoriteChange = this._onFavoriteChange.bind(this);
 
-    this.getElement()
-      .querySelector(`.event__favorite-checkbox`)
-      .addEventListener(`change`, this._onFavoriteChange);
+    this._setInnerHandlers();
   }
 
   _getTemplate() {
@@ -189,6 +187,21 @@ export default class PointEdit extends Abstract {
 
     parent.replaceChild(newElement, previousElement);
     previousElement = null;
+
+    this.restoreHandlers();
+  }
+
+  restoreHandlers() {
+    this._setInnerHandlers();
+
+    this.setRollupButtonClickHandler(this._callback.rollupButtonClick);
+    this.setFormSubmitHandler(this._callback.submit);
+  }
+
+  _setInnerHandlers() {
+    this.getElement()
+      .querySelector(`.event__favorite-checkbox`)
+      .addEventListener(`change`, this._onFavoriteChange);
   }
 
   _rollupButtonHandler() {
