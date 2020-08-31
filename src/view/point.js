@@ -6,7 +6,7 @@ import {
 } from './../utils/date';
 import Abstract from './abstract';
 
-const formatPointTitle = (point) => `${pointTypeToPretext[point.type]} ${point.destination}`;
+const formatPointTitle = (point) => `${pointTypeToPretext[point.type]} ${point.destination.name}`;
 
 const createPointTemplate = (point) => {
   return (

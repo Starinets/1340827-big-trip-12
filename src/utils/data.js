@@ -1,4 +1,4 @@
-const updateItem = (items, update) => {
+const updateItemByID = (items, update) => {
   const index = items.findIndex((item) => item.id === update.id);
 
   if (index === -1) {
@@ -12,4 +12,4 @@ const updateItem = (items, update) => {
   ];
 };
 
-export {updateItem};
+export {updateItemByID};

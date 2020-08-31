@@ -10,7 +10,11 @@ import SmartView from "./smart";
 
 const createEmptyPoint = () => ({
   type: ``,
-  destination: ``,
+  destination: {
+    name: ``,
+    description: ``,
+    photos: []
+  },
   startTime: new Date(),
   endTime: new Date(),
   offers: [],
@@ -27,14 +31,10 @@ const createOptionsListTemplate = (destinations) => {
 };
 
 const createPhotoContainerTemplate = (pointData) => {
-  if (!pointData.needGeneratePhotosTemplate) {
-    return ``;
-  }
-
   return (
     `<section class="event__section  event__section--destination">
     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-    <p class="event__destination-description">${pointData.destinationDescription}</p>
+    <p class="event__destination-description">${pointData.destination.description}</p>
 
     <div class="event__photos-container">
       <div class="event__photos-tape">
@@ -48,7 +48,7 @@ const createPhotoContainerTemplate = (pointData) => {
 };
 
 const createPhotoListTemplate = (pointData) =>
-  pointData.destinationPhotos.map((photo) =>
+  pointData.destination.photos.map((photo) =>
     `<img class="event__photo" src="${photo.href}" alt="${photo.description}">`);
 
 
@@ -66,10 +66,6 @@ const createEventListTemplate = (pointData, pointTypes) => {
 };
 
 const createOfferContainerTemplate = (pointData) => {
-  if (!pointData.needGenerateOffersTemplate) {
-    return ``;
-  }
-
   return (
     `<section class="event__details">
     <section class="event__section  event__section--offers">
@@ -135,7 +131,7 @@ const createPointFormTemplate = (pointData, destinations) => {
           <label class="event__label  event__type-output" for="event-destination-1">
             ${pointTypeToPretext[pointData.type]}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${pointData.destination}" list="destination-list-1">
+          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${pointData.destination.name}" list="destination-list-1">
           <datalist id="destination-list-1">
             ${optionsListTemplate}
           </datalist>
@@ -177,9 +173,9 @@ const createPointFormTemplate = (pointData, destinations) => {
         </button>
       </header>
 
-      ${createOfferContainerTemplate(pointData)}
+      ${pointData.offers.length > 0 ? createOfferContainerTemplate(pointData) : ``}
 
-      ${createPhotoContainerTemplate(pointData, destinations)}
+      ${pointData.destination.photos.length > 0 ? createPhotoContainerTemplate(pointData) : ``}
 
     </form>
     </li>`
@@ -191,7 +187,7 @@ export default class PointEdit extends SmartView {
     super();
 
     this._destinations = destinations;
-    this._data = PointEdit.parsePointToData(point, this._destinations);
+    this._data = PointEdit.parsePointToData(point);
 
     this._rollupButtonClickHandler = this._rollupButtonClickHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
@@ -205,7 +201,7 @@ export default class PointEdit extends SmartView {
 
   reset(point) {
     this.updateData(
-        PointEdit.parsePointToData(point, this._destinations)
+        PointEdit.parsePointToData(point)
     );
   }
 
@@ -251,13 +247,19 @@ export default class PointEdit extends SmartView {
 
   _priceChangeHandler(evt) {
     this.updateData({
-      price: Number(evt.target.value),
+      price: evt.target.valueAsNumber,
     }, true);
   }
 
   _destinationChangeHandler(evt) {
+    const destination = this._destinations.find((item) => item.name === evt.target.value);
+    if (destination === undefined) {
+      evt.target.value = this._data.destination.name;
+      return;
+    }
+
     this.updateData({
-      destination: evt.target.value
+      destination
     });
   }
 
@@ -284,31 +286,17 @@ export default class PointEdit extends SmartView {
     this._callback.favoriteChange = callback;
   }
 
-  static parsePointToData(point, destinations) {
-    let destinationPhotos = [];
-    const destination = destinations.find((item) => item.name === point.destination);
-    destinationPhotos = destination.photos;
-
+  static parsePointToData(point) {
     return Object.assign(
         {},
-        point,
-        {
-          needGenerateOffersTemplate: point.offers.length > 0,
-          needGeneratePhotosTemplate: destinationPhotos.length > 0,
-          destinationDescription: destination.description,
-          destinationPhotos,
-        }
+        point
     );
   }
 
-  static parseDataToPoint(data) {
-    delete data.needGenerateOffersTemplate;
-    delete data.needGeneratePhotosTemplate;
-    delete data.destinationDescription;
-    delete data.destinationPhotos;
+  static parseDataToPoint(pointData) {
     return Object.assign(
         {},
-        data
+        pointData
     );
   }
 }

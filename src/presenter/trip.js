@@ -8,7 +8,7 @@ import {
   sortPointByTime,
   sortPointByPrice
 } from "../utils/trip";
-import {updateItem} from "../utils/data";
+import {updateItemByID} from "../utils/data";
 import {formatDayDate} from './../utils/date';
 import SortView from './../view/sort';
 import PointMessage from './../view/point-message';
@@ -43,7 +43,8 @@ export default class Trip {
     // тогда не нужно его копировать
     this._destinations = destinations;
 
-    this._points = this._unsortedPoints = [];
+    this._points = [];
+    this._unsortedPoints = [];
     this._pointPresenter = {};
     this._currentSortType = SortType.EVENT;
     this._days = [];
@@ -57,7 +58,8 @@ export default class Trip {
   }
 
   init(points) {
-    this._points = this._unsortedPoints = [...points];
+    this._points = [...points];
+    this._unsortedPoints = [...points];
 
     if (points.length === 0) {
       this._renderNoPointMessage(EMPTY_POINTS_LIST_MESSAGE);
@@ -76,8 +78,8 @@ export default class Trip {
   }
 
   _handlePointChange(updatedPoint) {
-    this._points = updateItem(this._points, updatedPoint);
-    this._unsortedPoints = updateItem(this._unsortedPoints, updatedPoint);
+    this._points = updateItemByID(this._points, updatedPoint);
+    this._unsortedPoints = updateItemByID(this._unsortedPoints, updatedPoint);
     this._pointPresenter[updatedPoint.id].init(updatedPoint);
   }
 
