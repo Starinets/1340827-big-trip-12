@@ -26,18 +26,20 @@ const createOptionsListTemplate = (destinations) => {
     .join(``);
 };
 
-const createPhotoContainerTemplate = (data, destinations) => {
-  const destination = destinations.find((item) => item.name === data.destination);
+const createPhotoContainerTemplate = (data) => {
+  if (!data.needGeneratePhotosTemplate) {
+    return ``;
+  }
 
   return (
     `<section class="event__section  event__section--destination">
     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-    <p class="event__destination-description">${destination.description}</p>
+    <p class="event__destination-description">${data.destinationDescription}</p>
 
     <div class="event__photos-container">
       <div class="event__photos-tape">
 
-        ${createPhotoListTemplate(data, destination.photos)}
+        ${createPhotoListTemplate(data)}
 
       </div>
     </div>
@@ -45,8 +47,8 @@ const createPhotoContainerTemplate = (data, destinations) => {
   );
 };
 
-const createPhotoListTemplate = (data, photos) =>
-  photos.map((photo) =>
+const createPhotoListTemplate = (data) =>
+  data.destinationPhotos.map((photo) =>
     `<img class="event__photo" src="${photo.href}" alt="${photo.description}">`);
 
 
@@ -64,6 +66,10 @@ const createEventListTemplate = (data, pointTypeList) => {
 };
 
 const createOfferContainerTemplate = (data) => {
+  if (!data.needGenerateOffersTemplate) {
+    return ``;
+  }
+
   return (
     `<section class="event__details">
     <section class="event__section  event__section--offers">
@@ -184,8 +190,8 @@ export default class PointEdit extends SmartView {
   constructor(point = BLANK_POINT, destinations) {
     super();
 
-    this._data = PointEdit.parsePointToData(point);
     this._destinations = destinations;
+    this._data = PointEdit.parsePointToData(point, this._destinations);
 
     this._rollupButtonClickHandler = this._rollupButtonClickHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
@@ -199,7 +205,7 @@ export default class PointEdit extends SmartView {
 
   reset(point) {
     this.updateData(
-        PointEdit.parsePointToData(point)
+        PointEdit.parsePointToData(point, this._destinations)
     );
   }
 
@@ -273,14 +279,30 @@ export default class PointEdit extends SmartView {
       .addEventListener(`submit`, this._formSubmitHandler);
   }
 
-  static parsePointToData(point) {
+  static parsePointToData(point, destinations) {
+    let destinationPhotos = [];
+    const destination = destinations.find((item) => item.name === point.destination);
+    if (destination !== undefined && destination.hasOwnProperty(`photos`)) {
+      destinationPhotos = destination.photos;
+    }
+
     return Object.assign(
         {},
-        point
+        point,
+        {
+          needGenerateOffersTemplate: point.offers.length > 0,
+          needGeneratePhotosTemplate: destinationPhotos.length > 0,
+          destinationDescription: destination.description,
+          destinationPhotos,
+        }
     );
   }
 
   static parseDataToPoint(data) {
+    delete data.needGenerateOffersTemplate;
+    delete data.needGeneratePhotosTemplate;
+    delete data.destinationDescription;
+    delete data.destinationPhotos;
     return Object.assign(
         {},
         data
