@@ -1,14 +1,14 @@
 import {
   pointTypeToPretext,
-  TYPE_GROUP_ACTIVITY,
-  TYPE_GROUP_TRANSFER,
+  TYPES_GROUP_ACTIVITY,
+  TYPES_GROUP_TRANSFER,
   OfferList
 } from '../constants';
 import {setFirstCharToUpperCase} from './../utils/general';
 import {dateToString} from '../utils/date';
 import SmartView from "./smart";
 
-const BLANK_POINT = {
+const createEmptyPoint = () => ({
   type: ``,
   destination: ``,
   startTime: new Date(),
@@ -16,7 +16,7 @@ const BLANK_POINT = {
   offers: [],
   isFavorite: false,
   price: 0,
-};
+});
 
 const isOfferCheckedForPoint = (offerName, offers) => offers.find((item) => item.type === offerName);
 
@@ -26,20 +26,20 @@ const createOptionsListTemplate = (destinations) => {
     .join(``);
 };
 
-const createPhotoContainerTemplate = (data) => {
-  if (!data.needGeneratePhotosTemplate) {
+const createPhotoContainerTemplate = (pointData) => {
+  if (!pointData.needGeneratePhotosTemplate) {
     return ``;
   }
 
   return (
     `<section class="event__section  event__section--destination">
     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-    <p class="event__destination-description">${data.destinationDescription}</p>
+    <p class="event__destination-description">${pointData.destinationDescription}</p>
 
     <div class="event__photos-container">
       <div class="event__photos-tape">
 
-        ${createPhotoListTemplate(data)}
+        ${createPhotoListTemplate(pointData)}
 
       </div>
     </div>
@@ -47,26 +47,26 @@ const createPhotoContainerTemplate = (data) => {
   );
 };
 
-const createPhotoListTemplate = (data) =>
-  data.destinationPhotos.map((photo) =>
+const createPhotoListTemplate = (pointData) =>
+  pointData.destinationPhotos.map((photo) =>
     `<img class="event__photo" src="${photo.href}" alt="${photo.description}">`);
 
 
-const createEventListTemplate = (data, pointTypeList) => {
+const createEventListTemplate = (pointData, pointTypes) => {
   return (
-    pointTypeList.map((pointTypeItem) => {
+    pointTypes.map((pointType) => {
       return (
         `<div class="event__type-item">
-          <input id="event-type-${pointTypeItem}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${pointTypeItem}" ${data.type === pointTypeItem ? `checked` : ``}>
-          <label class="event__type-label  event__type-label--${pointTypeItem}" for="event-type-${pointTypeItem}-1">${setFirstCharToUpperCase(pointTypeItem)}</label>
+          <input id="event-type-${pointType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${pointType}" ${pointData.type === pointType ? `checked` : ``}>
+          <label class="event__type-label  event__type-label--${pointType}" for="event-type-${pointType}-1">${setFirstCharToUpperCase(pointType)}</label>
         </div>`
       );
     }).join(``)
   );
 };
 
-const createOfferContainerTemplate = (data) => {
-  if (!data.needGenerateOffersTemplate) {
+const createOfferContainerTemplate = (pointData) => {
+  if (!pointData.needGenerateOffersTemplate) {
     return ``;
   }
 
@@ -77,7 +77,7 @@ const createOfferContainerTemplate = (data) => {
 
       <div class="event__available-offers">
 
-      ${createOfferListTemplate(data)}
+      ${createOfferListTemplate(pointData)}
 
       </div>
     </section>
@@ -85,11 +85,11 @@ const createOfferContainerTemplate = (data) => {
   );
 };
 
-const createOfferListTemplate = (data) => {
+const createOfferListTemplate = (pointData) => {
   return (
     Object.entries(OfferList).map((key) => {
       return (`<div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${key[0]}-1" type="checkbox" name="event-offer-${key[0]}" ${isOfferCheckedForPoint(key[0], data.offers) ? `checked` : ``}>
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${key[0]}-1" type="checkbox" name="event-offer-${key[0]}" ${isOfferCheckedForPoint(key[0], pointData.offers) ? `checked` : ``}>
         <label class="event__offer-label" for="event-offer-${key[0]}-1">
           <span class="event__offer-title">${key[1].text}</span>
           +
@@ -100,7 +100,7 @@ const createOfferListTemplate = (data) => {
   );
 };
 
-const createPointFormTemplate = (data, destinations) => {
+const createPointFormTemplate = (pointData, destinations) => {
   const optionsListTemplate = createOptionsListTemplate(destinations);
 
   return (
@@ -110,7 +110,7 @@ const createPointFormTemplate = (data, destinations) => {
         <div class="event__type-wrapper">
           <label class="event__type  event__type-btn" for="event-type-toggle-1">
             <span class="visually-hidden">Choose event type</span>
-            <img class="event__type-icon" width="17" height="17" src="img/icons/${data.type}.png" alt="Event type icon">
+            <img class="event__type-icon" width="17" height="17" src="img/icons/${pointData.type}.png" alt="Event type icon">
           </label>
           <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
@@ -118,14 +118,14 @@ const createPointFormTemplate = (data, destinations) => {
             <fieldset class="event__type-group">
               <legend class="visually-hidden">Transfer</legend>
 
-              ${createEventListTemplate(data, TYPE_GROUP_ACTIVITY)}
+              ${createEventListTemplate(pointData, TYPES_GROUP_ACTIVITY)}
 
             </fieldset>
 
             <fieldset class="event__type-group">
               <legend class="visually-hidden">Activity</legend>
 
-              ${createEventListTemplate(data, TYPE_GROUP_TRANSFER)}
+              ${createEventListTemplate(pointData, TYPES_GROUP_TRANSFER)}
 
             </fieldset>
           </div>
@@ -133,9 +133,9 @@ const createPointFormTemplate = (data, destinations) => {
 
         <div class="event__field-group  event__field-group--destination">
           <label class="event__label  event__type-output" for="event-destination-1">
-            ${pointTypeToPretext[data.type]}
+            ${pointTypeToPretext[pointData.type]}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${data.destination}" list="destination-list-1">
+          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${pointData.destination}" list="destination-list-1">
           <datalist id="destination-list-1">
             ${optionsListTemplate}
           </datalist>
@@ -145,12 +145,12 @@ const createPointFormTemplate = (data, destinations) => {
           <label class="visually-hidden" for="event-start-time-1">
             From
           </label>
-          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${dateToString(data.startTime)}">
+          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${dateToString(pointData.startTime)}">
           —
           <label class="visually-hidden" for="event-end-time-1">
             To
           </label>
-          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${dateToString(data.endTime)}">
+          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${dateToString(pointData.endTime)}">
         </div>
 
         <div class="event__field-group  event__field-group--price">
@@ -158,13 +158,13 @@ const createPointFormTemplate = (data, destinations) => {
             <span class="visually-hidden">Price</span>
             €
           </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${data.price}">
+          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${pointData.price}">
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
         <button class="event__reset-btn" type="reset">Delete</button>
 
-        <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${data.isFavorite ? `checked` : ``}>
+        <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${pointData.isFavorite ? `checked` : ``}>
         <label class="event__favorite-btn" for="event-favorite-1">
           <span class="visually-hidden">Add to favorite</span>
           <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
@@ -177,9 +177,9 @@ const createPointFormTemplate = (data, destinations) => {
         </button>
       </header>
 
-      ${createOfferContainerTemplate(data)}
+      ${createOfferContainerTemplate(pointData)}
 
-      ${createPhotoContainerTemplate(data, destinations)}
+      ${createPhotoContainerTemplate(pointData, destinations)}
 
     </form>
     </li>`
@@ -187,7 +187,7 @@ const createPointFormTemplate = (data, destinations) => {
 };
 
 export default class PointEdit extends SmartView {
-  constructor(point = BLANK_POINT, destinations) {
+  constructor(point = createEmptyPoint, destinations) {
     super();
 
     this._destinations = destinations;
@@ -287,9 +287,7 @@ export default class PointEdit extends SmartView {
   static parsePointToData(point, destinations) {
     let destinationPhotos = [];
     const destination = destinations.find((item) => item.name === point.destination);
-    if (destination !== undefined && destination.hasOwnProperty(`photos`)) {
-      destinationPhotos = destination.photos;
-    }
+    destinationPhotos = destination.photos;
 
     return Object.assign(
         {},

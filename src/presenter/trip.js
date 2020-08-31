@@ -124,8 +124,8 @@ export default class Trip {
       .forEach((presenter) => presenter.destroy());
     this._pointPresenter = {};
 
-    this._days.forEach((day) => remove(day));
-    this._days.length = 0;
+    this._days.forEach(remove);
+    this._days = [];
 
     remove(this._daysView);
   }

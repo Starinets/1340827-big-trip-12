@@ -18,6 +18,7 @@ export default class Point {
     this._changeData = changeData;
     this._changeMode = changeMode;
 
+    this._point = {};
     this._pointComponent = null;
     this._pointEditComponent = null;
     this._mode = Mode.DEFAULT;
