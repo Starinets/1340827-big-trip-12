@@ -26,6 +26,7 @@ export default class Point {
     this._handlePointFormRollupButtonClick = this._handlePointFormRollupButtonClick.bind(this);
     this._handlePointFormSubmit = this._handlePointFormSubmit.bind(this);
     this._onEscapeKeydown = this._onEscapeKeydown.bind(this);
+    this._handleFavoriteChange = this._handleFavoriteChange.bind(this);
   }
 
   init(point) {
@@ -40,6 +41,8 @@ export default class Point {
     this._pointComponent.setRollupButtonClickHandler(this._handlePointRollupButtonClick);
     this._pointEditComponent.setRollupButtonClickHandler(this._handlePointFormRollupButtonClick);
     this._pointEditComponent.setFormSubmitHandler(this._handlePointFormSubmit);
+
+    this._pointEditComponent.setFavoriteChangeHandler(this._handleFavoriteChange);
 
     if (point.offers.length > 0) {
       const offersContainer = this._pointComponent.getContainer();
@@ -107,6 +110,14 @@ export default class Point {
   _handlePointFormSubmit(editedPoint) {
     this._changeData(editedPoint);
     this._replaceFormToCard();
+  }
+
+  _handleFavoriteChange(isFavorite) {
+    this._point = Object.assign(
+        this._point,
+        {isFavorite}
+    );
+    this._changeData(this._point);
   }
 
   _renderOffersList(offersContainer, offers) {

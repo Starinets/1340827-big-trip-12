@@ -246,6 +246,7 @@ export default class PointEdit extends SmartView {
     this.updateData({
       isFavorite: !this._data.isFavorite
     }, true);
+    this._callback.favoriteChange(this._data.isFavorite);
   }
 
   _priceChangeHandler(evt) {
@@ -277,6 +278,10 @@ export default class PointEdit extends SmartView {
     this._callback.formSubmit = callback;
     this.getElement()
       .addEventListener(`submit`, this._formSubmitHandler);
+  }
+
+  setFavoriteChangeHandler(callback) {
+    this._callback.favoriteChange = callback;
   }
 
   static parsePointToData(point, destinations) {
