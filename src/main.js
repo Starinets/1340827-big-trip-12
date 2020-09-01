@@ -2,6 +2,10 @@ import {
   render,
   RenderPosition
 } from './utils/dom';
+import {
+  formatMonthDate,
+  addLeadingRank
+} from './utils/date';
 import TripInfoView from './view/trip-info';
 import MainInfoView from './view/main-info';
 import TripCostView from './view/trip-cost';
@@ -39,6 +43,21 @@ const getTripPath = (points) => {
   }
 };
 
+const getTripDuration = (points) => {
+  const startTime = points[0].startTime;
+  const endTime = points[points.length - 1].endTime;
+
+  if (startTime.getMonth() !== endTime.getMonth()) {
+    return `${formatMonthDate(startTime)}&nbsp;&mdash;&nbsp;${formatMonthDate(endTime)}`;
+  } else {
+    if (startTime.getDay() !== endTime.getDay()) {
+      return `${formatMonthDate(startTime)}&nbsp;&mdash;&nbsp;${addLeadingRank(endTime.getDay())}`;
+    }
+  }
+
+  return formatMonthDate(startTime);
+};
+
 let minDate = new Date();
 
 const points = new Array(EVENT_COUNT)
@@ -56,7 +75,7 @@ const infoView = new TripInfoView().getElement();
 render(infoPlace, infoView, RenderPosition.AFTER_BEGIN);
 render(infoPlace, new AddPointButtonView().getElement(), RenderPosition.BEFORE_END);
 
-render(infoView, new MainInfoView(getTripPath(points)).getElement(), RenderPosition.BEFORE_END);
+render(infoView, new MainInfoView(getTripPath(points), getTripDuration(points)).getElement(), RenderPosition.BEFORE_END);
 render(infoView, new TripCostView(getTripCost(points)).getElement(), RenderPosition.BEFORE_END);
 
 render(menuPlace, new MenuView().getElement(), RenderPosition.AFTER_END);

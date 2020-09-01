@@ -1,10 +1,5 @@
-import {formatDateToISOString} from './../utils/date';
+import {formatDateToISOString, formatMonthDate} from './../utils/date';
 import Abstract from './abstract';
-
-const formatMonthDate = new Intl.DateTimeFormat(`en-GB`, {
-  month: `short`,
-  day: `numeric`,
-}).format;
 
 const createDayTemplate = (dayDate, counter) => {
   return (
