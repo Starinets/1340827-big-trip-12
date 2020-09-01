@@ -1,3 +1,5 @@
+import moment from "moment";
+
 const MILLISECOND_IN_MINUTE = 60000;
 const MINUTES_IN_HOUR = 60;
 const HOURS_IN_DAY = 24;
@@ -8,28 +10,18 @@ const addLeadingRank = (value) => {
 };
 
 const dateToString = (date) => {
-  const year = addLeadingRank(date.getFullYear().toString().substr(-2));
-  const month = addLeadingRank(date.getMonth());
-  const day = addLeadingRank(date.getDate());
-
-  return `${day}/${month}/${year} ${timeToString(date)}`;
+  return moment(date).format(`DD/MM/YY hh:mm`);
 };
 
 const timeToString = (date = new Date()) => {
-  const hours = addLeadingRank(date.getHours());
-  const minutes = addLeadingRank(date.getMinutes());
-
-  return `${hours}:${minutes}`;
+  return moment(date).format(`hh:mm`);
 };
 
 const formatDateToISOString = (date) => {
-  const formattedDate = new Date(date);
-  formattedDate.setHours(formattedDate.getHours() - formattedDate.getTimezoneOffset() / MINUTES_IN_HOUR);
-
-  return formattedDate.toISOString();
+  return moment(date).format();
 };
 
-const formatDayDate = (date) => formatDateToISOString(date).slice(0, 10);
+const formatDayDate = (date) => moment(date).format(`DD/MM/YYYY`);
 
 const getDatesDifference = (startDate = new Date(), endDate = new Date()) => {
   let difference = endDate - startDate;
