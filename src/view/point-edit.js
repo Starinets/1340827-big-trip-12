@@ -183,7 +183,7 @@ const createPointFormTemplate = (pointData, destinations) => {
 };
 
 export default class PointEdit extends SmartView {
-  constructor(point = createEmptyPoint(), destinations) {
+  constructor(point = createEmptyPoint(), destinations = []) {
     super();
 
     this._destinations = destinations;
