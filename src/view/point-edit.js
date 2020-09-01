@@ -188,6 +188,8 @@ const createPointFormTemplate = (pointData, destinations) => {
 export default class PointEdit extends SmartView {
   constructor(point = createEmptyPoint(), destinations = []) {
     super();
+    this._startDatePicker = null;
+    this._endDatePicker = null;
 
     this._destinations = destinations;
     this._data = PointEdit.parsePointToData(point);
@@ -198,6 +200,8 @@ export default class PointEdit extends SmartView {
     this._priceChangeHandler = this._priceChangeHandler.bind(this);
     this._destinationChangeHandler = this._destinationChangeHandler.bind(this);
     this._typeListChangeHandler = this._typeListChangeHandler.bind(this);
+    this._startDateChangeHandler = this._startDateChangeHandler.bind(this);
+    this._endDateChangeHandler = this._endDateChangeHandler.bind(this);
 
     this._setInnerHandlers();
   }
@@ -230,6 +234,50 @@ export default class PointEdit extends SmartView {
       .addEventListener(`change`, this._destinationChangeHandler);
     element.querySelector(`.event__type-list`)
       .addEventListener(`change`, this._typeListChangeHandler);
+  }
+
+  _setDatePicker() {
+    if (this._startDatePicker) {
+      this._startDatePicker.destroy();
+      this._startDatePicker = null;
+    }
+    if (this._endDatePicker) {
+      this._endDatePicker.destroy();
+      this._endDatePicker = null;
+    }
+
+    this._startDatePicker = flatpickr(
+        this.getElement().querySelector(`#event-start-time-1`),
+        {
+          dateFormat: `j F`,
+          defaultDate: new Date(),
+          onChange: this._startDateChangeHandler
+        }
+    );
+
+    this._endDatePicker = flatpickr(
+        this.getElement().querySelector(`#event-end-time-1`),
+        {
+          dateFormat: `j F`,
+          defaultDate: new Date(),
+          onChange: this._endDateChangeHandler
+        }
+    );
+  }
+
+  _startDateChangeHandler([userDate]) {
+    console.log(`startdate`);
+
+    this.updateData({
+      startDate: userDate
+    });
+  }
+
+  _endDateChangeHandler([userDate]) {
+    console.log(`endDate`);
+    this.updateData({
+      endDate: userDate
+    });
   }
 
   _rollupButtonClickHandler() {
