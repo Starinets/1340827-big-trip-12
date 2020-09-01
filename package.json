@@ -21,6 +21,8 @@
     "node": "10"
   },
   "dependencies": {
-    "flatpickr": "4.6.6"
+    "css-loader": "4.2.2",
+    "flatpickr": "4.6.6",
+    "style-loader": "1.2.1"
   }
 }

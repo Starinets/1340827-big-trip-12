@@ -15,5 +15,13 @@ module.exports = {
   devServer: {
     contentBase: PATH_TO_BUNDLE,
     watchContentBase: true,
+  },
+  module: {
+    rules: [
+      {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader']
+      }
+    ]
   }
 };
