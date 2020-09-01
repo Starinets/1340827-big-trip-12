@@ -40,20 +40,20 @@ export default class Sort extends Abstract {
   constructor() {
     super();
 
-    this._onTypeChange = this._onTypeChange.bind(this);
+    this._sortTypeChangeHandler = this._sortTypeChangeHandler.bind(this);
   }
 
   _getTemplate() {
     return createSortTemplate();
   }
 
-  _onTypeChange(evt) {
+  _sortTypeChangeHandler(evt) {
     this._callback.typeChange(evt.target.value);
   }
 
   setChangeHandler(callback) {
     this._callback.typeChange = callback;
     this.getElement()
-      .addEventListener(`change`, this._onTypeChange);
+      .addEventListener(`change`, this._sortTypeChangeHandler);
   }
 }

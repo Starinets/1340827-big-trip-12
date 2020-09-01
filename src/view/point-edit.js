@@ -1,7 +1,7 @@
 import {
   pointTypeToPretext,
-  TYPES_GROUP_ACTIVITY,
-  TYPES_GROUP_TRANSFER,
+  GROUP_ACTIVITY_TYPES,
+  GROUP_TRANSFER_TYPES,
   OfferList
 } from '../constants';
 import {setFirstCharToUpperCase} from './../utils/general';
@@ -114,14 +114,14 @@ const createPointFormTemplate = (pointData, destinations) => {
             <fieldset class="event__type-group">
               <legend class="visually-hidden">Transfer</legend>
 
-              ${createEventListTemplate(pointData, TYPES_GROUP_ACTIVITY)}
+              ${createEventListTemplate(pointData, GROUP_ACTIVITY_TYPES)}
 
             </fieldset>
 
             <fieldset class="event__type-group">
               <legend class="visually-hidden">Activity</legend>
 
-              ${createEventListTemplate(pointData, TYPES_GROUP_TRANSFER)}
+              ${createEventListTemplate(pointData, GROUP_TRANSFER_TYPES)}
 
             </fieldset>
           </div>
@@ -183,7 +183,7 @@ const createPointFormTemplate = (pointData, destinations) => {
 };
 
 export default class PointEdit extends SmartView {
-  constructor(point = createEmptyPoint, destinations) {
+  constructor(point = createEmptyPoint(), destinations) {
     super();
 
     this._destinations = destinations;

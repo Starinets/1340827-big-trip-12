@@ -12,13 +12,13 @@ const Mode = {
 };
 
 export default class Point {
-  constructor(pointListContainer, destinations, changeData, changeMode) {
-    this._pointListContainer = pointListContainer;
+  constructor(container, destinations, changeData, changeMode) {
+    this._container = container;
     this._destinations = destinations;
     this._changeData = changeData;
     this._changeMode = changeMode;
 
-    this._point = {};
+    this._point = null;
     this._pointComponent = null;
     this._pointEditComponent = null;
     this._mode = Mode.DEFAULT;
@@ -26,7 +26,7 @@ export default class Point {
     this._handlePointRollupButtonClick = this._handlePointRollupButtonClick.bind(this);
     this._handlePointFormRollupButtonClick = this._handlePointFormRollupButtonClick.bind(this);
     this._handlePointFormSubmit = this._handlePointFormSubmit.bind(this);
-    this._onEscapeKeydown = this._onEscapeKeydown.bind(this);
+    this._onEscapeKeydown = this._escapeKeydownHandler.bind(this);
     this._handleFavoriteChange = this._handleFavoriteChange.bind(this);
   }
 
@@ -51,7 +51,7 @@ export default class Point {
     }
 
     if (previousPointComponent === null || previousPointEditComponent === null) {
-      render(this._pointListContainer, this._pointComponent, RenderPosition.BEFORE_END);
+      render(this._container, this._pointComponent, RenderPosition.BEFORE_END);
       return;
     }
 
@@ -90,7 +90,7 @@ export default class Point {
     this._mode = Mode.DEFAULT;
   }
 
-  _onEscapeKeydown(evt) {
+  _escapeKeydownHandler(evt) {
     if (isEscapeEvent(evt)) {
       this._replaceFormToCard();
     }
@@ -99,13 +99,13 @@ export default class Point {
   _handlePointRollupButtonClick() {
     this._replaceCardToForm();
 
-    document.addEventListener(`keydown`, this._onEscapeKeydown);
+    document.addEventListener(`keydown`, this._escapeKeydownHandler);
   }
 
   _handlePointFormRollupButtonClick() {
     this._replaceFormToCard();
 
-    document.removeEventListener(`keydown`, this._onEscapeKeydown);
+    document.removeEventListener(`keydown`, this._escapeKeydownHandler);
   }
 
   _handlePointFormSubmit(editedPoint) {
