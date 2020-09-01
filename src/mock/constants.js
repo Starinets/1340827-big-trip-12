@@ -2,6 +2,9 @@ const OFFERS_COUNT = 5;
 const INFO_COUNT = 5;
 const PHOTOS_COUNT = 5;
 
+const MIN_PHOTO_PATH_NUMBER = 1;
+const MAX_PHOTO_PATH_NUMBER = 5;
+
 const POINT_TYPES = [
   `taxi`,
   `bus`,
@@ -72,6 +75,8 @@ export {
   OFFERS_COUNT,
   INFO_COUNT,
   PHOTOS_COUNT,
+  MIN_PHOTO_PATH_NUMBER,
+  MAX_PHOTO_PATH_NUMBER,
   POINT_TYPES,
   DESTINATIONS,
   INFOS,

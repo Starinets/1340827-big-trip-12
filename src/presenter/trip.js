@@ -1,7 +1,6 @@
 import {SortType} from './../constants';
 import {
   render,
-  replace,
   remove,
   RenderPosition
 } from './../utils/dom';
@@ -9,20 +8,16 @@ import {
   sortPointByTime,
   sortPointByPrice
 } from "../utils/trip";
+import {updateItemByID} from "../utils/data";
 import {formatDayDate} from './../utils/date';
-import {isEscapeEvent} from './../utils/dom-event';
 import SortView from './../view/sort';
 import PointMessage from './../view/point-message';
 import DaysView from './../view/days';
 import DayView from './../view/day';
 import PointListView from './../view/point-list';
-import PointView from './../view/point';
-import PointEditView from '../view/point-edit';
-import OfferListView from '../view/offer-list';
-import OfferView from './../view/offer';
+import PointPresenter from "./point";
 
 const EMPTY_POINTS_LIST_MESSAGE = `Click New Event to create your first point`;
-const MAX_OFFERS_COUNT = 3;
 const UNGROUPED_LIST = 0;
 
 const reducePointByDay = (days, point) => {
@@ -44,18 +39,27 @@ const groupPointsByDays = (points) => points
 export default class Trip {
   constructor(container, destinations) {
     this._container = container;
-    this._destinations = [...destinations];
+    // Если этот массив нужен только для генерации Options для формы редактирования,
+    // тогда не нужно его копировать
+    this._destinations = destinations;
 
-    this._points = this._unsortedPoints = [];
+    this._points = [];
+    this._unsortedPoints = [];
+    this._pointPresenter = {};
     this._currentSortType = SortType.EVENT;
+    this._days = [];
 
     this._pointMessage = new PointMessage(EMPTY_POINTS_LIST_MESSAGE);
     this._sort = new SortView();
     this._daysView = new DaysView();
+
+    this._handlePointChange = this._handlePointChange.bind(this);
+    this._handleModeChange = this._handleModeChange.bind(this);
   }
 
   init(points) {
-    this._points = this._unsortedPoints = [...points];
+    this._points = [...points];
+    this._unsortedPoints = [...points];
 
     if (points.length === 0) {
       this._renderNoPointMessage(EMPTY_POINTS_LIST_MESSAGE);
@@ -65,6 +69,18 @@ export default class Trip {
     this._renderSort();
     this._sortPoints(this._currentSortType);
     this._renderDaysList();
+  }
+
+  _handleModeChange() {
+    Object
+      .values(this._pointPresenter)
+      .forEach((presenter) => presenter.resetView());
+  }
+
+  _handlePointChange(updatedPoint) {
+    this._points = updateItemByID(this._points, updatedPoint);
+    this._unsortedPoints = updateItemByID(this._unsortedPoints, updatedPoint);
+    this._pointPresenter[updatedPoint.id].init(updatedPoint);
   }
 
   _sortPoints(sortType) {
@@ -84,7 +100,7 @@ export default class Trip {
 
   _renderSort() {
 
-    const handleSortClick = (sortType) => {
+    const handleSortChange = (sortType) => {
       if (this._currentSortType === sortType) {
         return;
       }
@@ -95,13 +111,25 @@ export default class Trip {
 
     };
 
-    this._sort.setClickHandler(handleSortClick);
+    this._sort.setChangeHandler(handleSortChange);
 
     render(this._container, this._sort, RenderPosition.BEFORE_END);
   }
 
   _renderNoPointMessage() {
     render(this._container, this._pointMessage, RenderPosition.BEFORE_END);
+  }
+
+  _clearPointList() {
+    Object
+      .values(this._pointPresenter)
+      .forEach((presenter) => presenter.destroy());
+    this._pointPresenter = {};
+
+    this._days.forEach(remove);
+    this._days = [];
+
+    remove(this._daysView);
   }
 
   _renderDaysList() {
@@ -116,6 +144,11 @@ export default class Trip {
       Object.values(days)
         .forEach((dayPoints, counter) => {
           const dayView = new DayView(new Date(dayPoints[0].startTime), counter + 1);
+          // так как все точки сгруппированы по дням, то при "умном" удалении точек,
+          // так же надо удалить дни и контейнер дней. Не придумал ничего лучшего,
+          // кроме как сохранять дни в массив, и в случае необходимости вызывать
+          // метод removeElement().
+          this._days.push(dayView);
 
           render(this._daysView, dayView, RenderPosition.BEFORE_END);
           this._renderPointsList(dayView, dayPoints);
@@ -124,6 +157,8 @@ export default class Trip {
     } else {
 
       const dayView = new DayView(new Date(), UNGROUPED_LIST);
+
+      this._days.push(dayView);
 
       render(this._daysView, dayView, RenderPosition.BEFORE_END);
       this._renderPointsList(dayView, this._points);
@@ -138,64 +173,10 @@ export default class Trip {
 
   _renderPoints(pointListView, dayPoints) {
     dayPoints.forEach((point) => {
-      const pointComponent = new PointView(point);
-      const pointView = pointComponent.getElement();
-      const pointEditComponent = new PointEditView(point, this._destinations);
+      const pointPresenter = new PointPresenter(pointListView, this._destinations, this._handlePointChange, this._handleModeChange);
+      pointPresenter.init(point);
 
-      const replaceCardToForm = () => {
-        replace(pointEditComponent, pointComponent);
-      };
-
-      const replaceFormToCard = () => {
-        replace(pointComponent, pointEditComponent);
-      };
-
-      const onEscapeKeydown = (evt) => {
-        if (isEscapeEvent(evt)) {
-          replaceFormToCard();
-        }
-      };
-
-      const handlePointRollupButtonClick = () => {
-        replaceCardToForm();
-
-        document.addEventListener(`keydown`, onEscapeKeydown);
-      };
-
-      const handlePointFormRollupButtonClick = () => {
-        replaceFormToCard();
-
-        document.removeEventListener(`keydown`, onEscapeKeydown);
-      };
-
-      const handlePointFormSubmit = () => {
-        replaceFormToCard();
-      };
-
-      pointComponent.setRollupButtonClickHandler(handlePointRollupButtonClick);
-      pointEditComponent.setRollupButtonClickHandler(handlePointFormRollupButtonClick);
-      pointEditComponent.setFormSubmitHandler(handlePointFormSubmit);
-
-      render(pointListView, pointView, RenderPosition.BEFORE_END);
-
-      if (point.offers.length > 0) {
-        const offersContainer = pointComponent.getContainer();
-        this._renderOffersList(offersContainer, point.offers);
-      }
-    });
-  }
-
-  _renderOffersList(offersContainer, offers) {
-    const offerListView = new OfferListView();
-    render(offersContainer, offerListView, RenderPosition.AFTER_END);
-
-    this._renderOffers(offerListView, offers);
-  }
-
-  _renderOffers(offerListView, offers) {
-    offers.slice(0, MAX_OFFERS_COUNT)
-    .forEach((offer) => {
-      render(offerListView, new OfferView(offer), RenderPosition.BEFORE_END);
+      this._pointPresenter[point.id] = pointPresenter;
     });
   }
 }
