@@ -8,6 +8,9 @@ import {setFirstCharToUpperCase} from './../utils/general';
 import {dateToString} from '../utils/date';
 import SmartView from "./smart";
 
+import flatpickr from "flatpickr";
+import "../../node_modules/flatpickr/dist/flatpickr.min.css";
+
 const createEmptyPoint = () => ({
   type: ``,
   destination: {
