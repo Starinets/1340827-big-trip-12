@@ -23,6 +23,7 @@
   "dependencies": {
     "css-loader": "4.2.2",
     "flatpickr": "4.6.6",
+    "moment": "2.27.0",
     "style-loader": "1.2.1"
   }
 }
