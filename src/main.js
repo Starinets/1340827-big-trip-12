@@ -29,13 +29,13 @@ const getTripPath = (points) => {
     case 0:
       return ``;
     case 1:
-      return `${points[0].destination}`;
+      return `${points[0].destination.name}`;
     case 2:
-      return `${points[0].destination} &mdash; ${points[points.length - 1].destination}`;
+      return `${points[0].destination.name} &mdash; ${points[points.length - 1].destination.name}`;
     case 3:
-      return `${points[0].destination} &mdash; ${points[1].destination} &mdash; ${points[points.length - 1].destination}`;
+      return `${points[0].destination.name} &mdash; ${points[1].destination.name} &mdash; ${points[points.length - 1].destination.name}`;
     default:
-      return `${points[0].destination} &mdash; ... &mdash; ${points[points.length - 1].destination}`;
+      return `${points[0].destination.name} &mdash; ... &mdash; ${points[points.length - 1].destination.name}`;
   }
 };
 
