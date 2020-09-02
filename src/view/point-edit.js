@@ -204,6 +204,7 @@ export default class PointEdit extends SmartView {
     this._endDateChangeHandler = this._endDateChangeHandler.bind(this);
 
     this._setInnerHandlers();
+    this._setDatePicker();
   }
 
   reset(point) {
@@ -238,11 +239,11 @@ export default class PointEdit extends SmartView {
   }
 
   _setDatePicker() {
-    if (this._startDatePicker) {
+    if (this._startDatePicker !== null) {
       this._startDatePicker.destroy();
       this._startDatePicker = null;
     }
-    if (this._endDatePicker) {
+    if (this._endDatePicker !== null) {
       this._endDatePicker.destroy();
       this._endDatePicker = null;
     }
