@@ -242,6 +242,19 @@ export default class PointEdit extends SmartView {
     this.setFormSubmitHandler(this._callback.formSubmit);
   }
 
+  removeElement() {
+    super.removeElement();
+
+    if (this._startDatePicker !== null) {
+      this._startDatePicker.destroy();
+      this._startDatePicker = null;
+    }
+    if (this._endDatePicker !== null) {
+      this._endDatePicker.destroy();
+      this._endDatePicker = null;
+    }
+  }
+
   /* ----------------------------- Class methods ---------------------------- */
 
   reset(point) {
