@@ -250,24 +250,24 @@ export default class PointEdit extends SmartView {
     this._startDatePicker = flatpickr(
         this.getElement().querySelector(`#event-start-time-1`),
         {
-          enableTime: true,
-          time_24hr: true,
-          dateFormat: `d/m/y H:i`,
-          defaultDate: this._data.startTime || new Date(),
-          maxDate: this._data.endTime,
-          onChange: this._startDateChangeHandler
+          'enableTime': true,
+          'time_24hr': true,
+          'dateFormat': `d/m/y H:i`,
+          'defaultDate': this._data.startTime || new Date(),
+          'maxDate': this._data.endTime,
+          'onChange': this._startDateChangeHandler
         }
     );
 
     this._endDatePicker = flatpickr(
         this.getElement().querySelector(`#event-end-time-1`),
         {
-          enableTime: true,
-          time_24hr: true,
-          dateFormat: `d/m/y H:i`,
-          defaultDate: this._data.endTime || new Date(),
-          minDate: this._data.startTime,
-          onChange: this._endDateChangeHandler
+          'enableTime': true,
+          'time_24hr': true,
+          'dateFormat': `d/m/y H:i`,
+          'defaultDate': this._data.endTime || new Date(),
+          'minDate': this._data.startTime,
+          'onChange': this._endDateChangeHandler
         }
     );
   }
