@@ -207,11 +207,28 @@ export default class PointEdit extends SmartView {
     this._setDatePicker();
   }
 
-  reset(point) {
-    this.updateData(
-        PointEdit.parsePointToData(point)
-    );
+
+  /* -------------------------------- Setters ------------------------------- */
+
+  setRollupButtonClickHandler(callback) {
+    this._callback.rollupButtonClick = callback;
+    this.getElement()
+      .querySelector(`.event__rollup-btn`)
+      .addEventListener(`click`, this._rollupButtonClickHandler);
   }
+
+  setFormSubmitHandler(callback) {
+    this._callback.formSubmit = callback;
+    this.getElement()
+      .addEventListener(`submit`, this._formSubmitHandler);
+  }
+
+  setFavoriteChangeHandler(callback) {
+    this._callback.favoriteChange = callback;
+  }
+
+
+  /* -------------------------- Overloaded methods -------------------------- */
 
   _getTemplate() {
     return createPointFormTemplate(this._data, this._destinations);
@@ -224,6 +241,17 @@ export default class PointEdit extends SmartView {
     this.setRollupButtonClickHandler(this._callback.rollupButtonClick);
     this.setFormSubmitHandler(this._callback.formSubmit);
   }
+
+  /* ----------------------------- Class methods ---------------------------- */
+
+  reset(point) {
+    this.updateData(
+        PointEdit.parsePointToData(point)
+    );
+  }
+
+
+  /* ---------------------------- Private methods --------------------------- */
 
   _setInnerHandlers() {
     const element = this.getElement();
@@ -285,13 +313,16 @@ export default class PointEdit extends SmartView {
     }, true);
   }
 
-  _rollupButtonClickHandler() {
-    this._callback.rollupButtonClick();
-  }
+
+  /* ---------------------------- Events handlers --------------------------- */
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
     this._callback.formSubmit(PointEdit.parseDataToPoint(this._data));
+  }
+
+  _rollupButtonClickHandler() {
+    this._callback.rollupButtonClick();
   }
 
   _favoriteCheckboxChangeHandler() {
@@ -301,10 +332,10 @@ export default class PointEdit extends SmartView {
     this._callback.favoriteChange(this._data.isFavorite);
   }
 
-  _priceChangeHandler(evt) {
+  _typeListChangeHandler(evt) {
     this.updateData({
-      price: evt.target.valueAsNumber,
-    }, true);
+      type: evt.target.value
+    });
   }
 
   _destinationChangeHandler(evt) {
@@ -319,28 +350,14 @@ export default class PointEdit extends SmartView {
     });
   }
 
-  _typeListChangeHandler(evt) {
+  _priceChangeHandler(evt) {
     this.updateData({
-      type: evt.target.value
-    });
+      price: evt.target.valueAsNumber,
+    }, true);
   }
 
-  setRollupButtonClickHandler(callback) {
-    this._callback.rollupButtonClick = callback;
-    this.getElement()
-      .querySelector(`.event__rollup-btn`)
-      .addEventListener(`click`, this._rollupButtonClickHandler);
-  }
 
-  setFormSubmitHandler(callback) {
-    this._callback.formSubmit = callback;
-    this.getElement()
-      .addEventListener(`submit`, this._formSubmitHandler);
-  }
-
-  setFavoriteChangeHandler(callback) {
-    this._callback.favoriteChange = callback;
-  }
+  /* ---------------------------- Static methods ---------------------------- */
 
   static parsePointToData(point) {
     return Object.assign(
