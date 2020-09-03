@@ -16,11 +16,11 @@ const getDatesDifference = (startDate, endDate) => {
   const {days, hours, minutes} = duration(endDate - startDate)._data;
 
   return `${
-    days > 0 ? addLeadingRank(days) + `D ` : ``
+    days > 0 ? `${addLeadingRank(days)}D ` : ``
   }${
-    days > 0 || hours > 0 ? addLeadingRank(hours) + `H ` : ``
+    days > 0 || hours > 0 ? `${addLeadingRank(hours)}H ` : ``
   }${
-    addLeadingRank(minutes) + `M`
+    `${addLeadingRank(minutes)}M`
   }`;
 };
 
