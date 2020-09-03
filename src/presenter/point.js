@@ -90,6 +90,20 @@ export default class Point {
     this._mode = Mode.DEFAULT;
   }
 
+  _renderOffersList(offersContainer, offers) {
+    const offerListView = new OfferListView();
+    render(offersContainer, offerListView, RenderPosition.AFTER_END);
+
+    this._renderOffers(offerListView, offers);
+  }
+
+  _renderOffers(offerListView, offers) {
+    offers.slice(0, MAX_OFFERS_COUNT)
+      .forEach((offer) => {
+        render(offerListView, new OfferView(offer), RenderPosition.BEFORE_END);
+      });
+  }
+
   _escapeKeydownHandler(evt) {
     if (isEscapeEvent(evt)) {
       this._replaceFormToCard();
@@ -119,19 +133,5 @@ export default class Point {
         {isFavorite}
     );
     this._changeData(this._point);
-  }
-
-  _renderOffersList(offersContainer, offers) {
-    const offerListView = new OfferListView();
-    render(offersContainer, offerListView, RenderPosition.AFTER_END);
-
-    this._renderOffers(offerListView, offers);
-  }
-
-  _renderOffers(offerListView, offers) {
-    offers.slice(0, MAX_OFFERS_COUNT)
-      .forEach((offer) => {
-        render(offerListView, new OfferView(offer), RenderPosition.BEFORE_END);
-      });
   }
 }

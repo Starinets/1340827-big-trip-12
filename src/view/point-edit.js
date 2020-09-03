@@ -8,6 +8,9 @@ import {setFirstCharToUpperCase} from './../utils/general';
 import {dateToString} from '../utils/date';
 import SmartView from "./smart";
 
+import flatpickr from "flatpickr";
+import "../../node_modules/flatpickr/dist/flatpickr.min.css";
+
 const createEmptyPoint = () => ({
   type: ``,
   destination: {
@@ -154,7 +157,7 @@ const createPointFormTemplate = (pointData, destinations) => {
             <span class="visually-hidden">Price</span>
             €
           </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${pointData.price}">
+          <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${pointData.price}">
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -183,8 +186,10 @@ const createPointFormTemplate = (pointData, destinations) => {
 };
 
 export default class PointEdit extends SmartView {
-  constructor(point = createEmptyPoint(), destinations) {
+  constructor(point = createEmptyPoint(), destinations = []) {
     super();
+    this._startDatePicker = null;
+    this._endDatePicker = null;
 
     this._destinations = destinations;
     this._data = PointEdit.parsePointToData(point);
@@ -195,79 +200,15 @@ export default class PointEdit extends SmartView {
     this._priceChangeHandler = this._priceChangeHandler.bind(this);
     this._destinationChangeHandler = this._destinationChangeHandler.bind(this);
     this._typeListChangeHandler = this._typeListChangeHandler.bind(this);
+    this._startDateChangeHandler = this._startDateChangeHandler.bind(this);
+    this._endDateChangeHandler = this._endDateChangeHandler.bind(this);
 
     this._setInnerHandlers();
+    this._setDatePicker();
   }
 
-  reset(point) {
-    this.updateData(
-        PointEdit.parsePointToData(point)
-    );
-  }
 
-  _getTemplate() {
-    return createPointFormTemplate(this._data, this._destinations);
-  }
-
-  restoreHandlers() {
-    this._setInnerHandlers();
-
-    this.setRollupButtonClickHandler(this._callback.rollupButtonClick);
-    this.setFormSubmitHandler(this._callback.formSubmit);
-  }
-
-  _setInnerHandlers() {
-    const element = this.getElement();
-
-    element.querySelector(`.event__favorite-checkbox`)
-      .addEventListener(`change`, this._favoriteCheckboxChangeHandler);
-    element.querySelector(`.event__input--price`)
-      .addEventListener(`change`, this._priceChangeHandler);
-    element.querySelector(`.event__input--destination`)
-      .addEventListener(`change`, this._destinationChangeHandler);
-    element.querySelector(`.event__type-list`)
-      .addEventListener(`change`, this._typeListChangeHandler);
-  }
-
-  _rollupButtonClickHandler() {
-    this._callback.rollupButtonClick();
-  }
-
-  _formSubmitHandler(evt) {
-    evt.preventDefault();
-    this._callback.formSubmit(PointEdit.parseDataToPoint(this._data));
-  }
-
-  _favoriteCheckboxChangeHandler() {
-    this.updateData({
-      isFavorite: !this._data.isFavorite
-    }, true);
-    this._callback.favoriteChange(this._data.isFavorite);
-  }
-
-  _priceChangeHandler(evt) {
-    this.updateData({
-      price: evt.target.valueAsNumber,
-    }, true);
-  }
-
-  _destinationChangeHandler(evt) {
-    const destination = this._destinations.find((item) => item.name === evt.target.value);
-    if (destination === undefined) {
-      evt.target.value = this._data.destination.name;
-      return;
-    }
-
-    this.updateData({
-      destination
-    });
-  }
-
-  _typeListChangeHandler(evt) {
-    this.updateData({
-      type: evt.target.value
-    });
-  }
+  /* -------------------------------- Setters ------------------------------- */
 
   setRollupButtonClickHandler(callback) {
     this._callback.rollupButtonClick = callback;
@@ -285,6 +226,151 @@ export default class PointEdit extends SmartView {
   setFavoriteChangeHandler(callback) {
     this._callback.favoriteChange = callback;
   }
+
+
+  /* -------------------------- Overloaded methods -------------------------- */
+
+  _getTemplate() {
+    return createPointFormTemplate(this._data, this._destinations);
+  }
+
+  restoreHandlers() {
+    this._setInnerHandlers();
+    this._setDatePicker();
+
+    this.setRollupButtonClickHandler(this._callback.rollupButtonClick);
+    this.setFormSubmitHandler(this._callback.formSubmit);
+  }
+
+  removeElement() {
+    super.removeElement();
+
+    if (this._startDatePicker !== null) {
+      this._startDatePicker.destroy();
+      this._startDatePicker = null;
+    }
+    if (this._endDatePicker !== null) {
+      this._endDatePicker.destroy();
+      this._endDatePicker = null;
+    }
+  }
+
+  /* ----------------------------- Class methods ---------------------------- */
+
+  reset(point) {
+    this.updateData(
+        PointEdit.parsePointToData(point)
+    );
+  }
+
+
+  /* ---------------------------- Private methods --------------------------- */
+
+  _setInnerHandlers() {
+    const element = this.getElement();
+
+    element.querySelector(`.event__favorite-checkbox`)
+      .addEventListener(`change`, this._favoriteCheckboxChangeHandler);
+    element.querySelector(`.event__input--price`)
+      .addEventListener(`change`, this._priceChangeHandler);
+    element.querySelector(`.event__input--destination`)
+      .addEventListener(`change`, this._destinationChangeHandler);
+    element.querySelector(`.event__type-list`)
+      .addEventListener(`change`, this._typeListChangeHandler);
+  }
+
+  _setDatePicker() {
+    if (this._startDatePicker !== null) {
+      this._startDatePicker.destroy();
+      this._startDatePicker = null;
+    }
+    if (this._endDatePicker !== null) {
+      this._endDatePicker.destroy();
+      this._endDatePicker = null;
+    }
+
+    this._startDatePicker = flatpickr(
+        this.getElement().querySelector(`#event-start-time-1`),
+        {
+          'enableTime': true,
+          'time_24hr': true,
+          'dateFormat': `d/m/y H:i`,
+          'defaultDate': this._data.startTime || new Date(),
+          'maxDate': this._data.endTime,
+          'onChange': this._startDateChangeHandler
+        }
+    );
+
+    this._endDatePicker = flatpickr(
+        this.getElement().querySelector(`#event-end-time-1`),
+        {
+          'enableTime': true,
+          'time_24hr': true,
+          'dateFormat': `d/m/y H:i`,
+          'defaultDate': this._data.endTime || new Date(),
+          'minDate': this._data.startTime,
+          'onChange': this._endDateChangeHandler
+        }
+    );
+  }
+
+  _startDateChangeHandler([userDate]) {
+    this.updateData({
+      startTime: userDate
+    }, true);
+  }
+
+  _endDateChangeHandler([userDate]) {
+    this.updateData({
+      endTime: userDate
+    }, true);
+  }
+
+
+  /* ---------------------------- Events handlers --------------------------- */
+
+  _formSubmitHandler(evt) {
+    evt.preventDefault();
+    this._callback.formSubmit(PointEdit.parseDataToPoint(this._data));
+  }
+
+  _rollupButtonClickHandler() {
+    this._callback.rollupButtonClick();
+  }
+
+  _favoriteCheckboxChangeHandler() {
+    this.updateData({
+      isFavorite: !this._data.isFavorite
+    }, true);
+    this._callback.favoriteChange(this._data.isFavorite);
+  }
+
+  _typeListChangeHandler(evt) {
+    this.updateData({
+      type: evt.target.value
+    });
+  }
+
+  _destinationChangeHandler(evt) {
+    const destination = this._destinations.find((item) => item.name === evt.target.value);
+    if (destination === undefined) {
+      evt.target.value = this._data.destination.name;
+      return;
+    }
+
+    this.updateData({
+      destination
+    });
+  }
+
+  _priceChangeHandler(evt) {
+    this.updateData({
+      price: evt.target.valueAsNumber,
+    }, true);
+  }
+
+
+  /* ---------------------------- Static methods ---------------------------- */
 
   static parsePointToData(point) {
     return Object.assign(
