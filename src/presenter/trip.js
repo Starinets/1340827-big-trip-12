@@ -42,8 +42,8 @@ export default class Trip {
     this._destinations = destinations;
     this._pointsModel = pointsModel;
 
-    this._points = [];
-    this._unsortedPoints = [];
+    this._points = []; // remove later
+    this._unsortedPoints = []; // remove later
     this._pointPresenter = {};
     this._currentSortType = SortType.EVENT;
     this._days = [];
@@ -56,14 +56,14 @@ export default class Trip {
     this._handleModeChange = this._handleModeChange.bind(this);
   }
 
-  init(points) {
-    this._points = [...points];
-    this._unsortedPoints = [...points];
+  init() {
+    // this._points = [...points];
+    // this._unsortedPoints = [...points];
 
-    if (points.length === 0) {
-      this._renderNoPointMessage(EMPTY_POINTS_LIST_MESSAGE);
-      return;
-    }
+    // if (points.length === 0) {
+    //   this._renderNoPointMessage(EMPTY_POINTS_LIST_MESSAGE);
+    //   return;
+    // }
 
     this._renderSort();
     this._sortPoints(this._currentSortType);
