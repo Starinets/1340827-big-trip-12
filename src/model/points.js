@@ -11,7 +11,7 @@ export default class Points {
     return this._points;
   }
 
-  updatePoint(update) {
+  updatePoint(updateType, update) {
     const index = this._points.findIndex((point) => point.id === update.id);
 
     if (index === -1) {
@@ -23,5 +23,7 @@ export default class Points {
       update,
       ...this._points.slice(index + 1)
     ];
+
+    this._notify(updateType, update);
   }
 }
