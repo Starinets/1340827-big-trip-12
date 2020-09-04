@@ -202,6 +202,7 @@ export default class PointEdit extends SmartView {
     this._typeListChangeHandler = this._typeListChangeHandler.bind(this);
     this._startDateChangeHandler = this._startDateChangeHandler.bind(this);
     this._endDateChangeHandler = this._endDateChangeHandler.bind(this);
+    this._resetButtonClickHandler = this._resetButtonClickHandler.bind(this);
 
     this._setInnerHandlers();
     this._setDatePicker();
@@ -227,6 +228,9 @@ export default class PointEdit extends SmartView {
     this._callback.favoriteChange = callback;
   }
 
+  setResetButtonClickHandler(callback) {
+    this._callback.resetButtonClick = callback;
+  }
 
   /* -------------------------- Overloaded methods -------------------------- */
 
@@ -277,6 +281,8 @@ export default class PointEdit extends SmartView {
       .addEventListener(`change`, this._destinationChangeHandler);
     element.querySelector(`.event__type-list`)
       .addEventListener(`change`, this._typeListChangeHandler);
+    element.querySelector(`.event__reset-btn`)
+      .addEventListener(`click`, this._resetButtonClickHandler);
   }
 
   _setDatePicker() {
@@ -367,6 +373,10 @@ export default class PointEdit extends SmartView {
     this.updateData({
       price: evt.target.valueAsNumber,
     }, true);
+  }
+
+  _resetButtonClickHandler() {
+    this._callback.resetButtonClick();
   }
 
 

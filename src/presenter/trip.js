@@ -100,10 +100,12 @@ export default class Trip {
         break;
       case UpdateType.MINOR:
         this._clearPointList();
+        this._renderSort();
         this._renderDaysList();
         break;
       case UpdateType.MAJOR:
         this._clearBoard({resetSortType: true});
+        this._renderSort();
         this._renderDaysList();
         break;
     }
@@ -119,6 +121,7 @@ export default class Trip {
       this._currentSortType = sortType;
 
       this._clearPointList();
+      this._renderSort();
       this._renderDaysList();
 
     };

@@ -29,6 +29,7 @@ export default class Point {
     this._handlePointFormSubmit = this._handlePointFormSubmit.bind(this);
     this._escapeKeydownHandler = this._escapeKeydownHandler.bind(this);
     this._handleFavoriteChange = this._handleFavoriteChange.bind(this);
+    this._handleResetButtonClick = this._handleResetButtonClick.bind(this);
   }
 
   init(point) {
@@ -45,6 +46,7 @@ export default class Point {
     this._pointEditComponent.setFormSubmitHandler(this._handlePointFormSubmit);
 
     this._pointEditComponent.setFavoriteChangeHandler(this._handleFavoriteChange);
+    this._pointEditComponent.setResetButtonClickHandler(this._handleResetButtonClick);
 
     if (point.offers.length > 0) {
       const offersContainer = this._pointComponent.getContainer();
@@ -139,6 +141,14 @@ export default class Point {
             this._point,
             {isFavorite}
         )
+    );
+  }
+
+  _handleResetButtonClick() {
+    this._changeData(
+        UserAction.DELETE_POINT,
+        UpdateType.MINOR,
+        this._point
     );
   }
 }
