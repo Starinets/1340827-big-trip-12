@@ -66,11 +66,17 @@ export default class Trip {
     // }
 
     this._renderSort();
-    this._sortPoints(this._currentSortType);
+    // this._sortPoints(this._currentSortType);
     this._renderDaysList();
   }
 
   _getPoints() {
+    switch (this._currentSortType) {
+      case SortType.TIME:
+        return this._tasksModel.getTasks().slice().sort(sortPointByTime);
+      case SortType.PRICE:
+        return this._tasksModel.getTasks().slice().sort(sortPointByPrice);
+    }
     return this._tasksModel.getPoints();
   }
 
@@ -86,20 +92,20 @@ export default class Trip {
     this._pointPresenter[updatedPoint.id].init(updatedPoint);
   }
 
-  _sortPoints(sortType) {
-    switch (sortType) {
-      case SortType.PRICE:
-        this._points.sort(sortPointByPrice);
-        break;
-      case SortType.TIME:
-        this._points.sort(sortPointByTime);
-        break;
-      default:
-        this._points = [...this._unsortedPoints];
-    }
+  // _sortPoints(sortType) {
+  //   switch (sortType) {
+  //     case SortType.PRICE:
+  //       this._points.sort(sortPointByPrice);
+  //       break;
+  //     case SortType.TIME:
+  //       this._points.sort(sortPointByTime);
+  //       break;
+  //     default:
+  //       this._points = [...this._unsortedPoints];
+  //   }
 
-    this._currentSortType = sortType;
-  }
+  //   this._currentSortType = sortType;
+  // }
 
   _renderSort() {
 
@@ -108,7 +114,7 @@ export default class Trip {
         return;
       }
 
-      this._sortPoints(sortType);
+      // this._sortPoints(sortType);
       remove(this._daysView);
       this._renderDaysList();
 
