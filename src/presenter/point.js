@@ -4,6 +4,7 @@ import {render, RenderPosition, replace, remove} from "../utils/dom";
 import {isEscapeEvent} from './../utils/dom-event';
 import OfferListView from '../view/offer-list';
 import OfferView from './../view/offer';
+import {UserAction, UpdateType} from "./../constants";
 
 const MAX_OFFERS_COUNT = 3;
 const Mode = {
@@ -128,10 +129,13 @@ export default class Point {
   }
 
   _handleFavoriteChange(isFavorite) {
-    this._point = Object.assign(
-        this._point,
-        {isFavorite}
+    this._changeData(
+        UserAction.UPDATE_TASK,
+        UpdateType.MINOR,
+        Object.assign(
+            this._point,
+            {isFavorite}
+        )
     );
-    this._changeData(this._point);
   }
 }

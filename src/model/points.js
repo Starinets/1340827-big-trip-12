@@ -1,5 +1,9 @@
-export default class Points {
+import Observer from "./../utils/observer";
+
+export default class Points extends Observer {
   constructor() {
+    super();
+
     this._points = [];
   }
 
