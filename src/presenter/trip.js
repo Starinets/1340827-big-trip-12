@@ -44,9 +44,10 @@ export default class Trip {
     this._pointPresenter = {};
     this._currentSortType = SortType.EVENT;
     this._days = [];
+    this._sort = null;
 
     this._pointMessage = new PointMessage(EMPTY_POINTS_LIST_MESSAGE);
-    this._sort = new SortView(this._currentSortType);
+    // this._sort = new SortView(this._currentSortType);
     this._daysView = new DaysView();
 
     // this._handlePointChange = this._handlePointChange.bind(this);
@@ -98,8 +99,12 @@ export default class Trip {
         this._taskPresenter[data.id].init(data);
         break;
       case UpdateType.MINOR:
+        this._clearPointList();
+        this._renderDaysList();
         break;
       case UpdateType.MAJOR:
+        this._clearBoard({resetSortType: true});
+        this._renderDaysList();
         break;
     }
   }
@@ -118,6 +123,11 @@ export default class Trip {
 
     };
 
+    if (this._sort !== null) {
+      this._sort = null;
+    }
+
+    this._sort = new SortView(this._currentSortType);
     this._sort.setChangeHandler(handleSortChange);
 
     render(this._container, this._sort, RenderPosition.BEFORE_END);
@@ -127,7 +137,7 @@ export default class Trip {
     render(this._container, this._pointMessage, RenderPosition.BEFORE_END);
   }
 
-  _clearPointList() {
+  _clearPointList({resetSortType = false} = {}) {
     Object
       .values(this._pointPresenter)
       .forEach((presenter) => presenter.destroy());
@@ -136,7 +146,12 @@ export default class Trip {
     this._days.forEach(remove);
     this._days = [];
 
+    remove(this._sort);
     remove(this._daysView);
+
+    if (resetSortType) {
+      this._currentSortType = SortType.DEFAULT;
+    }
   }
 
   _renderDaysList() {
