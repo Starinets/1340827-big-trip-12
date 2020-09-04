@@ -27,7 +27,7 @@ export default class Point {
     this._handlePointRollupButtonClick = this._handlePointRollupButtonClick.bind(this);
     this._handlePointFormRollupButtonClick = this._handlePointFormRollupButtonClick.bind(this);
     this._handlePointFormSubmit = this._handlePointFormSubmit.bind(this);
-    this._onEscapeKeydown = this._escapeKeydownHandler.bind(this);
+    this._escapeKeydownHandler = this._escapeKeydownHandler.bind(this);
     this._handleFavoriteChange = this._handleFavoriteChange.bind(this);
   }
 
@@ -108,6 +108,8 @@ export default class Point {
   _escapeKeydownHandler(evt) {
     if (isEscapeEvent(evt)) {
       this._replaceFormToCard();
+
+      document.removeEventListener(`keydown`, this._escapeKeydownHandler);
     }
   }
 
