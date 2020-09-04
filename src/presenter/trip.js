@@ -8,7 +8,6 @@ import {
   sortPointByTime,
   sortPointByPrice
 } from "../utils/trip";
-// import {updateItemByID} from "../utils/data";
 import {formatDayDate} from './../utils/date';
 import SortView from './../view/sort';
 import PointMessage from './../view/point-message';
@@ -42,8 +41,6 @@ export default class Trip {
     this._destinations = destinations;
     this._pointsModel = pointsModel;
 
-    // this._points = [];
-    // this._unsortedPoints = [];
     this._pointPresenter = {};
     this._currentSortType = SortType.EVENT;
     this._days = [];
@@ -57,16 +54,7 @@ export default class Trip {
   }
 
   init() {
-    // this._points = [...points];
-    // this._unsortedPoints = [...points];
-
-    // if (points.length === 0) {
-    //   this._renderNoPointMessage(EMPTY_POINTS_LIST_MESSAGE);
-    //   return;
-    // }
-
     this._renderSort();
-    // this._sortPoints(this._currentSortType);
     this._renderDaysList();
   }
 
@@ -87,25 +75,8 @@ export default class Trip {
   }
 
   _handlePointChange(updatedPoint) {
-    // this._points = updateItemByID(this._points, updatedPoint);
-    // this._unsortedPoints = updateItemByID(this._unsortedPoints, updatedPoint);
     this._pointPresenter[updatedPoint.id].init(updatedPoint);
   }
-
-  // _sortPoints(sortType) {
-  //   switch (sortType) {
-  //     case SortType.PRICE:
-  //       this._points.sort(sortPointByPrice);
-  //       break;
-  //     case SortType.TIME:
-  //       this._points.sort(sortPointByTime);
-  //       break;
-  //     default:
-  //       this._points = [...this._unsortedPoints];
-  //   }
-
-  //   this._currentSortType = sortType;
-  // }
 
   _renderSort() {
 
@@ -116,8 +87,6 @@ export default class Trip {
 
       this._currentSortType = sortType;
 
-      // this._sortPoints(sortType);
-      // remove(this._daysView);
       this._clearPointList();
       this._renderDaysList();
 
@@ -156,10 +125,6 @@ export default class Trip {
       Object.values(days)
         .forEach((dayPoints, counter) => {
           const dayView = new DayView(new Date(dayPoints[0].startTime), counter + 1);
-          // так как все точки сгруппированы по дням, то при "умном" удалении точек,
-          // так же надо удалить дни и контейнер дней. Не придумал ничего лучшего,
-          // кроме как сохранять дни в массив, и в случае необходимости вызывать
-          // метод removeElement().
           this._days.push(dayView);
 
           render(this._daysView, dayView, RenderPosition.BEFORE_END);
