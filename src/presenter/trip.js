@@ -37,11 +37,10 @@ const groupPointsByDays = (points) => points
   .reduce(reducePointByDay, {});
 
 export default class Trip {
-  constructor(container, destinations) {
+  constructor(container, destinations, pointsModel) {
     this._container = container;
-    // Если этот массив нужен только для генерации Options для формы редактирования,
-    // тогда не нужно его копировать
     this._destinations = destinations;
+    this._pointsModel = pointsModel;
 
     this._points = [];
     this._unsortedPoints = [];
@@ -69,6 +68,10 @@ export default class Trip {
     this._renderSort();
     this._sortPoints(this._currentSortType);
     this._renderDaysList();
+  }
+
+  _getPoints() {
+    return this._tasksModel.getPoints();
   }
 
   _handleModeChange() {
