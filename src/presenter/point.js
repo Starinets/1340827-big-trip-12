@@ -5,6 +5,7 @@ import {isEscapeEvent} from './../utils/dom-event';
 import OfferListView from '../view/offer-list';
 import OfferView from './../view/offer';
 import {UserAction, UpdateType} from "./../constants";
+import {isDatesEqual} from "./../utils/date";
 
 const MAX_OFFERS_COUNT = 3;
 const Mode = {
@@ -126,9 +127,11 @@ export default class Point {
   }
 
   _handlePointFormSubmit(editedPoint) {
+    const isMinorUpdate = !isDatesEqual(this._point.startTime, editedPoint.startTime);
+
     this._changeData(
         UserAction.UPDATE_POINT,
-        UpdateType.MINOR,
+        isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
         editedPoint);
     this._replaceFormToCard();
   }
