@@ -6,6 +6,7 @@ import {
   formatMonthDate,
   addLeadingRank
 } from './utils/date';
+import PointsModel from './model/points';
 import TripInfoView from './view/trip-info';
 import MainInfoView from './view/main-info';
 import TripCostView from './view/trip-cost';
@@ -60,13 +61,15 @@ const getTripDuration = (points) => {
 
 let minDate = new Date();
 
-const points = new Array(EVENT_COUNT)
-  .fill()
-  .map(() => {
-    let point = generatePoint(minDate);
-    minDate = point.endTime;
-    return point;
-  });
+const points = new PointsModel().setPoints(
+    new Array(EVENT_COUNT)
+      .fill()
+      .map(() => {
+        let point = generatePoint(minDate);
+        minDate = point.endTime;
+        return point;
+      })
+);
 
 const destinations = generateDestinationsInfo();
 
