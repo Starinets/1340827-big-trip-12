@@ -46,7 +46,7 @@ export default class Trip {
     this._days = [];
 
     this._pointMessage = new PointMessage(EMPTY_POINTS_LIST_MESSAGE);
-    this._sort = new SortView();
+    this._sort = new SortView(this._currentSortType);
     this._daysView = new DaysView();
 
     // this._handlePointChange = this._handlePointChange.bind(this);
