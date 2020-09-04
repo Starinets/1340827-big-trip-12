@@ -81,6 +81,8 @@ export default class Point {
 
   _replaceCardToForm() {
     replace(this._pointEditComponent, this._pointComponent);
+    document.addEventListener(`keydown`, this._escapeKeydownHandler);
+
     this._pointEditComponent.reset(this._point);
     this._changeMode();
     this._mode = Mode.EDITING;
@@ -88,6 +90,8 @@ export default class Point {
 
   _replaceFormToCard() {
     replace(this._pointComponent, this._pointEditComponent);
+    document.removeEventListener(`keydown`, this._escapeKeydownHandler);
+
     this._mode = Mode.DEFAULT;
   }
 
@@ -108,21 +112,15 @@ export default class Point {
   _escapeKeydownHandler(evt) {
     if (isEscapeEvent(evt)) {
       this._replaceFormToCard();
-
-      document.removeEventListener(`keydown`, this._escapeKeydownHandler);
     }
   }
 
   _handlePointRollupButtonClick() {
     this._replaceCardToForm();
-
-    document.addEventListener(`keydown`, this._escapeKeydownHandler);
   }
 
   _handlePointFormRollupButtonClick() {
     this._replaceFormToCard();
-
-    document.removeEventListener(`keydown`, this._escapeKeydownHandler);
   }
 
   _handlePointFormSubmit(editedPoint) {
