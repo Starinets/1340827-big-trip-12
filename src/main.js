@@ -61,7 +61,8 @@ const getTripDuration = (points) => {
 
 let minDate = new Date();
 
-const points = new PointsModel().setPoints(
+const pointsModel = new PointsModel();
+pointsModel.setPoints(
     new Array(EVENT_COUNT)
       .fill()
       .map(() => {
@@ -76,13 +77,18 @@ const destinations = generateDestinationsInfo();
 const infoView = new TripInfoView().getElement();
 
 render(infoPlace, infoView, RenderPosition.AFTER_BEGIN);
-render(infoPlace, new AddPointButtonView().getElement(), RenderPosition.BEFORE_END);
+render(infoPlace, new AddPointButtonView(), RenderPosition.BEFORE_END);
 
-render(infoView, new MainInfoView(getTripPath(points), getTripDuration(points)).getElement(), RenderPosition.BEFORE_END);
-render(infoView, new TripCostView(getTripCost(points)).getElement(), RenderPosition.BEFORE_END);
+const points = pointsModel.getPoints();
+const tripPath = getTripPath(points);
+const tripDuration = getTripDuration(points);
+const tripCost = getTripCost(points);
 
-render(menuPlace, new MenuView().getElement(), RenderPosition.AFTER_END);
-render(filtersPlace, new FiltersView().getElement(), RenderPosition.BEFORE_END);
+render(infoView, new MainInfoView(tripPath, tripDuration), RenderPosition.BEFORE_END);
+render(infoView, new TripCostView(tripCost), RenderPosition.BEFORE_END);
 
-const tripPresenter = new TripPresenter(contentPlace, destinations);
-tripPresenter.init(points);
+render(menuPlace, new MenuView(), RenderPosition.AFTER_END);
+render(filtersPlace, new FiltersView(), RenderPosition.BEFORE_END);
+
+const tripPresenter = new TripPresenter(contentPlace, destinations, pointsModel);
+tripPresenter.init();
