@@ -8,7 +8,7 @@ import {
   sortPointByTime,
   sortPointByPrice
 } from "../utils/trip";
-import {updateItemByID} from "../utils/data";
+// import {updateItemByID} from "../utils/data";
 import {formatDayDate} from './../utils/date';
 import SortView from './../view/sort';
 import PointMessage from './../view/point-message';
@@ -42,8 +42,8 @@ export default class Trip {
     this._destinations = destinations;
     this._pointsModel = pointsModel;
 
-    this._points = []; // remove later
-    this._unsortedPoints = []; // remove later
+    // this._points = [];
+    // this._unsortedPoints = [];
     this._pointPresenter = {};
     this._currentSortType = SortType.EVENT;
     this._days = [];
@@ -73,11 +73,11 @@ export default class Trip {
   _getPoints() {
     switch (this._currentSortType) {
       case SortType.TIME:
-        return this._tasksModel.getTasks().slice().sort(sortPointByTime);
+        return this._pointsModel.getPoints().slice().sort(sortPointByTime);
       case SortType.PRICE:
-        return this._tasksModel.getTasks().slice().sort(sortPointByPrice);
+        return this._pointsModel.getPoints().slice().sort(sortPointByPrice);
     }
-    return this._tasksModel.getPoints();
+    return this._pointsModel.getPoints();
   }
 
   _handleModeChange() {
@@ -87,8 +87,8 @@ export default class Trip {
   }
 
   _handlePointChange(updatedPoint) {
-    this._points = updateItemByID(this._points, updatedPoint);
-    this._unsortedPoints = updateItemByID(this._unsortedPoints, updatedPoint);
+    // this._points = updateItemByID(this._points, updatedPoint);
+    // this._unsortedPoints = updateItemByID(this._unsortedPoints, updatedPoint);
     this._pointPresenter[updatedPoint.id].init(updatedPoint);
   }
 
@@ -114,8 +114,11 @@ export default class Trip {
         return;
       }
 
+      this._currentSortType = sortType;
+
       // this._sortPoints(sortType);
-      remove(this._daysView);
+      // remove(this._daysView);
+      this._clearPointList();
       this._renderDaysList();
 
     };
@@ -148,7 +151,7 @@ export default class Trip {
 
   _renderDays() {
     if (this._currentSortType === SortType.EVENT) {
-      const days = groupPointsByDays(this._points);
+      const days = groupPointsByDays(this._getPoints());
 
       Object.values(days)
         .forEach((dayPoints, counter) => {
@@ -170,7 +173,7 @@ export default class Trip {
       this._days.push(dayView);
 
       render(this._daysView, dayView, RenderPosition.BEFORE_END);
-      this._renderPointsList(dayView, this._points);
+      this._renderPointsList(dayView, this._getPoints());
     }
   }
 
