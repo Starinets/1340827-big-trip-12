@@ -54,6 +54,12 @@ const UpdateType = {
   MAJOR: `MAJOR`
 };
 
+export const FilterType = {
+  EVERYTHING: `everything`,
+  FUTURE: `future`,
+  PAST: `past`
+};
+
 export {
   pointTypeToPretext,
   GROUP_ACTIVITY_TYPES,

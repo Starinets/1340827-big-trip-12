@@ -7,6 +7,7 @@ import {
   addLeadingRank
 } from './utils/date';
 import PointsModel from './model/points';
+import FilterModel from './model/filter';
 import TripInfoView from './view/trip-info';
 import MainInfoView from './view/main-info';
 import TripCostView from './view/trip-cost';
@@ -71,6 +72,8 @@ pointsModel.setPoints(
         return point;
       })
 );
+
+const filterModel = new FilterModel();
 
 const destinations = generateDestinationsInfo();
 
