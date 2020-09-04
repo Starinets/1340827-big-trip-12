@@ -126,13 +126,16 @@ export default class Point {
   }
 
   _handlePointFormSubmit(editedPoint) {
-    this._changeData(editedPoint);
+    this._changeData(
+        UserAction.UPDATE_POINT,
+        UpdateType.MINOR,
+        editedPoint);
     this._replaceFormToCard();
   }
 
   _handleFavoriteChange(isFavorite) {
     this._changeData(
-        UserAction.UPDATE_TASK,
+        UserAction.UPDATE_POINT,
         UpdateType.MINOR,
         Object.assign(
             this._point,
