@@ -26,4 +26,14 @@ export default class Points {
 
     this._notify(updateType, update);
   }
+
+  addPoint(updateType, update) {
+    this._points = [
+      update,
+      ...this._points
+    ];
+
+    this._notify(updateType, update);
+  }
+
 }
