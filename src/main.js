@@ -6,14 +6,14 @@ import {
   formatMonthDate,
   addLeadingRank
 } from './utils/date';
-import {FilterType} from './constants';
+// import {FilterType} from './constants';
 import PointsModel from './model/points';
 import FilterModel from './model/filter';
 import TripInfoView from './view/trip-info';
 import MainInfoView from './view/main-info';
 import TripCostView from './view/trip-cost';
 import MenuView from './view/menu';
-import FiltersView from './view/filters';
+// import FiltersView from './view/filters';
 import AddPointButtonView from './view/add-point-button';
 import {generatePoint} from './mock/point';
 import {generateDestinationsInfo} from './mock/destinations';

@@ -1,4 +1,5 @@
 import {SortType, UpdateType, UserAction} from "./../constants";
+import {filter} from './../utils/filter';
 import {
   render,
   remove,
@@ -57,6 +58,7 @@ export default class Trip {
     this._handleModeChange = this._handleModeChange.bind(this);
 
     this._pointsModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
   }
 
   init() {
@@ -65,13 +67,18 @@ export default class Trip {
   }
 
   _getPoints() {
+    const filterType = this._filterModel.getFilter();
+    const points = this._pointsModel.getPoints();
+    const filteredPoints = filter[filterType](points, new Date());
+
     switch (this._currentSortType) {
       case SortType.TIME:
-        return this._pointsModel.getPoints().slice().sort(sortPointByTime);
+        return filteredPoints.sort(sortPointByTime);
       case SortType.PRICE:
-        return this._pointsModel.getPoints().slice().sort(sortPointByPrice);
+        return filteredPoints.sort(sortPointByPrice);
     }
-    return this._pointsModel.getPoints();
+
+    return filteredPoints;
   }
 
   _handleModeChange() {
@@ -105,7 +112,7 @@ export default class Trip {
         this._renderDaysList();
         break;
       case UpdateType.MAJOR:
-        this._clearBoard({resetSortType: true});
+        this._clearPointList({resetSortType: true});
         this._renderSort();
         this._renderDaysList();
         break;
@@ -154,7 +161,7 @@ export default class Trip {
     remove(this._daysView);
 
     if (resetSortType) {
-      this._currentSortType = SortType.DEFAULT;
+      this._currentSortType = SortType.EVENT;
     }
   }
 
