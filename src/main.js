@@ -18,6 +18,7 @@ import AddPointButtonView from './view/add-point-button';
 import {generatePoint} from './mock/point';
 import {generateDestinationsInfo} from './mock/destinations';
 import TripPresenter from './presenter/trip';
+import FilterPresenter from './presenter/filter';
 
 const EVENT_COUNT = 30;
 
@@ -92,7 +93,10 @@ render(infoView, new MainInfoView(tripPath, tripDuration), RenderPosition.BEFORE
 render(infoView, new TripCostView(tripCost), RenderPosition.BEFORE_END);
 
 render(menuPlace, new MenuView(), RenderPosition.AFTER_END);
-render(filtersPlace, new FiltersView(FilterType.EVERYTHING), RenderPosition.BEFORE_END);
+// render(filtersPlace, new FiltersView(FilterType.EVERYTHING), RenderPosition.BEFORE_END);
 
 const tripPresenter = new TripPresenter(contentPlace, destinations, pointsModel, filterModel);
+const filterPresenter = new FilterPresenter(filtersPlace, filterModel, pointsModel);
+
+filterPresenter.init();
 tripPresenter.init();
