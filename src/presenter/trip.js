@@ -36,10 +36,11 @@ const groupPointsByDays = (points) => points
   .reduce(reducePointByDay, {});
 
 export default class Trip {
-  constructor(container, destinations, pointsModel) {
+  constructor(container, destinations, pointsModel, filterModel) {
     this._container = container;
     this._destinations = destinations;
     this._pointsModel = pointsModel;
+    this._filterModel = filterModel;
 
     this._pointPresenter = {};
     this._currentSortType = SortType.EVENT;
