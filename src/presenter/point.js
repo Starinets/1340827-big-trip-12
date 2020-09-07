@@ -139,7 +139,7 @@ export default class Point {
   _handleFavoriteChange(isFavorite) {
     this._changeData(
         UserAction.UPDATE_POINT,
-        UpdateType.MINOR,
+        UpdateType.PATCH,
         Object.assign(
             this._point,
             {isFavorite}
