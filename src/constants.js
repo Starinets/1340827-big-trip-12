@@ -1,3 +1,6 @@
+const EMPTY_POINTS_LIST_MESSAGE = `Click New Event to create your first point`;
+const UNGROUPED_LIST = 0;
+
 const pointTypeToPretext = {
   'taxi': `Taxi to`,
   'bus': `Bus to`,
@@ -61,6 +64,8 @@ export const FilterType = {
 };
 
 export {
+  EMPTY_POINTS_LIST_MESSAGE,
+  UNGROUPED_LIST,
   pointTypeToPretext,
   GROUP_ACTIVITY_TYPES,
   GROUP_TRANSFER_TYPES,
