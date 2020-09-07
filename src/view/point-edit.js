@@ -11,20 +11,6 @@ import SmartView from "./smart";
 import flatpickr from "flatpickr";
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
-const createEmptyPoint = () => ({
-  type: ``,
-  destination: {
-    name: ``,
-    description: ``,
-    photos: []
-  },
-  startTime: new Date(),
-  endTime: new Date(),
-  offers: [],
-  isFavorite: false,
-  price: 0,
-});
-
 const isOfferCheckedForPoint = (offerName, offers) => offers.find((item) => item.type === offerName);
 
 const createOptionsListTemplate = (destinations) => {
@@ -186,7 +172,7 @@ const createPointFormTemplate = (pointData, destinations) => {
 };
 
 export default class PointEdit extends SmartView {
-  constructor(point = createEmptyPoint(), destinations = []) {
+  constructor(point, destinations = []) {
     super();
     this._startDatePicker = null;
     this._endDatePicker = null;
@@ -348,7 +334,11 @@ export default class PointEdit extends SmartView {
     this.updateData({
       isFavorite: !this._data.isFavorite
     }, true);
-    this._callback.favoriteChange(this._data.isFavorite);
+
+    // Для новой точки вызывать обработчик не будем
+    if (typeof this._callback.favoriteChange === `function`) {
+      this._callback.favoriteChange(this._data.isFavorite);
+    }
   }
 
   _typeListChangeHandler(evt) {
