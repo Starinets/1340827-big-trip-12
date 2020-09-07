@@ -1,4 +1,11 @@
-import {SortType, UpdateType, UserAction} from "./../constants";
+import {
+  EMPTY_POINTS_LIST_MESSAGE,
+  UNGROUPED_LIST,
+  SortType,
+  UpdateType,
+  UserAction,
+  FilterType
+} from './../constants';
 import {filter} from './../utils/filter';
 import {
   render,
@@ -16,9 +23,7 @@ import DaysView from './../view/days';
 import DayView from './../view/day';
 import PointListView from './../view/point-list';
 import PointPresenter from "./point";
-
-const EMPTY_POINTS_LIST_MESSAGE = `Click New Event to create your first point`;
-const UNGROUPED_LIST = 0;
+import PointNewPresenter from './point-new';
 
 const reducePointByDay = (days, point) => {
   const dayDate = formatDayDate(point.startTime);
@@ -59,11 +64,19 @@ export default class Trip {
 
     this._pointsModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
+
+    this._pointNewPresenter = new PointNewPresenter(this._daysView, this._destinations, this._handleViewAction);
   }
 
   init() {
     this._renderSort();
     this._renderDaysList();
+  }
+
+  createPoint() {
+    this._currentSortType = SortType.EVENT;
+    this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this._pointNewPresenter.init();
   }
 
   _getPoints() {
@@ -82,6 +95,8 @@ export default class Trip {
   }
 
   _handleModeChange() {
+    this._pointNewPresenter.destroy();
+
     Object
       .values(this._pointPresenter)
       .forEach((presenter) => presenter.resetView());
@@ -149,6 +164,8 @@ export default class Trip {
   }
 
   _clearPointList({resetSortType = false} = {}) {
+    this._pointNewPresenter.destroy();
+
     Object
       .values(this._pointPresenter)
       .forEach((presenter) => presenter.destroy());

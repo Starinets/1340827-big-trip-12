@@ -100,3 +100,8 @@ const filterPresenter = new FilterPresenter(filtersPlace, filterModel, pointsMod
 
 filterPresenter.init();
 tripPresenter.init();
+
+infoPlace.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, (evt) => {
+  evt.preventDefault();
+  tripPresenter.createPoint();
+});
