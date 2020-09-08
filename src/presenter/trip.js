@@ -6,7 +6,7 @@ import {
   UserAction,
   FilterType
 } from './../constants';
-import {filter} from './../utils/filter';
+import {filterTypeToPoints} from './../utils/filter';
 import {
   render,
   remove,
@@ -80,7 +80,7 @@ export default class Trip {
   _getPoints() {
     const filterType = this._filterModel.getFilter();
     const points = this._pointsModel.getPoints();
-    const filteredPoints = filter[filterType](points, new Date());
+    const filteredPoints = filterTypeToPoints[filterType](points, new Date());
 
     switch (this._currentSortType) {
       case SortType.TIME:
