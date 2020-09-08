@@ -78,9 +78,10 @@ const filterModel = new FilterModel();
 const destinations = generateDestinationsInfo();
 
 const infoView = new TripInfoView().getElement();
+const addPointButtonView = new AddPointButtonView();
 
 render(infoPlace, infoView, RenderPosition.AFTER_BEGIN);
-render(infoPlace, new AddPointButtonView(), RenderPosition.BEFORE_END);
+render(infoPlace, addPointButtonView, RenderPosition.BEFORE_END);
 
 const points = pointsModel.getPoints();
 const tripPath = getTripPath(points);
@@ -98,7 +99,4 @@ const filterPresenter = new FilterPresenter(filtersPlace, filterModel, pointsMod
 filterPresenter.init();
 tripPresenter.init();
 
-infoPlace.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, (evt) => {
-  evt.preventDefault();
-  tripPresenter.createPoint();
-});
+addPointButtonView.setClickHandler(tripPresenter.createPoint);
