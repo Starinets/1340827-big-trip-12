@@ -74,7 +74,7 @@ export default class PointNew {
     remove(this._pointEditComponent);
     this._pointEditComponent = null;
     remove(this._pointListView);
-    remove(this._pointListView);
+    remove(this._dayView);
 
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
   }
