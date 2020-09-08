@@ -54,10 +54,8 @@ export default class Trip {
     this._sort = null;
 
     this._pointMessage = new PointMessage(EMPTY_POINTS_LIST_MESSAGE);
-    // this._sort = new SortView(this._currentSortType);
     this._daysView = new DaysView();
 
-    // this._handlePointChange = this._handlePointChange.bind(this);
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
@@ -219,7 +217,6 @@ export default class Trip {
 
   _renderPoints(pointListView, dayPoints) {
     dayPoints.forEach((point) => {
-      // const pointPresenter = new PointPresenter(pointListView, this._destinations, this._handlePointChange, this._handleModeChange);
       const pointPresenter = new PointPresenter(pointListView, this._destinations, this._handleViewAction, this._handleModeChange);
       pointPresenter.init(point);
 

@@ -6,14 +6,12 @@ import {
   formatMonthDate,
   addLeadingRank
 } from './utils/date';
-// import {FilterType} from './constants';
 import PointsModel from './model/points';
 import FilterModel from './model/filter';
 import TripInfoView from './view/trip-info';
 import MainInfoView from './view/main-info';
 import TripCostView from './view/trip-cost';
 import MenuView from './view/menu';
-// import FiltersView from './view/filters';
 import AddPointButtonView from './view/add-point-button';
 import {generatePoint} from './mock/point';
 import {generateDestinationsInfo} from './mock/destinations';
@@ -93,7 +91,6 @@ render(infoView, new MainInfoView(tripPath, tripDuration), RenderPosition.BEFORE
 render(infoView, new TripCostView(tripCost), RenderPosition.BEFORE_END);
 
 render(menuPlace, new MenuView(), RenderPosition.AFTER_END);
-// render(filtersPlace, new FiltersView(FilterType.EVERYTHING), RenderPosition.BEFORE_END);
 
 const tripPresenter = new TripPresenter(contentPlace, destinations, pointsModel, filterModel);
 const filterPresenter = new FilterPresenter(filtersPlace, filterModel, pointsModel);
