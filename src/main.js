@@ -6,15 +6,17 @@ import {
   formatMonthDate,
   addLeadingRank
 } from './utils/date';
+import PointsModel from './model/points';
+import FilterModel from './model/filter';
 import TripInfoView from './view/trip-info';
 import MainInfoView from './view/main-info';
 import TripCostView from './view/trip-cost';
 import MenuView from './view/menu';
-import FiltersView from './view/filters';
 import AddPointButtonView from './view/add-point-button';
 import {generatePoint} from './mock/point';
 import {generateDestinationsInfo} from './mock/destinations';
 import TripPresenter from './presenter/trip';
+import FilterPresenter from './presenter/filter';
 
 const EVENT_COUNT = 30;
 
@@ -60,26 +62,41 @@ const getTripDuration = (points) => {
 
 let minDate = new Date();
 
-const points = new Array(EVENT_COUNT)
-  .fill()
-  .map(() => {
-    let point = generatePoint(minDate);
-    minDate = point.endTime;
-    return point;
-  });
+const pointsModel = new PointsModel();
+pointsModel.set(
+    new Array(EVENT_COUNT)
+      .fill()
+      .map(() => {
+        let point = generatePoint(minDate);
+        minDate = point.endTime;
+        return point;
+      })
+);
+
+const filterModel = new FilterModel();
 
 const destinations = generateDestinationsInfo();
 
 const infoView = new TripInfoView().getElement();
+const addPointButtonView = new AddPointButtonView();
 
 render(infoPlace, infoView, RenderPosition.AFTER_BEGIN);
-render(infoPlace, new AddPointButtonView().getElement(), RenderPosition.BEFORE_END);
+render(infoPlace, addPointButtonView, RenderPosition.BEFORE_END);
 
-render(infoView, new MainInfoView(getTripPath(points), getTripDuration(points)).getElement(), RenderPosition.BEFORE_END);
-render(infoView, new TripCostView(getTripCost(points)).getElement(), RenderPosition.BEFORE_END);
+const points = pointsModel.get();
+const tripPath = getTripPath(points);
+const tripDuration = getTripDuration(points);
+const tripCost = getTripCost(points);
 
-render(menuPlace, new MenuView().getElement(), RenderPosition.AFTER_END);
-render(filtersPlace, new FiltersView().getElement(), RenderPosition.BEFORE_END);
+render(infoView, new MainInfoView(tripPath, tripDuration), RenderPosition.BEFORE_END);
+render(infoView, new TripCostView(tripCost), RenderPosition.BEFORE_END);
 
-const tripPresenter = new TripPresenter(contentPlace, destinations);
-tripPresenter.init(points);
+render(menuPlace, new MenuView(), RenderPosition.AFTER_END);
+
+const tripPresenter = new TripPresenter(contentPlace, destinations, pointsModel, filterModel);
+const filterPresenter = new FilterPresenter(filtersPlace, filterModel, pointsModel);
+
+filterPresenter.init();
+tripPresenter.init();
+
+addPointButtonView.setClickHandler(tripPresenter.createPoint);

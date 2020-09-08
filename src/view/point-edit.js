@@ -11,20 +11,6 @@ import SmartView from "./smart";
 import flatpickr from "flatpickr";
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
-const createEmptyPoint = () => ({
-  type: ``,
-  destination: {
-    name: ``,
-    description: ``,
-    photos: []
-  },
-  startTime: new Date(),
-  endTime: new Date(),
-  offers: [],
-  isFavorite: false,
-  price: 0,
-});
-
 const isOfferCheckedForPoint = (offerName, offers) => offers.find((item) => item.type === offerName);
 
 const createOptionsListTemplate = (destinations) => {
@@ -186,7 +172,7 @@ const createPointFormTemplate = (pointData, destinations) => {
 };
 
 export default class PointEdit extends SmartView {
-  constructor(point = createEmptyPoint(), destinations = []) {
+  constructor(point, destinations = []) {
     super();
     this._startDatePicker = null;
     this._endDatePicker = null;
@@ -202,6 +188,7 @@ export default class PointEdit extends SmartView {
     this._typeListChangeHandler = this._typeListChangeHandler.bind(this);
     this._startDateChangeHandler = this._startDateChangeHandler.bind(this);
     this._endDateChangeHandler = this._endDateChangeHandler.bind(this);
+    this._resetButtonClickHandler = this._resetButtonClickHandler.bind(this);
 
     this._setInnerHandlers();
     this._setDatePicker();
@@ -227,6 +214,9 @@ export default class PointEdit extends SmartView {
     this._callback.favoriteChange = callback;
   }
 
+  setResetButtonClickHandler(callback) {
+    this._callback.resetButtonClick = callback;
+  }
 
   /* -------------------------- Overloaded methods -------------------------- */
 
@@ -277,6 +267,8 @@ export default class PointEdit extends SmartView {
       .addEventListener(`change`, this._destinationChangeHandler);
     element.querySelector(`.event__type-list`)
       .addEventListener(`change`, this._typeListChangeHandler);
+    element.querySelector(`.event__reset-btn`)
+      .addEventListener(`click`, this._resetButtonClickHandler);
   }
 
   _setDatePicker() {
@@ -342,7 +334,11 @@ export default class PointEdit extends SmartView {
     this.updateData({
       isFavorite: !this._data.isFavorite
     }, true);
-    this._callback.favoriteChange(this._data.isFavorite);
+
+    // Для новой точки вызывать обработчик не будем
+    if (typeof this._callback.favoriteChange === `function`) {
+      this._callback.favoriteChange(this._data.isFavorite);
+    }
   }
 
   _typeListChangeHandler(evt) {
@@ -367,6 +363,10 @@ export default class PointEdit extends SmartView {
     this.updateData({
       price: evt.target.valueAsNumber,
     }, true);
+  }
+
+  _resetButtonClickHandler() {
+    this._callback.resetButtonClick();
   }
 
 

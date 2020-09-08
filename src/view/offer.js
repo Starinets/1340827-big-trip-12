@@ -7,13 +7,13 @@ const createOfferTemplate = (offer) => `<li class="event__offer">
   </li>`;
 
 export default class Offer extends Abstract {
-  constructor(offer) {
+  constructor(specific) {
     super();
 
-    this._offer = offer;
+    this._specific = specific;
   }
 
   _getTemplate() {
-    return createOfferTemplate(this._offer);
+    return createOfferTemplate(this._specific);
   }
 }

@@ -12,6 +12,14 @@ const formatDayDate = (date) => moment(date).format(`DD/MM/YYYY`);
 
 const formatMonthDate = (date) => moment(date).format(`MMM D`);
 
+const isDatesEqual = (dateA, dateB) => {
+  if (dateA === null && dateB === null) {
+    return true;
+  }
+
+  return moment(dateA).isSame(dateB, `day`);
+};
+
 const getDatesDifference = (startDate, endDate) => {
   const {days, hours, minutes} = duration(endDate - startDate)._data;
 
@@ -31,5 +39,6 @@ export {
   timeToString,
   formatDateToISOString,
   formatDayDate,
-  formatMonthDate
+  formatMonthDate,
+  isDatesEqual
 };

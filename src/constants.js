@@ -1,3 +1,6 @@
+const EMPTY_POINTS_LIST_MESSAGE = `Click New Event to create your first point`;
+const UNGROUPED_LIST = 0;
+
 const pointTypeToPretext = {
   'taxi': `Taxi to`,
   'bus': `Bus to`,
@@ -42,10 +45,33 @@ const SortType = {
   PRICE: `price`
 };
 
+const UserAction = {
+  UPDATE_POINT: `UPDATE_POINT`,
+  ADD_POINT: `ADD_POINT`,
+  DELETE_POINT: `DELETE_POINT`
+};
+
+const UpdateType = {
+  PATCH: `PATCH`,
+  MINOR: `MINOR`,
+  MAJOR: `MAJOR`
+};
+
+const FilterType = {
+  EVERYTHING: `everything`,
+  FUTURE: `future`,
+  PAST: `past`
+};
+
 export {
+  EMPTY_POINTS_LIST_MESSAGE,
+  UNGROUPED_LIST,
   pointTypeToPretext,
   GROUP_ACTIVITY_TYPES,
   GROUP_TRANSFER_TYPES,
   OfferList,
-  SortType
+  SortType,
+  UserAction,
+  UpdateType,
+  FilterType
 };

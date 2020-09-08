@@ -39,15 +39,15 @@ const createPointTemplate = (point) => {
 };
 
 export default class Point extends Abstract {
-  constructor(point) {
+  constructor(specific) {
     super();
 
-    this._point = point;
+    this._specific = specific;
     this._onRollupButtonClick = this._onRollupButtonClick.bind(this);
   }
 
   _getTemplate() {
-    return createPointTemplate(this._point);
+    return createPointTemplate(this._specific);
   }
 
   getContainer() {
