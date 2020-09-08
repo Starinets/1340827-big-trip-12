@@ -24,7 +24,7 @@ export default class Filter {
     const prevComponent = this._component;
 
     this._component = new FilterView(this._current);
-    this._component.setFilterTypeChangeHandler(this._handleTypeChange);
+    this._component.setTypeChangeHandler(this._handleTypeChange);
 
     if (prevComponent === null) {
       render(this._container, this._component, RenderPosition.BEFORE_END);
