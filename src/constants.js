@@ -57,7 +57,7 @@ const UpdateType = {
   MAJOR: `MAJOR`
 };
 
-export const FilterType = {
+const FilterType = {
   EVERYTHING: `everything`,
   FUTURE: `future`,
   PAST: `past`
@@ -72,5 +72,6 @@ export {
   OfferList,
   SortType,
   UserAction,
-  UpdateType
+  UpdateType,
+  FilterType
 };
