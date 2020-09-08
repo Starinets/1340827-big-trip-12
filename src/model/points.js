@@ -4,52 +4,52 @@ export default class Points extends Observer {
   constructor() {
     super();
 
-    this._points = [];
+    this._specifics = [];
   }
 
-  setPoints(points) {
-    this._points = points.slice();
+  set(points) {
+    this._specifics = points.slice();
   }
 
-  getPoints() {
-    return this._points;
+  get() {
+    return this._specifics;
   }
 
-  updatePoint(updateType, update) {
-    const index = this._points.findIndex((point) => point.id === update.id);
+  update(updateType, update) {
+    const index = this._specifics.findIndex((specific) => specific.id === update.id);
 
     if (index === -1) {
       throw new Error(`Can't update unexisting point`);
     }
 
-    this._points = [
-      ...this._points.slice(0, index),
+    this._specifics = [
+      ...this._specifics.slice(0, index),
       update,
-      ...this._points.slice(index + 1)
+      ...this._specifics.slice(index + 1)
     ];
 
     this._notify(updateType, update);
   }
 
-  addPoint(updateType, update) {
-    this._points = [
+  add(updateType, update) {
+    this._specifics = [
       update,
-      ...this._points
+      ...this._specifics
     ];
 
     this._notify(updateType, update);
   }
 
-  deletePoint(updateType, update) {
-    const index = this._points.findIndex((point) => point.id === update.id);
+  delete(updateType, update) {
+    const index = this._specifics.findIndex((specific) => specific.id === update.id);
 
     if (index === -1) {
       throw new Error(`Can't delete unexisting task`);
     }
 
-    this._points = [
-      ...this._points.slice(0, index),
-      ...this._points.slice(index + 1)
+    this._specifics = [
+      ...this._specifics.slice(0, index),
+      ...this._specifics.slice(index + 1)
     ];
 
     this._notify(updateType);

@@ -80,7 +80,7 @@ export default class Trip {
 
   _getPoints() {
     const filterType = this._filterModel.getFilter();
-    const points = this._pointsModel.getPoints();
+    const points = this._pointsModel.get();
     const filteredPoints = filterTypeToPoints[filterType](points, new Date());
 
     switch (this._currentSortType) {
@@ -104,13 +104,13 @@ export default class Trip {
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_POINT:
-        this._pointsModel.updatePoint(updateType, update);
+        this._pointsModel.update(updateType, update);
         break;
       case UserAction.ADD_POINT:
-        this._pointsModel.addPoint(updateType, update);
+        this._pointsModel.add(updateType, update);
         break;
       case UserAction.DELETE_POINT:
-        this._pointsModel.deletePoint(updateType, update);
+        this._pointsModel.delete(updateType, update);
         break;
     }
   }

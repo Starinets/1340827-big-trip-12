@@ -63,7 +63,7 @@ const getTripDuration = (points) => {
 let minDate = new Date();
 
 const pointsModel = new PointsModel();
-pointsModel.setPoints(
+pointsModel.set(
     new Array(EVENT_COUNT)
       .fill()
       .map(() => {
@@ -83,7 +83,7 @@ const addPointButtonView = new AddPointButtonView();
 render(infoPlace, infoView, RenderPosition.AFTER_BEGIN);
 render(infoPlace, addPointButtonView, RenderPosition.BEFORE_END);
 
-const points = pointsModel.getPoints();
+const points = pointsModel.get();
 const tripPath = getTripPath(points);
 const tripDuration = getTripDuration(points);
 const tripCost = getTripCost(points);
