@@ -74,12 +74,12 @@ export default class Trip {
 
   createPoint() {
     this._currentSortType = SortType.EVENT;
-    this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this._filterModel.set(UpdateType.MAJOR, FilterType.EVERYTHING);
     this._pointNewPresenter.init();
   }
 
   _getPoints() {
-    const filterType = this._filterModel.getFilter();
+    const filterType = this._filterModel.get();
     const points = this._pointsModel.get();
     const filteredPoints = filterTypeToPoints[filterType](points, new Date());
 

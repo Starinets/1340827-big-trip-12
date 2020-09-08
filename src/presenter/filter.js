@@ -19,7 +19,7 @@ export default class Filter {
   }
 
   init() {
-    this._current = this._model.getFilter();
+    this._current = this._model.get();
 
     const prevComponent = this._component;
 
@@ -44,6 +44,6 @@ export default class Filter {
       return;
     }
 
-    this._model.setFilter(UpdateType.MINOR, filterType);
+    this._model.set(UpdateType.MINOR, filterType);
   }
 }
