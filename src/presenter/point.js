@@ -128,11 +128,11 @@ export default class Point {
   }
 
   _handlePointFormSubmit(editedPoint) {
-    const isMinorUpdate = !isDatesEqual(this._point.startTime, editedPoint.startTime);
+    const isPatchUpdate = isDatesEqual(this._point.startTime, editedPoint.startTime);
 
     this._changeData(
         UserAction.UPDATE_POINT,
-        isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
+        isPatchUpdate ? UpdateType.PATCH : UpdateType.MINOR,
         editedPoint);
     this._replaceFormToCard();
   }
