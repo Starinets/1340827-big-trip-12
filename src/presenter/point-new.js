@@ -34,7 +34,7 @@ export default class PointNew {
     this._destinations = destinations;
     this._changeData = changeData;
 
-    this._pointEditComponent = null;
+    this._editComponent = null;
     this._dayView = null;
     this._pointListView = null;
 
@@ -45,14 +45,14 @@ export default class PointNew {
   }
 
   init() {
-    if (this._pointEditComponent !== null) {
+    if (this._editComponent !== null) {
       return;
     }
 
-    this._pointEditComponent = new PointEditView(createEmptyPoint(), this._destinations);
-    this._pointEditComponent.setFormSubmitHandler(this._handleFormSubmit);
-    this._pointEditComponent.setResetButtonClickHandler(this._handleResetButtonClick);
-    this._pointEditComponent.setRollupButtonClickHandler(this._handleRollupButtonClick);
+    this._editComponent = new PointEditView(createEmptyPoint(), this._destinations);
+    this._editComponent.setFormSubmitHandler(this._handleFormSubmit);
+    this._editComponent.setResetButtonClickHandler(this._handleResetButtonClick);
+    this._editComponent.setRollupButtonClickHandler(this._handleRollupButtonClick);
 
 
     this._dayView = new DayView(new Date(), UNGROUPED_LIST);
@@ -61,18 +61,18 @@ export default class PointNew {
     this._pointListView = new PointListView();
     render(this._dayView, this._pointListView, RenderPosition.BEFORE_END);
 
-    render(this._pointListView, this._pointEditComponent, RenderPosition.AFTER_BEGIN);
+    render(this._pointListView, this._editComponent, RenderPosition.AFTER_BEGIN);
 
     document.addEventListener(`keydown`, this._escKeyDownHandler);
   }
 
   destroy() {
-    if (this._pointEditComponent === null) {
+    if (this._editComponent === null) {
       return;
     }
 
-    remove(this._pointEditComponent);
-    this._pointEditComponent = null;
+    remove(this._editComponent);
+    this._editComponent = null;
     remove(this._pointListView);
     remove(this._dayView);
 
