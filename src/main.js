@@ -13,6 +13,7 @@ import MainInfoView from './view/main-info';
 import TripCostView from './view/trip-cost';
 import MenuView from './view/menu';
 import AddPointButtonView from './view/add-point-button';
+import Statistics from './view/statistics';
 import {generatePoint} from './mock/point';
 import {generateDestinationsInfo} from './mock/destinations';
 import TripPresenter from './presenter/trip';
@@ -100,3 +101,6 @@ filterPresenter.init();
 tripPresenter.init();
 
 addPointButtonView.setClickHandler(tripPresenter.createPoint);
+
+render(contentPlace, new Statistics(), RenderPosition.AFTER_END);
+contentPlace.classList.add(`trip-events--hidden`);
