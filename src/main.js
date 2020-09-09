@@ -102,8 +102,6 @@ const filterPresenter = new FilterPresenter(filtersPlace, filterModel, pointsMod
 filterPresenter.init();
 tripPresenter.init();
 
-addPointButtonView.setClickHandler(tripPresenter.createPoint);
-
 render(contentPlace, new Statistics(), RenderPosition.AFTER_END);
 contentPlace.classList.add(`trip-events--hidden`);
 
@@ -112,7 +110,7 @@ const handleMenuClick = (menuItem) => {
     case MenuItem.ADD_NEW_POINT:
       // Скрыть статистику
       // Показать точки
-      // Показать форму добавления новой точки
+      tripPresenter.createPoint();
       break;
     case MenuItem.TABLE:
       // Показать точки
@@ -126,3 +124,4 @@ const handleMenuClick = (menuItem) => {
 };
 
 menuView.setClickHandler(handleMenuClick);
+addPointButtonView.setClickHandler(handleMenuClick);

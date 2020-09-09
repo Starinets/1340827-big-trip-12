@@ -1,4 +1,5 @@
 import Abstract from './abstract';
+import {MenuItem} from './../constants';
 
 const createAddPointButtonTemplate = () => {
   return (
@@ -19,7 +20,7 @@ export default class AddPointButton extends Abstract {
 
   _elementClickHandler(evt) {
     evt.preventDefault();
-    this._callback.buttonClick();
+    this._callback.buttonClick(MenuItem.ADD_NEW_POINT);
   }
 
   // весь объект является кнопкой, и больше в нем ничего нет, поэтому ClickHandler
