@@ -63,6 +63,12 @@ const FilterType = {
   PAST: `past`
 };
 
+const MenuItem = {
+  ADD_NEW_POINT: `ADD_NEW_POINT`,
+  TABLE: `TABLE`,
+  STATISTICS: `STATISTICS`
+};
+
 export {
   EMPTY_POINTS_LIST_MESSAGE,
   UNGROUPED_LIST,
@@ -73,5 +79,6 @@ export {
   SortType,
   UserAction,
   UpdateType,
-  FilterType
+  FilterType,
+  MenuItem
 };

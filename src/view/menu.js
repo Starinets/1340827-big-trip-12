@@ -1,12 +1,13 @@
 import Abstract from './abstract';
+import {MenuItem} from './../constants';
 
 const ACTIVE_MENU_CLASS = `trip-tabs__btn--active`;
 
 const createMenuTemplate = () => {
   return (
     `<nav class="trip-controls__trip-tabs  trip-tabs">
-      <a class="trip-tabs__btn trip-tabs__btn--active" href="#">Table</a>
-      <a class="trip-tabs__btn" href="#">Stats</a>
+      <a class="trip-tabs__btn trip-tabs__btn--active" data-menu-item="${MenuItem.TABLE}" href="#">Table</a>
+      <a class="trip-tabs__btn" data-menu-item="${MenuItem.STATISTICS}" href="#">Stats</a>
     </nav>`
   );
 };
@@ -15,7 +16,7 @@ export default class Menu extends Abstract {
   constructor() {
     super();
 
-    this._tabsClickHandler = this._tabsClickHandler.bind(this);
+    this._clickHandler = this._clickHandler.bind(this);
   }
 
   _getTemplate() {
@@ -24,10 +25,10 @@ export default class Menu extends Abstract {
 
   setClickHandler(callback) {
     this._callback.itemClick = callback;
-    this.getElement().addEventListener(`click`, this._tabsClickHandler);
+    this.getElement().addEventListener(`click`, this._clickHandler);
   }
 
-  _tabsClickHandler(evt) {
+  _clickHandler(evt) {
     evt.preventDefault();
 
     const previousActive = this.getElement().querySelector(`.${ACTIVE_MENU_CLASS}`);
@@ -37,7 +38,7 @@ export default class Menu extends Abstract {
       previousActive.classList.remove(ACTIVE_MENU_CLASS);
       currentActive.classList.add(ACTIVE_MENU_CLASS);
 
-      this._callback.itemClick();
+      this._callback.itemClick(currentActive.dataset.menuItem);
     }
   }
 
