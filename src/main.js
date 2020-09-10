@@ -1,5 +1,6 @@
 import {
   render,
+  remove,
   RenderPosition
 } from './utils/dom';
 import {
@@ -14,7 +15,7 @@ import MainInfoView from './view/main-info';
 import TripCostView from './view/trip-cost';
 import MenuView from './view/menu';
 import AddPointButtonView from './view/add-point-button';
-import Statistics from './view/statistics';
+import StatisticsView from './view/statistics';
 import {generatePoint} from './mock/point';
 import {generateDestinationsInfo} from './mock/destinations';
 import TripPresenter from './presenter/trip';
@@ -98,27 +99,27 @@ render(menuPlace, menuView, RenderPosition.AFTER_END);
 
 const tripPresenter = new TripPresenter(contentPlace, destinations, pointsModel, filterModel);
 const filterPresenter = new FilterPresenter(filtersPlace, filterModel, pointsModel);
+const statisticsView = new StatisticsView();
 
 filterPresenter.init();
 tripPresenter.init();
 
-render(contentPlace, new Statistics(), RenderPosition.AFTER_END);
-contentPlace.classList.add(`trip-events--hidden`);
+render(contentPlace, new StatisticsView(), RenderPosition.AFTER_END);
 
 const handleMenuClick = (menuItem) => {
   switch (menuItem) {
     case MenuItem.ADD_NEW_POINT:
-      // Скрыть статистику
-      // Показать точки
+      remove(statisticsView);
+      tripPresenter.init();
       tripPresenter.createPoint();
       break;
     case MenuItem.TABLE:
-      // Показать точки
-      // Скрыть статистику
+      tripPresenter.init();
+      remove(statisticsView);
       break;
     case MenuItem.STATISTICS:
-      // Скрыть точки
-      // Показать статистику
+      tripPresenter.destroy();
+      render(contentPlace, new StatisticsView(), RenderPosition.AFTER_END);
       break;
   }
 };

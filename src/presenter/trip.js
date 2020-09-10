@@ -61,15 +61,22 @@ export default class Trip {
     this._handleModeChange = this._handleModeChange.bind(this);
     this.createPoint = this.createPoint.bind(this);
 
-    this._pointsModel.addObserver(this._handleModelEvent);
-    this._filterModel.addObserver(this._handleModelEvent);
-
     this._pointNewPresenter = new PointNewPresenter(this._daysView, this._destinations, this._handleViewAction);
   }
 
   init() {
+    this._pointsModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
+
     this._renderSort();
     this._renderDaysList();
+  }
+
+  destroy() {
+    this._clearPointList({resetSortType: true});
+
+    this._pointsModel.removeObserver(this._handleModelEvent);
+    this._filterModel.removeObserver(this._handleModelEvent);
   }
 
   createPoint() {
@@ -149,6 +156,7 @@ export default class Trip {
     };
 
     if (this._sort !== null) {
+      remove(this._sort);
       this._sort = null;
     }
 
