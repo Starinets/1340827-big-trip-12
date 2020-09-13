@@ -28,6 +28,14 @@ export default class Menu extends Abstract {
     this.getElement().addEventListener(`click`, this._clickHandler);
   }
 
+  reset() {
+    const element = this.getElement();
+    const table = element.querySelector(`a[data-menu-item="${MenuItem.TABLE}"]`);
+    const statistic = element.querySelector(`a[data-menu-item="${MenuItem.STATISTICS}"]`);
+    table.classList.add(ACTIVE_MENU_CLASS);
+    statistic.classList.remove(ACTIVE_MENU_CLASS);
+  }
+
   _clickHandler(evt) {
     evt.preventDefault();
 

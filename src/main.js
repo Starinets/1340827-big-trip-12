@@ -1,6 +1,5 @@
 import {
   render,
-  remove,
   RenderPosition
 } from './utils/dom';
 import {
@@ -15,11 +14,11 @@ import MainInfoView from './view/main-info';
 import TripCostView from './view/trip-cost';
 import MenuView from './view/menu';
 import AddPointButtonView from './view/add-point-button';
-import StatisticsView from './view/statistics';
 import {generatePoint} from './mock/point';
 import {generateDestinationsInfo} from './mock/destinations';
 import TripPresenter from './presenter/trip';
 import FilterPresenter from './presenter/filter';
+import StatisticsPresenter from './presenter/statistics';
 
 const EVENT_COUNT = 30;
 
@@ -99,27 +98,26 @@ render(menuPlace, menuView, RenderPosition.AFTER_END);
 
 const tripPresenter = new TripPresenter(contentPlace, destinations, pointsModel, filterModel);
 const filterPresenter = new FilterPresenter(filtersPlace, filterModel, pointsModel);
-const statisticsView = new StatisticsView();
+const statisticsPresenter = new StatisticsPresenter(contentPlace, pointsModel);
 
 filterPresenter.init();
 tripPresenter.init();
 
-render(contentPlace, new StatisticsView(), RenderPosition.AFTER_END);
-
 const handleMenuClick = (menuItem) => {
   switch (menuItem) {
     case MenuItem.ADD_NEW_POINT:
-      remove(statisticsView);
+      statisticsPresenter.destroy();
       tripPresenter.init();
       tripPresenter.createPoint();
+      menuView.reset();
       break;
     case MenuItem.TABLE:
+      statisticsPresenter.destroy();
       tripPresenter.init();
-      remove(statisticsView);
       break;
     case MenuItem.STATISTICS:
       tripPresenter.destroy();
-      render(contentPlace, new StatisticsView(), RenderPosition.AFTER_END);
+      statisticsPresenter.init();
       break;
   }
 };
