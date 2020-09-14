@@ -1,6 +1,5 @@
 import StatisticsView from './../view/statistics';
 import {render, RenderPosition, remove} from './../utils/dom';
-import {UpdateType} from './../constants';
 
 export default class Statistics {
   constructor(container, pointsModel) {
@@ -27,13 +26,5 @@ export default class Statistics {
 
   _handleModelEvent() {
     this.init();
-  }
-
-  _handleTypeChange(filterType) {
-    if (this._current === filterType) {
-      return;
-    }
-
-    this._model.set(UpdateType.MINOR, filterType);
   }
 }
