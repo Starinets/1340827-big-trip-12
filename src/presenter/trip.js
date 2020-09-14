@@ -127,6 +127,11 @@ export default class Trip {
       case UpdateType.PATCH:
         this._pointPresenter[data.id].init(data);
         break;
+      case UpdateType.FILTER:
+        this._clearPointList({resetSortType: true});
+        this._renderSort();
+        this._renderDaysList();
+        break;
       case UpdateType.MINOR:
         this._clearPointList();
         this._renderSort();
