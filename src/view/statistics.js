@@ -6,6 +6,67 @@ import {PointKind, PointType, pointKindToTypeMap} from './../constants';
 
 const BAR_HEIGHT = 55;
 const INCREMENT_TRANSPORT_VALUE = 1;
+const CHART_BACKGROUND_COLOR = `#f2f2f2`;
+
+const ChartDataset = {
+  BACKGROUND_COLOR: `#ffffff`,
+  HOVER_BACKGROUND_COLOR: `#ffffff`,
+  ANCHOR: `start`,
+  BAR_THICKNESS: 50,
+  MIN_BAR_LENGTH: 50,
+};
+const ChartDataLabel = {
+  FONT_SIZE: 13,
+  COLOR: `#000000`,
+  ANCHOR: `end`,
+  ALIGN: `start`,
+};
+const ChartTitle = {
+  DISPLAY: true,
+  FONT_COLOR: `#000000`,
+  FONT_SIZE: 23,
+  POSITION: `left`,
+};
+const LEGEND_DISPLAY = false;
+const TOOLTIPS_ENABLED = false;
+const ChartSettingsToScales = {
+  yAxes: [{
+    ticks: {
+      fontColor: `#000000`,
+      padding: 5,
+      fontSize: 13,
+    },
+    gridLines: {
+      display: false,
+      drawBorder: false,
+    },
+  }],
+  xAxes: [{
+    ticks: {
+      display: false,
+      beginAtZero: true,
+    },
+    gridLines: {
+      display: false,
+      drawBorder: false,
+    },
+  }],
+};
+
+const ChartOptions = {
+  MONEY: {
+    text: `MONEY`,
+    formatter: (value) => `€ ${value}`,
+  },
+  TRANSPORT: {
+    text: `TRANSPORT`,
+    formatter: (value) => `${value}x`,
+  },
+  TIME_SPEND: {
+    text: `TIME SPEND`,
+    formatter: (value) => `${getDatesDifference(0, value)}`,
+  }
+};
 
 const pointTypeToChartLabel = {
   [PointType.TAXI]: `🚕 Taxi`,
@@ -84,76 +145,51 @@ const generateChart = (ctx, chartLabels, chartValues, options) => {
 
   const {text, formatter} = options;
 
-  return new Chart(ctx, {
-    plugins: [ChartDataLabels],
-    type: `horizontalBar`,
-    data: {
-      labels: chartLabels,
-      datasets: [
-        {
-          data: chartValues,
-          backgroundColor: `#ffffff`,
-          hoverBackgroundColor: `#ffffff`,
-          anchor: `start`,
-          barThickness: 50,
-          minBarLength: 50,
+  return new Chart(
+      ctx,
+      {
+        plugins: [ChartDataLabels],
+        type: `horizontalBar`,
+        data: {
+          labels: chartLabels,
+          datasets: [{
+            data: chartValues,
+            backgroundColor: ChartDataset.BACKGROUND_COLOR,
+            hoverBackgroundColor: ChartDataset.HOVER_BACKGROUND_COLOR,
+            anchor: ChartDataset.ANCHOR,
+            barThickness: ChartDataset.BAR_THICKNESS,
+            minBarLength: ChartDataset.MIN_BAR_LENGTH,
+          }],
         },
-      ],
-    },
-    options: {
-      plugins: {
-        datalabels: {
-          font: {
-            size: 13,
+        options: {
+          plugins: {
+            datalabels: {
+              font: {
+                size: ChartDataLabel.FONT_SIZE,
+              },
+              color: ChartDataLabel.COLOR,
+              anchor: ChartDataLabel.ANCHOR,
+              align: ChartDataLabel.ALIGN,
+              formatter,
+            },
           },
-          color: `#000000`,
-          anchor: `end`,
-          align: `start`,
-          formatter,
+          title: {
+            display: ChartTitle.DISPLAY,
+            text,
+            fontColor: ChartTitle.FONT_COLOR,
+            fontSize: ChartTitle.FONT_SIZE,
+            position: ChartTitle.POSITION,
+          },
+          scales: ChartSettingsToScales,
+          legend: {
+            display: LEGEND_DISPLAY,
+          },
+          tooltips: {
+            enabled: TOOLTIPS_ENABLED,
+          },
         },
-      },
-      title: {
-        display: true,
-        text,
-        fontColor: `#000000`,
-        fontSize: 23,
-        position: `left`,
-      },
-      scales: {
-        yAxes: [
-          {
-            ticks: {
-              fontColor: `#000000`,
-              padding: 5,
-              fontSize: 13,
-            },
-            gridLines: {
-              display: false,
-              drawBorder: false,
-            },
-          },
-        ],
-        xAxes: [
-          {
-            ticks: {
-              display: false,
-              beginAtZero: true,
-            },
-            gridLines: {
-              display: false,
-              drawBorder: false,
-            },
-          },
-        ],
-      },
-      legend: {
-        display: false,
-      },
-      tooltips: {
-        enabled: false,
-      },
-    },
-  });
+      }
+  );
 };
 
 
@@ -163,12 +199,7 @@ const generateMoneyChart = (ctx, points) => {
   const chartLabels = getPointTypeLabels(sortedTotals.map((total) => total.type));
   const chartValues = sortedTotals.map((total) => total.price);
 
-  const options = {
-    text: `MONEY`,
-    formatter: (value) => `€ ${value}`,
-  };
-
-  generateChart(ctx, chartLabels, chartValues, options);
+  return generateChart(ctx, chartLabels, chartValues, ChartOptions.MONEY);
 };
 
 const generateTransportChart = (ctx, points) => {
@@ -177,12 +208,7 @@ const generateTransportChart = (ctx, points) => {
   const chartLabels = getPointTypeLabels(sortedTotals.map((total) => total.type));
   const chartValues = sortedTotals.map((total) => total.totals);
 
-  const options = {
-    text: `TRANSPORT`,
-    formatter: (value) => `${value}x`,
-  };
-
-  generateChart(ctx, chartLabels, chartValues, options);
+  return generateChart(ctx, chartLabels, chartValues, ChartOptions.TRANSPORT);
 };
 
 const generateTimeSpendChart = (ctx, points) => {
@@ -191,12 +217,7 @@ const generateTimeSpendChart = (ctx, points) => {
   const chartLabels = getPointTypeLabels(sortedTotals.map((total) => total.type));
   const chartValues = sortedTotals.map((total) => total.hours);
 
-  const options = {
-    text: `TIME SPEND`,
-    formatter: (value) => `${getDatesDifference(0, value)}`,
-  };
-
-  generateChart(ctx, chartLabels, chartValues, options);
+  return generateChart(ctx, chartLabels, chartValues, ChartOptions.TIME_SPEND);
 };
 
 
@@ -239,9 +260,9 @@ export default class Statistics extends Abstract {
     const transportChart = element.querySelector(`.statistics__chart--transport`);
     const timeSpendChart = element.querySelector(`.statistics__chart--time`);
 
-    moneyChart.style.backgroundColor = `#f2f2f2`;
-    transportChart.style.backgroundColor = `#f2f2f2`;
-    timeSpendChart.style.backgroundColor = `#f2f2f2`;
+    moneyChart.style.backgroundColor = CHART_BACKGROUND_COLOR;
+    transportChart.style.backgroundColor = CHART_BACKGROUND_COLOR;
+    timeSpendChart.style.backgroundColor = CHART_BACKGROUND_COLOR;
 
     this._moneyCart = generateMoneyChart(moneyChart, this._points);
     this._transportChart = generateTransportChart(transportChart, this._points);
