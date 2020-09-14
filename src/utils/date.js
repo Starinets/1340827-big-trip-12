@@ -20,6 +20,8 @@ const isDatesEqual = (dateA, dateB) => {
   return moment(dateA).isSame(dateB, `day`);
 };
 
+const getHourDuration = (startDate, endDate) => duration(endDate - startDate).asHours();
+
 const getDatesDifference = (startDate, endDate) => {
   const {days, hours, minutes} = duration(endDate - startDate)._data;
 
@@ -34,11 +36,12 @@ const getDatesDifference = (startDate, endDate) => {
 
 export {
   addLeadingRank,
-  getDatesDifference,
   dateToString,
   timeToString,
   formatDateToISOString,
   formatDayDate,
   formatMonthDate,
-  isDatesEqual
+  isDatesEqual,
+  getHourDuration,
+  getDatesDifference
 };

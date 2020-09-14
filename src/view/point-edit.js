@@ -1,7 +1,7 @@
 import {
   pointTypeToPretext,
-  GROUP_ACTIVITY_TYPES,
-  GROUP_TRANSFER_TYPES,
+  PointKind,
+  pointKindToTypeMap,
   OfferList
 } from '../constants';
 import {setFirstCharToUpperCase} from './../utils/general';
@@ -103,14 +103,14 @@ const createPointFormTemplate = (pointData, destinations) => {
             <fieldset class="event__type-group">
               <legend class="visually-hidden">Transfer</legend>
 
-              ${createEventListTemplate(pointData, GROUP_ACTIVITY_TYPES)}
+              ${createEventListTemplate(pointData, pointKindToTypeMap[PointKind.TRANSFER])}
 
             </fieldset>
 
             <fieldset class="event__type-group">
               <legend class="visually-hidden">Activity</legend>
 
-              ${createEventListTemplate(pointData, GROUP_TRANSFER_TYPES)}
+              ${createEventListTemplate(pointData, pointKindToTypeMap[PointKind.ACTIVITY])}
 
             </fieldset>
           </div>

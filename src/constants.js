@@ -1,21 +1,54 @@
 const EMPTY_POINTS_LIST_MESSAGE = `Click New Event to create your first point`;
 const UNGROUPED_LIST = 0;
 
-const pointTypeToPretext = {
-  'taxi': `Taxi to`,
-  'bus': `Bus to`,
-  'train': `Train to`,
-  'ship': `Ship to`,
-  'transport': `Transport to`,
-  'drive': `Drive to`,
-  'flight': `Flight to`,
-  'check-in': `Check in`,
-  'sightseeing': `Sightseeing in`,
-  'restaurant': `Restaurant in`,
+const PointKind = {
+  TRANSFER: `transfer`,
+  ACTIVITY: `activity`,
 };
 
-const GROUP_ACTIVITY_TYPES = [`taxi`, `bus`, `train`, `ship`, `transport`, `drive`, `flight`];
-const GROUP_TRANSFER_TYPES = [`check-in`, `sightseeing`, `restaurant`];
+const PointType = {
+  TAXI: `taxi`,
+  BUS: `bus`,
+  TRAIN: `train`,
+  SHIP: `ship`,
+  TRANSPORT: `transport`,
+  DRIVE: `drive`,
+  FLIGHT: `flight`,
+  CHECK_IN: `check-in`,
+  SIGHTSEEING: `sightseeing`,
+  RESTAURANT: `restaurant`,
+};
+
+const pointKindToTypeMap = {
+  [PointKind.TRANSFER]: [
+    PointType.TAXI,
+    PointType.BUS,
+    PointType.TRAIN,
+    PointType.SHIP,
+    PointType.TRANSPORT,
+    PointType.DRIVE,
+    PointType.FLIGHT,
+  ],
+  [PointKind.ACTIVITY]: [
+    PointType.CHECK_IN,
+    PointType.SIGHTSEEING,
+    PointType.RESTAURANT,
+  ],
+};
+
+const pointTypeToPretext = {
+  [PointType.TAXI]: `Taxi to`,
+  [PointType.BUS]: `Bus to`,
+  [PointType.TRAIN]: `Train to`,
+  [PointType.SHIP]: `Ship to`,
+  [PointType.TRANSPORT]: `Transport to`,
+  [PointType.DRIVE]: `Drive to`,
+  [PointType.FLIGHT]: `Flight to`,
+  [PointType.CHECK_IN]: `Check in`,
+  [PointType.SIGHTSEEING]: `Sightseeing in`,
+  [PointType.RESTAURANT]: `Restaurant in`,
+};
+
 const OfferList = {
   'luggage': {
     text: `Add luggage`,
@@ -53,6 +86,7 @@ const UserAction = {
 
 const UpdateType = {
   PATCH: `PATCH`,
+  FILTER: `FILTER`,
   MINOR: `MINOR`,
   MAJOR: `MAJOR`
 };
@@ -63,15 +97,23 @@ const FilterType = {
   PAST: `past`
 };
 
+const MenuItem = {
+  ADD_NEW_POINT: `ADD_NEW_POINT`,
+  TABLE: `TABLE`,
+  STATISTICS: `STATISTICS`
+};
+
 export {
+  PointKind,
+  PointType,
+  pointKindToTypeMap,
   EMPTY_POINTS_LIST_MESSAGE,
   UNGROUPED_LIST,
   pointTypeToPretext,
-  GROUP_ACTIVITY_TYPES,
-  GROUP_TRANSFER_TYPES,
   OfferList,
   SortType,
   UserAction,
   UpdateType,
-  FilterType
+  FilterType,
+  MenuItem
 };

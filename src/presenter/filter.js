@@ -1,6 +1,7 @@
 import FilterView from './../view/filters';
 import {render, RenderPosition, replace, remove} from './../utils/dom';
-import {UpdateType} from './../constants';
+import {UpdateType, FilterType} from './../constants';
+import {filterTypeToPoints} from './../utils/filter';
 
 export default class Filter {
   constructor(container, model, pointsModel) {
@@ -21,9 +22,10 @@ export default class Filter {
   init() {
     this._current = this._model.get();
 
+    const filters = this._getFilters();
     const prevComponent = this._component;
 
-    this._component = new FilterView(this._current);
+    this._component = new FilterView(this._current, filters);
     this._component.setTypeChangeHandler(this._handleTypeChange);
 
     if (prevComponent === null) {
@@ -44,6 +46,17 @@ export default class Filter {
       return;
     }
 
-    this._model.set(UpdateType.MINOR, filterType);
+    this._model.set(UpdateType.FILTER, filterType);
+  }
+
+  _getFilters() {
+    const points = this._pointsModel.get();
+    const currentDate = new Date();
+
+    return {
+      [FilterType.EVERYTHING]: filterTypeToPoints[FilterType.EVERYTHING](points).length,
+      [FilterType.FUTURE]: filterTypeToPoints[FilterType.FUTURE](points, currentDate).length,
+      [FilterType.PAST]: filterTypeToPoints[FilterType.PAST](points, currentDate).length,
+    };
   }
 }

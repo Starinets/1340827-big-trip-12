@@ -6,6 +6,7 @@ import {
   formatMonthDate,
   addLeadingRank
 } from './utils/date';
+import {MenuItem} from './constants';
 import PointsModel from './model/points';
 import FilterModel from './model/filter';
 import TripInfoView from './view/trip-info';
@@ -17,6 +18,7 @@ import {generatePoint} from './mock/point';
 import {generateDestinationsInfo} from './mock/destinations';
 import TripPresenter from './presenter/trip';
 import FilterPresenter from './presenter/filter';
+import StatisticsPresenter from './presenter/statistics';
 
 const EVENT_COUNT = 30;
 
@@ -91,12 +93,34 @@ const tripCost = getTripCost(points);
 render(infoView, new MainInfoView(tripPath, tripDuration), RenderPosition.BEFORE_END);
 render(infoView, new TripCostView(tripCost), RenderPosition.BEFORE_END);
 
-render(menuPlace, new MenuView(), RenderPosition.AFTER_END);
+const menuView = new MenuView();
+render(menuPlace, menuView, RenderPosition.AFTER_END);
 
 const tripPresenter = new TripPresenter(contentPlace, destinations, pointsModel, filterModel);
 const filterPresenter = new FilterPresenter(filtersPlace, filterModel, pointsModel);
+const statisticsPresenter = new StatisticsPresenter(contentPlace, pointsModel);
 
 filterPresenter.init();
 tripPresenter.init();
 
-addPointButtonView.setClickHandler(tripPresenter.createPoint);
+const handleMenuClick = (menuItem) => {
+  switch (menuItem) {
+    case MenuItem.ADD_NEW_POINT:
+      statisticsPresenter.destroy();
+      tripPresenter.init();
+      tripPresenter.createPoint();
+      menuView.reset();
+      break;
+    case MenuItem.TABLE:
+      statisticsPresenter.destroy();
+      tripPresenter.init();
+      break;
+    case MenuItem.STATISTICS:
+      tripPresenter.destroy();
+      statisticsPresenter.init();
+      break;
+  }
+};
+
+menuView.setClickHandler(handleMenuClick);
+addPointButtonView.setClickHandler(handleMenuClick);

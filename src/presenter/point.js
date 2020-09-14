@@ -128,7 +128,9 @@ export default class Point {
   }
 
   _handleFormSubmit(editedPoint) {
-    const isPatchUpdate = isDatesEqual(this._specific.startTime, editedPoint.startTime);
+    const isPatchUpdate =
+      isDatesEqual(this._specific.startTime, editedPoint.startTime)
+      && this._specific.price === editedPoint.price;
 
     this._changeData(
         UserAction.UPDATE_POINT,
