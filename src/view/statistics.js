@@ -132,7 +132,6 @@ const generateChart = (ctx, chartLabels, chartValues, options) => {
               display: false,
               drawBorder: false,
             },
-            barThickness: 44,
           },
         ],
         xAxes: [
@@ -145,7 +144,6 @@ const generateChart = (ctx, chartLabels, chartValues, options) => {
               display: false,
               drawBorder: false,
             },
-            minBarLength: 50,
           },
         ],
       },
@@ -168,7 +166,7 @@ const generateMoneyChart = (ctx, points) => {
 
   const options = {
     text: `MONEY`,
-    formatter: (val) => `€ ${val}`,
+    formatter: (value) => `€ ${value}`,
   };
 
   generateChart(ctx, chartLabels, chartValues, options);
@@ -182,7 +180,7 @@ const generateTransportChart = (ctx, points) => {
 
   const options = {
     text: `TRANSPORT`,
-    formatter: (val) => `${val}x`,
+    formatter: (value) => `${value}x`,
   };
 
   generateChart(ctx, chartLabels, chartValues, options);
@@ -196,7 +194,7 @@ const generateTimeSpendChart = (ctx, points) => {
 
   const options = {
     text: `TIME SPEND`,
-    formatter: (val) => `${val}h`,
+    formatter: (value) => `${value}h`,
   };
 
   generateChart(ctx, chartLabels, chartValues, options);
