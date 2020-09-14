@@ -81,6 +81,8 @@ const pointTypeToChartLabel = {
   [PointType.RESTAURANT]: `🍴 Restaurant`,
 };
 
+const transportTypeSet = new Set(pointKindToTypeMap[PointKind.TRANSFER]);
+
 const getPointTypePriceTotals = (points) => {
   const pointTypeTotalsMap = points.reduce((stats, point) => {
     const {type, price} = point;
@@ -100,12 +102,12 @@ const getPointTypeDurationTotals = (points) => {
   const pointTypeTotalsMap = points.reduce((stats, point) => {
     const {type, startTime, endTime} = point;
 
-    const hours = endTime - startTime;
+    const time = endTime - startTime;
 
     return Object.assign({}, stats, {
       [type]: {
         type,
-        hours: stats[type] ? stats[type].hours + hours : hours,
+        time: stats[type] ? stats[type].time + time : time,
       },
     });
   }, {});
@@ -113,12 +115,10 @@ const getPointTypeDurationTotals = (points) => {
   return Object.values(pointTypeTotalsMap);
 };
 
-const pointTransportsTypes = Object.values(pointKindToTypeMap[PointKind.TRANSFER]);
-
 const getPointTypeTransportTotals = (points) => {
   const pointTypeTotalsMap = points.reduce((stats, point) => {
     const {type} = point;
-    const isTransportType = pointTransportsTypes.includes(type);
+    const isTransportType = transportTypeSet.has(type);
 
     return isTransportType
       ? Object.assign({}, stats, {
@@ -214,9 +214,9 @@ const generateTransportChart = (ctx, points) => {
 
 const generateTimeSpendChart = (ctx, points) => {
   const pointTotals = getPointTypeDurationTotals(points);
-  const sortedTotals = pointTotals.sort(makeStatsSorter(`hours`));
+  const sortedTotals = pointTotals.sort(makeStatsSorter(`time`));
   const chartLabels = getPointTypeLabels(sortedTotals.map((total) => total.type));
-  const chartValues = sortedTotals.map((total) => total.hours);
+  const chartValues = sortedTotals.map((total) => total.time);
 
   return generateChart(ctx, chartLabels, chartValues, ChartOptions.TIME_SPEND);
 };
