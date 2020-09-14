@@ -1,10 +1,11 @@
 import Abstract from './abstract';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import {getHourDuration} from './../utils/date';
+import {getDatesDifference} from './../utils/date';
 import {PointKind, PointType, pointKindToTypeMap} from './../constants';
 
 const BAR_HEIGHT = 55;
+const INCREMENT_TRANSPORT_VALUE = 1;
 
 const pointTypeToChartLabel = {
   [PointType.TAXI]: `🚕 Taxi`,
@@ -20,13 +21,13 @@ const pointTypeToChartLabel = {
 };
 
 const getPointTypePriceTotals = (points) => {
-  const pointTypeTotalsMap = points.reduce((priceAccumulator, point) => {
+  const pointTypeTotalsMap = points.reduce((stats, point) => {
     const {type, price} = point;
 
-    return Object.assign({}, priceAccumulator, {
+    return Object.assign({}, stats, {
       [type]: {
         type,
-        price: priceAccumulator[type] ? priceAccumulator[type].price + price : price,
+        price: stats[type] ? stats[type].price + price : price,
       },
     });
   }, {});
@@ -35,15 +36,15 @@ const getPointTypePriceTotals = (points) => {
 };
 
 const getPointTypeDurationTotals = (points) => {
-  const pointTypeTotalsMap = points.reduce((durationAccumulator, point) => {
+  const pointTypeTotalsMap = points.reduce((stats, point) => {
     const {type, startTime, endTime} = point;
 
-    const hours = Math.trunc(getHourDuration(startTime, endTime));
+    const hours = endTime - startTime;
 
-    return Object.assign({}, durationAccumulator, {
+    return Object.assign({}, stats, {
       [type]: {
         type,
-        hours: durationAccumulator[type] ? durationAccumulator[type].hours + hours : hours,
+        hours: stats[type] ? stats[type].hours + hours : hours,
       },
     });
   }, {});
@@ -51,25 +52,23 @@ const getPointTypeDurationTotals = (points) => {
   return Object.values(pointTypeTotalsMap);
 };
 
-const INCREMENT_TRANSPORT_VALUE = 1;
-
 const pointTransportsTypes = Object.values(pointKindToTypeMap[PointKind.TRANSFER]);
 
 const getPointTypeTransportTotals = (points) => {
-  const pointTypeTotalsMap = points.reduce((transportAccumulator, point) => {
+  const pointTypeTotalsMap = points.reduce((stats, point) => {
     const {type} = point;
     const isTransportType = pointTransportsTypes.includes(type);
 
     return isTransportType
-      ? Object.assign({}, transportAccumulator, {
+      ? Object.assign({}, stats, {
         [type]: {
           type,
-          totals: transportAccumulator[type]
-            ? transportAccumulator[type].totals + INCREMENT_TRANSPORT_VALUE
+          totals: stats[type]
+            ? stats[type].totals + INCREMENT_TRANSPORT_VALUE
             : INCREMENT_TRANSPORT_VALUE,
         },
       })
-      : transportAccumulator;
+      : stats;
   }, {});
 
   return Object.values(pointTypeTotalsMap);
@@ -194,7 +193,7 @@ const generateTimeSpendChart = (ctx, points) => {
 
   const options = {
     text: `TIME SPEND`,
-    formatter: (value) => `${value}h`,
+    formatter: (value) => `${getDatesDifference(0, value)}`,
   };
 
   generateChart(ctx, chartLabels, chartValues, options);
