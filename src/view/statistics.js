@@ -192,10 +192,11 @@ const generateChart = (ctx, chartLabels, chartValues, options) => {
   );
 };
 
+const makeStatsSorter = (value) => (a, b) => b[value] - a[value];
 
 const generateMoneyChart = (ctx, points) => {
   const pointTotals = getPointTypePriceTotals(points);
-  const sortedTotals = pointTotals.sort((a, b) => b.price - a.price);
+  const sortedTotals = pointTotals.sort(makeStatsSorter(`price`));
   const chartLabels = getPointTypeLabels(sortedTotals.map((total) => total.type));
   const chartValues = sortedTotals.map((total) => total.price);
 
@@ -204,7 +205,7 @@ const generateMoneyChart = (ctx, points) => {
 
 const generateTransportChart = (ctx, points) => {
   const pointTotals = getPointTypeTransportTotals(points);
-  const sortedTotals = pointTotals.sort((a, b) => b.totals - a.totals);
+  const sortedTotals = pointTotals.sort(makeStatsSorter(`totals`));
   const chartLabels = getPointTypeLabels(sortedTotals.map((total) => total.type));
   const chartValues = sortedTotals.map((total) => total.totals);
 
@@ -213,7 +214,7 @@ const generateTransportChart = (ctx, points) => {
 
 const generateTimeSpendChart = (ctx, points) => {
   const pointTotals = getPointTypeDurationTotals(points);
-  const sortedTotals = pointTotals.sort((a, b) => b.hours - a.hours);
+  const sortedTotals = pointTotals.sort(makeStatsSorter(`hours`));
   const chartLabels = getPointTypeLabels(sortedTotals.map((total) => total.type));
   const chartValues = sortedTotals.map((total) => total.hours);
 
