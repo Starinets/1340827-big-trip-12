@@ -7,6 +7,8 @@ import {PointKind, PointType, pointKindToTypeMap} from './../constants';
 const BAR_HEIGHT = 55;
 const INCREMENT_TRANSPORT_VALUE = 1;
 const CHART_BACKGROUND_COLOR = `#f2f2f2`;
+const LEGEND_DISPLAY = false;
+const TOOLTIPS_ENABLED = false;
 
 const ChartDataset = {
   BACKGROUND_COLOR: `#ffffff`,
@@ -27,9 +29,7 @@ const ChartTitle = {
   FONT_SIZE: 23,
   POSITION: `left`,
 };
-const LEGEND_DISPLAY = false;
-const TOOLTIPS_ENABLED = false;
-const ChartSettingsToScales = {
+const chartScales = {
   yAxes: [{
     ticks: {
       fontColor: `#000000`,
@@ -53,7 +53,7 @@ const ChartSettingsToScales = {
   }],
 };
 
-const ChartOptions = {
+const ChartOption = {
   MONEY: {
     text: `MONEY`,
     formatter: (value) => `€ ${value}`,
@@ -180,7 +180,7 @@ const generateChart = (ctx, chartLabels, chartValues, options) => {
             fontSize: ChartTitle.FONT_SIZE,
             position: ChartTitle.POSITION,
           },
-          scales: ChartSettingsToScales,
+          scales: chartScales,
           legend: {
             display: LEGEND_DISPLAY,
           },
@@ -200,7 +200,7 @@ const generateMoneyChart = (ctx, points) => {
   const chartLabels = getPointTypeLabels(sortedTotals.map((total) => total.type));
   const chartValues = sortedTotals.map((total) => total.price);
 
-  return generateChart(ctx, chartLabels, chartValues, ChartOptions.MONEY);
+  return generateChart(ctx, chartLabels, chartValues, ChartOption.MONEY);
 };
 
 const generateTransportChart = (ctx, points) => {
@@ -209,7 +209,7 @@ const generateTransportChart = (ctx, points) => {
   const chartLabels = getPointTypeLabels(sortedTotals.map((total) => total.type));
   const chartValues = sortedTotals.map((total) => total.totals);
 
-  return generateChart(ctx, chartLabels, chartValues, ChartOptions.TRANSPORT);
+  return generateChart(ctx, chartLabels, chartValues, ChartOption.TRANSPORT);
 };
 
 const generateTimeSpendChart = (ctx, points) => {
@@ -218,7 +218,7 @@ const generateTimeSpendChart = (ctx, points) => {
   const chartLabels = getPointTypeLabels(sortedTotals.map((total) => total.type));
   const chartValues = sortedTotals.map((total) => total.time);
 
-  return generateChart(ctx, chartLabels, chartValues, ChartOptions.TIME_SPEND);
+  return generateChart(ctx, chartLabels, chartValues, ChartOption.TIME_SPEND);
 };
 
 
