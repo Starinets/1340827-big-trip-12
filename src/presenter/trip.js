@@ -200,8 +200,18 @@ export default class Trip {
   }
 
   _renderDays() {
+    const points = this._getPoints();
+
+    if (points.length === 0) {
+      remove(this._sort);
+      this._renderNoPointMessage();
+      return;
+    }
+
+    remove(this._pointMessage);
+
     if (this._currentSortType === SortType.EVENT) {
-      const days = groupPointsByDays(this._getPoints());
+      const days = groupPointsByDays(points);
 
       Object.values(days)
         .forEach((dayPoints, counter) => {
@@ -219,7 +229,7 @@ export default class Trip {
       this._days.push(dayView);
 
       render(this._daysView, dayView, RenderPosition.BEFORE_END);
-      this._renderPointsList(dayView, this._getPoints());
+      this._renderPointsList(dayView, points);
     }
   }
 
