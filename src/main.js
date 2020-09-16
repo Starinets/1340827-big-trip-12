@@ -19,8 +19,11 @@ import {generateDestinationsInfo} from './mock/destinations';
 import TripPresenter from './presenter/trip';
 import FilterPresenter from './presenter/filter';
 import StatisticsPresenter from './presenter/statistics';
+import Api from "./api.js";
 
 const EVENT_COUNT = 30;
+const AUTHORIZATION = `Basic hS3sd3dfd2cl7sa2j`;
+const END_POINT = `https://12.ecmascript.pages.academy/big-trip`;
 
 const infoPlace = document.querySelector(`.trip-main`);
 const menuPlace = infoPlace.querySelector(`.js-menu`);
@@ -61,6 +64,12 @@ const getTripDuration = (points) => {
 
   return formatMonthDate(startTime);
 };
+
+const api = new Api(END_POINT, AUTHORIZATION);
+
+api.getPoints().then((points) => {
+  console.log(points);
+});
 
 let minDate = new Date();
 
