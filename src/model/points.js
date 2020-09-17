@@ -61,12 +61,15 @@ export default class Points extends Observer {
         point,
         {
           price: point.base_price,
-          startTime: point.date_from,
-          endTime: point.date_to,
+          startTime: new Date(point.date_from),
+          endTime: new Date(point.date_to),
           destination: {
             name: point.destination.name,
             description: point.destination.description,
-            photos: point.destination.pictures
+            photos: point.destination.pictures.map((picture) => ({
+              href: picture.src,
+              description: picture.description
+            }))
           }
         }
     );
@@ -85,12 +88,15 @@ export default class Points extends Observer {
         point,
         {
           'base_price': point.price,
-          'date_from': point.startTime,
-          'date_to': point.endTime,
+          'date_from': point.startTime.toISOString(),
+          'date_to': point.endTime.toISOString(),
           'destination': {
             'name': point.destination.name,
             'description': point.destination.description,
-            'pictures': point.destination.photos
+            'pictures': point.destination.photos.map((photo) => ({
+              'src': photo.href,
+              'destination': photo.destination
+            }))
           }
         }
     );
