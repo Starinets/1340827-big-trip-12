@@ -88,7 +88,7 @@ render(infoPlace, addPointButtonView, RenderPosition.BEFORE_END);
 const menuView = new MenuView();
 render(menuPlace, menuView, RenderPosition.AFTER_END);
 
-const tripPresenter = new TripPresenter(contentPlace, destinations, pointsModel, filterModel);
+const tripPresenter = new TripPresenter(contentPlace, destinations, pointsModel, filterModel, api);
 const filterPresenter = new FilterPresenter(filtersPlace, filterModel, pointsModel);
 const statisticsPresenter = new StatisticsPresenter(contentPlace, pointsModel);
 
@@ -102,7 +102,7 @@ api.getPoints()
     setMenuHandlers();
   })
   .catch(() => {
-    pointsModel.setTasks(UpdateType.INIT, []);
+    pointsModel.set(UpdateType.INIT, []);
 
     setMenuHandlers();
   });
