@@ -56,7 +56,7 @@ const getTripDuration = (points) => {
     return `${formatMonthDate(startTime)}&nbsp;&mdash;&nbsp;${formatMonthDate(endTime)}`;
   } else {
     if (startTime.getDay() !== endTime.getDay()) {
-      return `${formatMonthDate(startTime)}&nbsp;&mdash;&nbsp;${addLeadingRank(endTime.getDay())}`;
+      return `${formatMonthDate(startTime)}&nbsp;&mdash;&nbsp;${addLeadingRank(endTime.getDate())}`;
     }
   }
 
@@ -76,15 +76,6 @@ const addPointButtonView = new AddPointButtonView();
 render(infoPlace, infoView, RenderPosition.AFTER_BEGIN);
 render(infoPlace, addPointButtonView, RenderPosition.BEFORE_END);
 
-// TODO: it is necessary to redo the data update through the model-observer-presenter
-// const points = pointsModel.get();
-// const tripPath = getTripPath(points);
-// const tripDuration = getTripDuration(points);
-// const tripCost = getTripCost(points);
-
-// render(infoView, new MainInfoView(tripPath, tripDuration), RenderPosition.BEFORE_END);
-// render(infoView, new TripCostView(tripCost), RenderPosition.BEFORE_END);
-
 const menuView = new MenuView();
 render(menuPlace, menuView, RenderPosition.AFTER_END);
 
@@ -98,6 +89,16 @@ tripPresenter.init();
 api.getPoints()
   .then((points) => {
     pointsModel.set(UpdateType.INIT, points);
+
+    // TODO: it is necessary to redo the data update through the model-observer-presenter (in additional task)
+    points = points.sort((less, more) => less.startTime - more.startTime);
+
+    const tripPath = getTripPath(points);
+    const tripDuration = getTripDuration(points);
+    const tripCost = getTripCost(points);
+
+    render(infoView, new MainInfoView(tripPath, tripDuration), RenderPosition.BEFORE_END);
+    render(infoView, new TripCostView(tripCost), RenderPosition.BEFORE_END);
 
     setMenuHandlers();
   })
