@@ -98,9 +98,13 @@ tripPresenter.init();
 api.getPoints()
   .then((points) => {
     pointsModel.set(UpdateType.INIT, points);
+
+    setMenuHandlers();
   })
   .catch(() => {
     pointsModel.setTasks(UpdateType.INIT, []);
+
+    setMenuHandlers();
   });
 
 const handleMenuClick = (menuItem) => {
@@ -122,5 +126,7 @@ const handleMenuClick = (menuItem) => {
   }
 };
 
-menuView.setClickHandler(handleMenuClick);
-addPointButtonView.setClickHandler(handleMenuClick);
+const setMenuHandlers = () => {
+  menuView.setClickHandler(handleMenuClick);
+  addPointButtonView.setClickHandler(handleMenuClick);
+};
