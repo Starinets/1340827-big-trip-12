@@ -43,9 +43,8 @@ const groupPointsByDays = (points) => points
   .reduce(reducePointByDay, {});
 
 export default class Trip {
-  constructor(container, destinations, pointsModel, filterModel, api) {
+  constructor(container, pointsModel, filterModel, api) {
     this._container = container;
-    this._destinations = destinations;
     this._pointsModel = pointsModel;
     this._filterModel = filterModel;
     this._api = api;
@@ -55,6 +54,7 @@ export default class Trip {
     this._days = [];
     this._sort = null;
     this._isLoading = true;
+    this._destinations = [];
 
     this._pointMessageView = new PointMessage(EMPTY_POINTS_LIST_MESSAGE);
     this._loadingView = new PointMessage(LOADING_MESSAGE);
@@ -65,7 +65,7 @@ export default class Trip {
     this._handleModeChange = this._handleModeChange.bind(this);
     this.createPoint = this.createPoint.bind(this);
 
-    this._pointNewPresenter = new PointNewPresenter(this._daysView, this._destinations, this._handleViewAction);
+    this._pointNewPresenter = {};
   }
 
   init() {
@@ -81,6 +81,12 @@ export default class Trip {
 
     this._pointsModel.removeObserver(this._handleModelEvent);
     this._filterModel.removeObserver(this._handleModelEvent);
+  }
+
+  setDestinations(destinations) {
+    this._destinations = destinations;
+
+    this._pointNewPresenter = new PointNewPresenter(this._daysView, destinations, this._handleViewAction);
   }
 
   createPoint() {

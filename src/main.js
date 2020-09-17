@@ -14,7 +14,6 @@ import MainInfoView from './view/main-info';
 import TripCostView from './view/trip-cost';
 import MenuView from './view/menu';
 import AddPointButtonView from './view/add-point-button';
-import {generateDestinationsInfo} from './mock/destinations';
 import TripPresenter from './presenter/trip';
 import FilterPresenter from './presenter/filter';
 import StatisticsPresenter from './presenter/statistics';
@@ -68,8 +67,6 @@ const pointsModel = new PointsModel();
 
 const filterModel = new FilterModel();
 
-const destinations = generateDestinationsInfo();
-
 const infoView = new TripInfoView().getElement();
 const addPointButtonView = new AddPointButtonView();
 
@@ -79,15 +76,19 @@ render(infoPlace, addPointButtonView, RenderPosition.BEFORE_END);
 const menuView = new MenuView();
 render(menuPlace, menuView, RenderPosition.AFTER_END);
 
-const tripPresenter = new TripPresenter(contentPlace, destinations, pointsModel, filterModel, api);
+const tripPresenter = new TripPresenter(contentPlace, pointsModel, filterModel, api);
 const filterPresenter = new FilterPresenter(filtersPlace, filterModel, pointsModel);
 const statisticsPresenter = new StatisticsPresenter(contentPlace, pointsModel);
 
 filterPresenter.init();
 tripPresenter.init();
 
-api.getPoints()
-  .then((points) => {
+Promise.all([
+  api.getPoints(),
+  api.getDestinations()
+])
+  .then(([points, destinations]) => {
+    tripPresenter.setDestinations(destinations);
     pointsModel.set(UpdateType.INIT, points);
 
     // TODO: it is necessary to redo the data update through the model-observer-presenter (in additional task)
