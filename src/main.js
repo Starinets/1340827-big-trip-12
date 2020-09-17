@@ -6,7 +6,7 @@ import {
   formatMonthDate,
   addLeadingRank
 } from './utils/date';
-import {MenuItem} from './constants';
+import {MenuItem, UpdateType} from './constants';
 import PointsModel from './model/points';
 import FilterModel from './model/filter';
 import TripInfoView from './view/trip-info';
@@ -95,9 +95,13 @@ const statisticsPresenter = new StatisticsPresenter(contentPlace, pointsModel);
 filterPresenter.init();
 tripPresenter.init();
 
-api.getPoints().then((points) => {
-  pointsModel.set(points);
-});
+api.getPoints()
+  .then((points) => {
+    pointsModel.set(UpdateType.INIT, points);
+  })
+  .catch(() => {
+    pointsModel.setTasks(UpdateType.INIT, []);
+  });
 
 const handleMenuClick = (menuItem) => {
   switch (menuItem) {

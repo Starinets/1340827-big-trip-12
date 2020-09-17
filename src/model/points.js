@@ -7,8 +7,9 @@ export default class Points extends Observer {
     this._specifics = [];
   }
 
-  set(points) {
+  set(updateType, points) {
     this._specifics = points.slice();
+    this._notify(updateType);
   }
 
   get() {
