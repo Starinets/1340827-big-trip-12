@@ -14,14 +14,12 @@ import MainInfoView from './view/main-info';
 import TripCostView from './view/trip-cost';
 import MenuView from './view/menu';
 import AddPointButtonView from './view/add-point-button';
-import {generatePoint} from './mock/point';
 import {generateDestinationsInfo} from './mock/destinations';
 import TripPresenter from './presenter/trip';
 import FilterPresenter from './presenter/filter';
 import StatisticsPresenter from './presenter/statistics';
 import Api from "./api.js";
 
-const EVENT_COUNT = 30;
 const AUTHORIZATION = `Basic hS3sd3dfd2cl7sa2j`;
 const END_POINT = `https://12.ecmascript.pages.academy/big-trip`;
 
@@ -66,23 +64,7 @@ const getTripDuration = (points) => {
 };
 
 const api = new Api(END_POINT, AUTHORIZATION);
-
-api.getPoints().then((points) => {
-  console.log(points);
-});
-
-let minDate = new Date();
-
 const pointsModel = new PointsModel();
-pointsModel.set(
-    new Array(EVENT_COUNT)
-      .fill()
-      .map(() => {
-        let point = generatePoint(minDate);
-        minDate = point.endTime;
-        return point;
-      })
-);
 
 const filterModel = new FilterModel();
 
@@ -94,13 +76,14 @@ const addPointButtonView = new AddPointButtonView();
 render(infoPlace, infoView, RenderPosition.AFTER_BEGIN);
 render(infoPlace, addPointButtonView, RenderPosition.BEFORE_END);
 
-const points = pointsModel.get();
-const tripPath = getTripPath(points);
-const tripDuration = getTripDuration(points);
-const tripCost = getTripCost(points);
+// TODO: it is necessary to redo the data update through the model-observer-presenter
+// const points = pointsModel.get();
+// const tripPath = getTripPath(points);
+// const tripDuration = getTripDuration(points);
+// const tripCost = getTripCost(points);
 
-render(infoView, new MainInfoView(tripPath, tripDuration), RenderPosition.BEFORE_END);
-render(infoView, new TripCostView(tripCost), RenderPosition.BEFORE_END);
+// render(infoView, new MainInfoView(tripPath, tripDuration), RenderPosition.BEFORE_END);
+// render(infoView, new TripCostView(tripCost), RenderPosition.BEFORE_END);
 
 const menuView = new MenuView();
 render(menuPlace, menuView, RenderPosition.AFTER_END);
@@ -111,6 +94,10 @@ const statisticsPresenter = new StatisticsPresenter(contentPlace, pointsModel);
 
 filterPresenter.init();
 tripPresenter.init();
+
+api.getPoints().then((points) => {
+  pointsModel.set(points);
+});
 
 const handleMenuClick = (menuItem) => {
   switch (menuItem) {
