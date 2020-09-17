@@ -1,4 +1,5 @@
 const EMPTY_POINTS_LIST_MESSAGE = `Click New Event to create your first point`;
+const LOADING_MESSAGE = `Loading...`;
 const UNGROUPED_LIST = 0;
 
 const PointKind = {
@@ -109,6 +110,7 @@ export {
   PointType,
   pointKindToTypeMap,
   EMPTY_POINTS_LIST_MESSAGE,
+  LOADING_MESSAGE,
   UNGROUPED_LIST,
   pointTypeToPretext,
   OfferList,

@@ -1,5 +1,6 @@
 import {
   EMPTY_POINTS_LIST_MESSAGE,
+  LOADING_MESSAGE,
   UNGROUPED_LIST,
   SortType,
   UpdateType,
@@ -52,8 +53,10 @@ export default class Trip {
     this._currentSortType = SortType.EVENT;
     this._days = [];
     this._sort = null;
+    this._isLoading = true;
 
-    this._pointMessage = new PointMessage(EMPTY_POINTS_LIST_MESSAGE);
+    this._pointMessageView = new PointMessage(EMPTY_POINTS_LIST_MESSAGE);
+    this._loadingView = new PointMessage(LOADING_MESSAGE);
     this._daysView = new DaysView();
 
     this._handleViewAction = this._handleViewAction.bind(this);
@@ -142,6 +145,12 @@ export default class Trip {
         this._renderSort();
         this._renderDaysList();
         break;
+      case UpdateType.INIT:
+        this._isLoading = false;
+        remove(this._loadingView);
+        this._renderSort();
+        this._renderDaysList();
+        break;
     }
   }
 
@@ -171,8 +180,12 @@ export default class Trip {
     render(this._container, this._sort, RenderPosition.BEFORE_END);
   }
 
+  _renderLoadingMessage() {
+    render(this._container, this._loadingView, RenderPosition.BEFORE_END);
+  }
+
   _renderNoPointMessage() {
-    render(this._container, this._pointMessage, RenderPosition.BEFORE_END);
+    render(this._container, this._pointMessageView, RenderPosition.BEFORE_END);
   }
 
   _clearPointList({resetSortType = false} = {}) {
@@ -187,6 +200,7 @@ export default class Trip {
     this._days = [];
 
     remove(this._sort);
+    remove(this._loadingView);
     remove(this._daysView);
 
     if (resetSortType) {
@@ -200,6 +214,11 @@ export default class Trip {
   }
 
   _renderDays() {
+    if (this._isLoading) {
+      this._renderLoadingMessage();
+      return;
+    }
+
     const points = this._getPoints();
 
     if (points.length === 0) {
@@ -208,7 +227,7 @@ export default class Trip {
       return;
     }
 
-    remove(this._pointMessage);
+    remove(this._pointMessageView);
 
     if (this._currentSortType === SortType.EVENT) {
       const days = groupPointsByDays(points);
