@@ -1,7 +1,6 @@
 import PointEditView from './../view/point-edit';
 import PointListView from './../view/point-list';
 import DayView from './../view/day';
-import {getNewID} from './../mock/random';
 import {
   remove,
   render,
@@ -79,16 +78,11 @@ export default class PointNew {
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
   }
 
-  _handleFormSubmit(task) {
+  _handleFormSubmit(point) {
     this._changeData(
         UserAction.ADD_POINT,
         UpdateType.MINOR,
-        Object.assign(
-            {
-              id: getNewID()
-            },
-            task
-        )
+        point
     );
     this.destroy();
   }
