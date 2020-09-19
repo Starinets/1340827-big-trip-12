@@ -12,7 +12,13 @@ import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 const getOffersForCurrentPointType = (offers, pointType) => {
   const currentOffer = offers.find((offer) => offer.type === pointType);
 
-  return currentOffer ? JSON.parse(JSON.stringify(currentOffer)).offers : [];
+  return currentOffer
+    ? currentOffer.offers.map((offer) =>
+      Object.assign(
+          {},
+          offer
+      ))
+    : [];
 };
 
 const createOptionsListTemplate = (destinations) => {
