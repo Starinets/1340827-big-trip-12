@@ -125,7 +125,6 @@ export default class Trip {
     switch (actionType) {
       case UserAction.UPDATE_POINT:
         this._pointPresenter[update.id].setViewState(PointFormState.SAVING);
-        this._addPointButtonView.getElement().disabled = true;
         this._api.updatePoint(update)
           .then((response) => {
             this._pointsModel.update(updateType, response);
@@ -140,7 +139,6 @@ export default class Trip {
         break;
       case UserAction.DELETE_POINT:
         this._pointPresenter[update.id].setViewState(PointFormState.DELETING);
-        this._addPointButtonView.getElement().disabled = true;
         this._api.deletePoint(update)
           .then(() => {
             this._pointsModel.delete(updateType, update);

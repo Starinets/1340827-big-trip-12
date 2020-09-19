@@ -229,6 +229,7 @@ export default class PointEdit extends SmartView {
 
     this._setInnerHandlers();
     this._setDatePicker();
+    this._validateFields();
   }
 
 
@@ -264,6 +265,7 @@ export default class PointEdit extends SmartView {
   restoreHandlers() {
     this._setInnerHandlers();
     this._setDatePicker();
+    this._validateFields();
 
     this.setRollupButtonClickHandler(this._callback.rollupButtonClick);
     this.setFormSubmitHandler(this._callback.formSubmit);
@@ -397,6 +399,24 @@ export default class PointEdit extends SmartView {
     return checkedOffers;
   }
 
+  _validateFields() {
+    const destination = this.getElement().querySelector(`.event__input--destination`).value;
+    const price = this.getElement().querySelector(`.event__input--price`).valueAsNumber;
+    const saveButton = this.getElement().querySelector(`.event__save-btn`);
+
+    // save button must be disabled if 'destination' empty, or not in list;
+    // or price = 0; and if not isDisabled - need remove disable status bcs it's
+    // maybe our last change state for Save button
+    if (this._destinations.find((item) => item.name === destination) === undefined || price === 0) {
+      saveButton.disabled = true;
+      return;
+    }
+
+    if (!this._data.isDisabled) {
+      saveButton.disabled = false;
+    }
+  }
+
 
   /* ---------------------------- Events handlers --------------------------- */
 
@@ -429,6 +449,8 @@ export default class PointEdit extends SmartView {
   }
 
   _destinationChangeHandler(evt) {
+    this._validateFields();
+
     const destination = this._destinations.find((item) => item.name === evt.target.value);
     if (destination === undefined) {
       evt.target.value = this._data.destination.name;
@@ -441,6 +463,8 @@ export default class PointEdit extends SmartView {
   }
 
   _priceChangeHandler(evt) {
+    this._validateFields();
+
     this.updateData({
       price: evt.target.valueAsNumber,
     }, true);
