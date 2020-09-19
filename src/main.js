@@ -53,11 +53,12 @@ const getTripDuration = (points) => {
 
   if (startTime.getMonth() !== endTime.getMonth()) {
     return `${formatMonthDate(startTime)}&nbsp;&mdash;&nbsp;${formatMonthDate(endTime)}`;
-  } else {
-    if (startTime.getDay() !== endTime.getDay()) {
-      return `${formatMonthDate(startTime)}&nbsp;&mdash;&nbsp;${addLeadingRank(endTime.getDate())}`;
-    }
   }
+
+  if (startTime.getDay() !== endTime.getDay()) {
+    return `${formatMonthDate(startTime)}&nbsp;&mdash;&nbsp;${addLeadingRank(endTime.getDate())}`;
+  }
+
 
   return formatMonthDate(startTime);
 };
