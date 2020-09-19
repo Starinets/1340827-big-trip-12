@@ -62,6 +62,30 @@ const getTripDuration = (points) => {
   return formatMonthDate(startTime);
 };
 
+const handleMenuClick = (menuItem) => {
+  switch (menuItem) {
+    case MenuItem.ADD_NEW_POINT:
+      statisticsPresenter.destroy();
+      tripPresenter.init();
+      tripPresenter.createPoint();
+      menuView.reset();
+      break;
+    case MenuItem.TABLE:
+      statisticsPresenter.destroy();
+      tripPresenter.init();
+      break;
+    case MenuItem.STATISTICS:
+      tripPresenter.destroy();
+      statisticsPresenter.init();
+      break;
+  }
+};
+
+const setMenuHandlers = () => {
+  menuView.setClickHandler(handleMenuClick);
+  addPointButtonView.setClickHandler(handleMenuClick);
+};
+
 const api = new Api(END_POINT, AUTHORIZATION);
 const pointsModel = new PointsModel();
 
@@ -110,27 +134,3 @@ Promise.all([
 
     setMenuHandlers();
   });
-
-const handleMenuClick = (menuItem) => {
-  switch (menuItem) {
-    case MenuItem.ADD_NEW_POINT:
-      statisticsPresenter.destroy();
-      tripPresenter.init();
-      tripPresenter.createPoint();
-      menuView.reset();
-      break;
-    case MenuItem.TABLE:
-      statisticsPresenter.destroy();
-      tripPresenter.init();
-      break;
-    case MenuItem.STATISTICS:
-      tripPresenter.destroy();
-      statisticsPresenter.init();
-      break;
-  }
-};
-
-const setMenuHandlers = () => {
-  menuView.setClickHandler(handleMenuClick);
-  addPointButtonView.setClickHandler(handleMenuClick);
-};
