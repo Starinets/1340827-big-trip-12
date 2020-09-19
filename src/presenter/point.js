@@ -6,6 +6,7 @@ import OfferListView from '../view/offer-list';
 import OfferView from './../view/offer';
 import {
   UserAction,
+  PointFormState,
   UpdateType,
   EditablePoint
 } from "./../constants";
@@ -69,7 +70,8 @@ export default class Point {
     }
 
     if (this._mode === Mode.EDITING) {
-      replace(this._editComponent, previousEditComponent);
+      replace(this._Component, previousEditComponent);
+      this._mode = Mode.DEFAULT;
     }
 
     remove(previousComponent);
@@ -85,6 +87,23 @@ export default class Point {
   resetView() {
     if (this._mode !== Mode.DEFAULT) {
       this._replaceFormToCard();
+    }
+  }
+
+  setViewState(state) {
+    switch (state) {
+      case PointFormState.SAVING:
+        this._editComponent.updateData({
+          isDisabled: true,
+          isSaving: true
+        });
+        break;
+      case PointFormState.DELETING:
+        this._editComponent.updateData({
+          isDisabled: true,
+          isDeleting: true
+        });
+        break;
     }
   }
 
@@ -141,7 +160,6 @@ export default class Point {
         UserAction.UPDATE_POINT,
         isPatchUpdate ? UpdateType.PATCH : UpdateType.MINOR,
         editedPoint);
-    this._replaceFormToCard();
   }
 
   _handleFavoriteChange(isFavorite) {

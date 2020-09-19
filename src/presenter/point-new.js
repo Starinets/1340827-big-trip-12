@@ -82,13 +82,18 @@ export default class PointNew {
     this._addPointButtonView.getElement().disabled = false;
   }
 
+  setSaving() {
+    this._editComponent.updateData({
+      isDisabled: true,
+      isSaving: true
+    });
+  }
   _handleFormSubmit(point) {
     this._changeData(
         UserAction.ADD_POINT,
         UpdateType.MINOR,
         point
     );
-    this.destroy();
   }
 
   _handleResetButtonClick() {
