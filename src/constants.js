@@ -92,7 +92,8 @@ const UserAction = {
 
 const PointFormState = {
   SAVING: `SAVING`,
-  DELETING: `DELETING`
+  DELETING: `DELETING`,
+  ABORTING: `ABORTING`
 };
 
 const UpdateType = {
