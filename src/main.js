@@ -67,15 +67,18 @@ const handleMenuClick = (menuItem) => {
   switch (menuItem) {
     case MenuItem.ADD_NEW_POINT:
       statisticsPresenter.destroy();
+      tripPresenter.destroy();
       tripPresenter.init();
       tripPresenter.createPoint();
       menuView.reset();
       break;
     case MenuItem.TABLE:
       statisticsPresenter.destroy();
+      tripPresenter.destroy();
       tripPresenter.init();
       break;
     case MenuItem.STATISTICS:
+      statisticsPresenter.destroy();
       tripPresenter.destroy();
       statisticsPresenter.init();
       break;
