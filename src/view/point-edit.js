@@ -22,6 +22,16 @@ const getOffersForCurrentPointType = (offers, pointType) => {
     : [];
 };
 
+const textForDeleteButton = (pointData, editablePoint) => {
+  if (editablePoint === EditablePoint.NEW) {
+    return `Cancel`;
+  }
+  if (pointData.isDeleting) {
+    return `Deleting...`;
+  }
+  return `Delete`;
+};
+
 const createOptionsListTemplate = (destinations) => {
   return destinations
     .map(({name}) => `<option value="${name}"></option>`)
@@ -170,8 +180,8 @@ const createPointFormTemplate = (pointData, destinations, offers, editablePoint)
           <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${pointData.price}" ${pointData.isDisabled ? `disabled` : ``}>
         </div>
 
-        <button class="event__save-btn  btn  btn--blue" type="submit" ${pointData.isDisabled ? `disabled` : ``}>Save</button>
-        <button class="event__reset-btn" type="reset" ${pointData.isDisabled ? `disabled` : ``}>${editablePoint === EditablePoint.NEW ? `Cancel` : `Delete`}</button>
+        <button class="event__save-btn  btn  btn--blue" type="submit" ${pointData.isDisabled ? `disabled` : ``}>${pointData.isSaving ? `Saving...` : `Save`}</button>
+        <button class="event__reset-btn" type="reset" ${pointData.isDisabled ? `disabled` : ``}>${textForDeleteButton(pointData, editablePoint)}</button>
 
         ${createFavoriteButtonTemplate(pointData, editablePoint)}
 
@@ -457,12 +467,16 @@ export default class PointEdit extends SmartView {
         point,
         {
           isDisabled: false,
+          isSaving: false,
+          isDeleting: false,
         }
     );
   }
 
   static parseDataToPoint(pointData) {
     delete pointData.isDisabled;
+    delete pointData.isSaving;
+    delete pointData.isDeleting;
 
     return Object.assign(
         {},
