@@ -201,7 +201,6 @@ export default class PointEdit extends SmartView {
     this._endDateChangeHandler = this._endDateChangeHandler.bind(this);
     this._resetButtonClickHandler = this._resetButtonClickHandler.bind(this);
     this._offerListChangeHandler = this._offerListChangeHandler.bind(this);
-    this._setOfferListState = this._setOfferListState.bind(this);
 
     this._currentOffers = getOffersForCurrentPointType(this._offers, this._data.type);
 
@@ -361,7 +360,7 @@ export default class PointEdit extends SmartView {
       this._currentOffers.push({
         title: offer.dataset.title,
         price: offer.dataset.price,
-        checked: offer.checked ? true : false
+        checked: offer.checked
       });
 
       if (offer.checked) {
