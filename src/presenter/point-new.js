@@ -49,7 +49,7 @@ export default class PointNew {
       return;
     }
 
-    this._editComponent = new PointEditView(createEmptyPoint(), this._destinations, []);
+    this._editComponent = new PointEditView(createEmptyPoint(), this._destinations, this._offers);
     this._editComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._editComponent.setResetButtonClickHandler(this._handleResetButtonClick);
     this._editComponent.setRollupButtonClickHandler(this._handleRollupButtonClick);
