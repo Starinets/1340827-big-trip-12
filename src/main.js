@@ -71,6 +71,7 @@ const handleMenuClick = (menuItem) => {
       tripPresenter.init();
       tripPresenter.createPoint();
       menuView.reset();
+      addPointButtonView.getElement().disabled = true;
       break;
     case MenuItem.TABLE:
       statisticsPresenter.destroy();
@@ -104,7 +105,7 @@ render(infoPlace, addPointButtonView, RenderPosition.BEFORE_END);
 const menuView = new MenuView();
 render(menuPlace, menuView, RenderPosition.AFTER_END);
 
-const tripPresenter = new TripPresenter(contentPlace, pointsModel, filterModel, api);
+const tripPresenter = new TripPresenter(contentPlace, pointsModel, filterModel, api, addPointButtonView);
 const filterPresenter = new FilterPresenter(filtersPlace, filterModel, pointsModel);
 const statisticsPresenter = new StatisticsPresenter(contentPlace, pointsModel);
 

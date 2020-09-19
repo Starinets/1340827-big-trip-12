@@ -28,11 +28,12 @@ const createEmptyPoint = () => ({
 });
 
 export default class PointNew {
-  constructor(container, destinations, offers, changeData) {
+  constructor(container, destinations, offers, changeData, addPointButtonView) {
     this._container = container;
     this._destinations = destinations;
     this._offers = offers;
     this._changeData = changeData;
+    this._addPointButtonView = addPointButtonView;
 
     this._editComponent = null;
     this._dayView = null;
@@ -77,6 +78,7 @@ export default class PointNew {
     remove(this._dayView);
 
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
+    this._addPointButtonView.getElement().disabled = false;
   }
 
   _handleFormSubmit(point) {

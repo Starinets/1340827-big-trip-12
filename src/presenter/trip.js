@@ -43,11 +43,12 @@ const groupPointsByDays = (points) => points
   .reduce(reducePointByDay, {});
 
 export default class Trip {
-  constructor(container, pointsModel, filterModel, api) {
+  constructor(container, pointsModel, filterModel, api, addPointButtonView) {
     this._container = container;
     this._pointsModel = pointsModel;
     this._filterModel = filterModel;
     this._api = api;
+    this._addPointButtonView = addPointButtonView;
 
     this._pointPresenter = {};
     this._currentSortType = SortType.EVENT;
@@ -87,7 +88,7 @@ export default class Trip {
     this._destinations = destinations;
     this._offers = offers;
 
-    this._pointNewPresenter = new PointNewPresenter(this._daysView, this._destinations, this._offers, this._handleViewAction);
+    this._pointNewPresenter = new PointNewPresenter(this._daysView, this._destinations, this._offers, this._handleViewAction, this._addPointButtonView);
   }
 
   createPoint() {
