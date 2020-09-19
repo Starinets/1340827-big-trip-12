@@ -85,10 +85,11 @@ tripPresenter.init();
 
 Promise.all([
   api.getPoints(),
-  api.getDestinations()
+  api.getDestinations(),
+  api.getOffers()
 ])
-  .then(([points, destinations]) => {
-    tripPresenter.setDestinations(destinations);
+  .then(([points, destinations, offers]) => {
+    tripPresenter.setOptions(destinations, offers);
     pointsModel.set(UpdateType.INIT, points);
 
     // TODO: it is necessary to redo the data update through the model-observer-presenter (in additional task)
@@ -104,6 +105,7 @@ Promise.all([
     setMenuHandlers();
   })
   .catch(() => {
+    tripPresenter.setOptions([], []);
     pointsModel.set(UpdateType.INIT, []);
 
     setMenuHandlers();

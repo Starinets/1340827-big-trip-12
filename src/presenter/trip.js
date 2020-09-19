@@ -83,10 +83,11 @@ export default class Trip {
     this._filterModel.removeObserver(this._handleModelEvent);
   }
 
-  setDestinations(destinations) {
+  setOptions(destinations, offers) {
     this._destinations = destinations;
+    this._offers = offers;
 
-    this._pointNewPresenter = new PointNewPresenter(this._daysView, destinations, this._handleViewAction);
+    this._pointNewPresenter = new PointNewPresenter(this._daysView, this._destinations, this._offers, this._handleViewAction);
   }
 
   createPoint() {
@@ -276,7 +277,7 @@ export default class Trip {
 
   _renderPoints(pointListView, dayPoints) {
     dayPoints.forEach((point) => {
-      const pointPresenter = new PointPresenter(pointListView, this._destinations, this._handleViewAction, this._handleModeChange);
+      const pointPresenter = new PointPresenter(pointListView, this._destinations, this._offers, this._handleViewAction, this._handleModeChange);
       pointPresenter.init(point);
 
       this._pointPresenter[point.id] = pointPresenter;

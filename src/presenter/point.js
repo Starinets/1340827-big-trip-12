@@ -14,9 +14,10 @@ const Mode = {
 };
 
 export default class Point {
-  constructor(container, destinations, changeData, changeMode) {
+  constructor(container, destinations, offers, changeData, changeMode) {
     this._container = container;
     this._destinations = destinations;
+    this._offers = offers;
     this._changeData = changeData;
     this._changeMode = changeMode;
 
@@ -40,7 +41,7 @@ export default class Point {
     const previousEditComponent = this._editComponent;
 
     this._component = new PointView(specifics);
-    this._editComponent = new PointEditView(specifics, this._destinations);
+    this._editComponent = new PointEditView(specifics, this._destinations, this._offers);
 
     this._component.setRollupButtonClickHandler(this._handleRollupButtonClick);
     this._editComponent.setRollupButtonClickHandler(this._handleFormRollupButtonClick);

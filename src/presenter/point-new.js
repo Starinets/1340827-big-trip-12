@@ -28,9 +28,10 @@ const createEmptyPoint = () => ({
 });
 
 export default class PointNew {
-  constructor(container, destinations, changeData) {
+  constructor(container, destinations, offers, changeData) {
     this._container = container;
     this._destinations = destinations;
+    this._offers = offers;
     this._changeData = changeData;
 
     this._editComponent = null;
@@ -48,7 +49,7 @@ export default class PointNew {
       return;
     }
 
-    this._editComponent = new PointEditView(createEmptyPoint(), this._destinations);
+    this._editComponent = new PointEditView(createEmptyPoint(), this._destinations, []);
     this._editComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._editComponent.setResetButtonClickHandler(this._handleResetButtonClick);
     this._editComponent.setRollupButtonClickHandler(this._handleRollupButtonClick);

@@ -1,11 +1,10 @@
 import PointsModel from './model/points';
-import {
-  adaptDestinationsToClient
-} from './utils/general';
+import {adaptDestinationsToClient} from './utils/general';
 
 const Url = {
   POINTS: `points`,
   DESTINATIONS: `destinations`,
+  OFFERS: `offers`,
 };
 
 const Method = {
@@ -31,6 +30,11 @@ export default class Api {
       .then(Api.toJSON)
       .then((destinations) => adaptDestinationsToClient(destinations)
       );
+  }
+
+  getOffers() {
+    return this._load({url: Url.OFFERS})
+      .then(Api.toJSON);
   }
 
   getPoints() {
