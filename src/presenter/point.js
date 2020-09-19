@@ -4,7 +4,11 @@ import {render, RenderPosition, replace, remove} from "../utils/dom";
 import {isEscapeEvent} from './../utils/dom-event';
 import OfferListView from '../view/offer-list';
 import OfferView from './../view/offer';
-import {UserAction, UpdateType} from "./../constants";
+import {
+  UserAction,
+  UpdateType,
+  EditablePoint
+} from "./../constants";
 import {isDatesEqual} from "./../utils/date";
 
 const MAX_OFFERS_COUNT = 3;
@@ -14,9 +18,10 @@ const Mode = {
 };
 
 export default class Point {
-  constructor(container, destinations, changeData, changeMode) {
+  constructor(container, destinations, offers, changeData, changeMode) {
     this._container = container;
     this._destinations = destinations;
+    this._offers = offers;
     this._changeData = changeData;
     this._changeMode = changeMode;
 
@@ -40,7 +45,7 @@ export default class Point {
     const previousEditComponent = this._editComponent;
 
     this._component = new PointView(specifics);
-    this._editComponent = new PointEditView(specifics, this._destinations);
+    this._editComponent = new PointEditView(specifics, this._destinations, this._offers, EditablePoint.OLD);
 
     this._component.setRollupButtonClickHandler(this._handleRollupButtonClick);
     this._editComponent.setRollupButtonClickHandler(this._handleFormRollupButtonClick);

@@ -7,8 +7,9 @@ export default class Points extends Observer {
     this._specifics = [];
   }
 
-  set(points) {
+  set(updateType, points) {
     this._specifics = points.slice();
+    this._notify(updateType);
   }
 
   get() {
@@ -53,5 +54,62 @@ export default class Points extends Observer {
     ];
 
     this._notify(updateType);
+  }
+
+  static adaptToClient(point) {
+    const adaptedPoint = Object.assign(
+        {},
+        point,
+        {
+          price: point.base_price,
+          startTime: new Date(point.date_from),
+          endTime: new Date(point.date_to),
+          isFavorite: Boolean(point.is_favorite),
+          destination: {
+            name: point.destination.name,
+            description: point.destination.description,
+            photos: point.destination.pictures.map((picture) => ({
+              href: picture.src,
+              description: picture.description,
+            }))
+          }
+        }
+    );
+
+    delete adaptedPoint.base_price;
+    delete adaptedPoint.date_from;
+    delete adaptedPoint.date_to;
+    delete adaptedPoint.is_favorite;
+    delete adaptedPoint.destination.pictures;
+
+    return adaptedPoint;
+  }
+
+  static adaptToServer(point) {
+    const adaptedPoint = Object.assign(
+        {},
+        point,
+        {
+          'base_price': point.price,
+          'date_from': point.startTime.toString(),
+          'date_to': point.endTime.toString(),
+          'is_favorite': point.isFavorite,
+          'destination': {
+            'name': point.destination.name,
+            'description': point.destination.description,
+            'pictures': point.destination.photos.map((photo) => ({
+              'src': photo.href,
+              'description': photo.description,
+            }))
+          }
+        }
+    );
+
+    delete adaptedPoint.price;
+    delete adaptedPoint.startTime;
+    delete adaptedPoint.endTime;
+    delete adaptedPoint.destination.photos;
+
+    return adaptedPoint;
   }
 }

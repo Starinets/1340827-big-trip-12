@@ -1,7 +1,6 @@
 import PointEditView from './../view/point-edit';
 import PointListView from './../view/point-list';
 import DayView from './../view/day';
-import {getNewID} from './../mock/random';
 import {
   remove,
   render,
@@ -11,7 +10,8 @@ import {isEscapeEvent} from './../utils/dom-event';
 import {
   UNGROUPED_LIST,
   UserAction,
-  UpdateType
+  UpdateType,
+  EditablePoint
 } from './../constants';
 
 const createEmptyPoint = () => ({
@@ -29,10 +29,12 @@ const createEmptyPoint = () => ({
 });
 
 export default class PointNew {
-  constructor(container, destinations, changeData) {
+  constructor(container, destinations, offers, changeData, addPointButtonView) {
     this._container = container;
     this._destinations = destinations;
+    this._offers = offers;
     this._changeData = changeData;
+    this._addPointButtonView = addPointButtonView;
 
     this._editComponent = null;
     this._dayView = null;
@@ -49,7 +51,7 @@ export default class PointNew {
       return;
     }
 
-    this._editComponent = new PointEditView(createEmptyPoint(), this._destinations);
+    this._editComponent = new PointEditView(createEmptyPoint(), this._destinations, this._offers, EditablePoint.NEW);
     this._editComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._editComponent.setResetButtonClickHandler(this._handleResetButtonClick);
     this._editComponent.setRollupButtonClickHandler(this._handleRollupButtonClick);
@@ -77,18 +79,14 @@ export default class PointNew {
     remove(this._dayView);
 
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
+    this._addPointButtonView.getElement().disabled = false;
   }
 
-  _handleFormSubmit(task) {
+  _handleFormSubmit(point) {
     this._changeData(
         UserAction.ADD_POINT,
         UpdateType.MINOR,
-        Object.assign(
-            {
-              id: getNewID()
-            },
-            task
-        )
+        point
     );
     this.destroy();
   }

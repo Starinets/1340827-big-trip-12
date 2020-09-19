@@ -1,9 +1,15 @@
 const EMPTY_POINTS_LIST_MESSAGE = `Click New Event to create your first point`;
+const LOADING_MESSAGE = `Loading...`;
 const UNGROUPED_LIST = 0;
 
 const PointKind = {
   TRANSFER: `transfer`,
   ACTIVITY: `activity`,
+};
+
+const EditablePoint = {
+  NEW: `NEW`,
+  OLD: `OLD`
 };
 
 const PointType = {
@@ -88,7 +94,8 @@ const UpdateType = {
   PATCH: `PATCH`,
   FILTER: `FILTER`,
   MINOR: `MINOR`,
-  MAJOR: `MAJOR`
+  MAJOR: `MAJOR`,
+  INIT: `INIT`
 };
 
 const FilterType = {
@@ -106,8 +113,10 @@ const MenuItem = {
 export {
   PointKind,
   PointType,
+  EditablePoint,
   pointKindToTypeMap,
   EMPTY_POINTS_LIST_MESSAGE,
+  LOADING_MESSAGE,
   UNGROUPED_LIST,
   pointTypeToPretext,
   OfferList,

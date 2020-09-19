@@ -1,5 +1,6 @@
 import {
   EMPTY_POINTS_LIST_MESSAGE,
+  LOADING_MESSAGE,
   UNGROUPED_LIST,
   SortType,
   UpdateType,
@@ -42,18 +43,22 @@ const groupPointsByDays = (points) => points
   .reduce(reducePointByDay, {});
 
 export default class Trip {
-  constructor(container, destinations, pointsModel, filterModel) {
+  constructor(container, pointsModel, filterModel, api, addPointButtonView) {
     this._container = container;
-    this._destinations = destinations;
     this._pointsModel = pointsModel;
     this._filterModel = filterModel;
+    this._api = api;
+    this._addPointButtonView = addPointButtonView;
 
     this._pointPresenter = {};
     this._currentSortType = SortType.EVENT;
     this._days = [];
     this._sort = null;
+    this._isLoading = true;
+    this._destinations = [];
 
-    this._pointMessage = new PointMessage(EMPTY_POINTS_LIST_MESSAGE);
+    this._pointMessageView = new PointMessage(EMPTY_POINTS_LIST_MESSAGE);
+    this._loadingView = new PointMessage(LOADING_MESSAGE);
     this._daysView = new DaysView();
 
     this._handleViewAction = this._handleViewAction.bind(this);
@@ -61,7 +66,7 @@ export default class Trip {
     this._handleModeChange = this._handleModeChange.bind(this);
     this.createPoint = this.createPoint.bind(this);
 
-    this._pointNewPresenter = new PointNewPresenter(this._daysView, this._destinations, this._handleViewAction);
+    this._pointNewPresenter = {};
   }
 
   init() {
@@ -77,6 +82,13 @@ export default class Trip {
 
     this._pointsModel.removeObserver(this._handleModelEvent);
     this._filterModel.removeObserver(this._handleModelEvent);
+  }
+
+  setOptions(destinations, offers) {
+    this._destinations = destinations;
+    this._offers = offers;
+
+    this._pointNewPresenter = new PointNewPresenter(this._daysView, this._destinations, this._offers, this._handleViewAction, this._addPointButtonView);
   }
 
   createPoint() {
@@ -111,13 +123,22 @@ export default class Trip {
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_POINT:
-        this._pointsModel.update(updateType, update);
+        this._api.updatePoint(update)
+          .then((response) => {
+            this._pointsModel.update(updateType, response);
+          });
         break;
       case UserAction.ADD_POINT:
-        this._pointsModel.add(updateType, update);
+        this._api.addPoint(update)
+          .then((response) => {
+            this._pointsModel.add(updateType, response);
+          });
         break;
       case UserAction.DELETE_POINT:
-        this._pointsModel.delete(updateType, update);
+        this._api.deletePoint(update)
+          .then(() => {
+            this._pointsModel.delete(updateType, update);
+          });
         break;
     }
   }
@@ -139,6 +160,12 @@ export default class Trip {
         break;
       case UpdateType.MAJOR:
         this._clearPointList({resetSortType: true});
+        this._renderSort();
+        this._renderDaysList();
+        break;
+      case UpdateType.INIT:
+        this._isLoading = false;
+        remove(this._loadingView);
         this._renderSort();
         this._renderDaysList();
         break;
@@ -171,8 +198,12 @@ export default class Trip {
     render(this._container, this._sort, RenderPosition.BEFORE_END);
   }
 
+  _renderLoadingMessage() {
+    render(this._container, this._loadingView, RenderPosition.BEFORE_END);
+  }
+
   _renderNoPointMessage() {
-    render(this._container, this._pointMessage, RenderPosition.BEFORE_END);
+    render(this._container, this._pointMessageView, RenderPosition.BEFORE_END);
   }
 
   _clearPointList({resetSortType = false} = {}) {
@@ -187,6 +218,7 @@ export default class Trip {
     this._days = [];
 
     remove(this._sort);
+    remove(this._loadingView);
     remove(this._daysView);
 
     if (resetSortType) {
@@ -200,8 +232,23 @@ export default class Trip {
   }
 
   _renderDays() {
+    if (this._isLoading) {
+      this._renderLoadingMessage();
+      return;
+    }
+
+    const points = this._getPoints();
+
+    if (points.length === 0) {
+      remove(this._sort);
+      this._renderNoPointMessage();
+      return;
+    }
+
+    remove(this._pointMessageView);
+
     if (this._currentSortType === SortType.EVENT) {
-      const days = groupPointsByDays(this._getPoints());
+      const days = groupPointsByDays(points);
 
       Object.values(days)
         .forEach((dayPoints, counter) => {
@@ -219,7 +266,7 @@ export default class Trip {
       this._days.push(dayView);
 
       render(this._daysView, dayView, RenderPosition.BEFORE_END);
-      this._renderPointsList(dayView, this._getPoints());
+      this._renderPointsList(dayView, points);
     }
   }
 
@@ -231,7 +278,7 @@ export default class Trip {
 
   _renderPoints(pointListView, dayPoints) {
     dayPoints.forEach((point) => {
-      const pointPresenter = new PointPresenter(pointListView, this._destinations, this._handleViewAction, this._handleModeChange);
+      const pointPresenter = new PointPresenter(pointListView, this._destinations, this._offers, this._handleViewAction, this._handleModeChange);
       pointPresenter.init(point);
 
       this._pointPresenter[point.id] = pointPresenter;

@@ -2,16 +2,25 @@ import {
   pointTypeToPretext,
   PointKind,
   pointKindToTypeMap,
-  OfferList
+  EditablePoint
 } from '../constants';
 import {setFirstCharToUpperCase} from './../utils/general';
 import {dateToString} from '../utils/date';
 import SmartView from "./smart";
-
 import flatpickr from "flatpickr";
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
-const isOfferCheckedForPoint = (offerName, offers) => offers.find((item) => item.type === offerName);
+const getOffersForCurrentPointType = (offers, pointType) => {
+  const currentOffer = offers.find((offer) => offer.type === pointType);
+
+  return currentOffer
+    ? currentOffer.offers.map((offer) =>
+      Object.assign(
+          {},
+          offer
+      ))
+    : [];
+};
 
 const createOptionsListTemplate = (destinations) => {
   return destinations
@@ -54,7 +63,7 @@ const createEventListTemplate = (pointData, pointTypes) => {
   );
 };
 
-const createOfferContainerTemplate = (pointData) => {
+const createOfferContainerTemplate = (pointData, offers) => {
   return (
     `<section class="event__details">
     <section class="event__section  event__section--offers">
@@ -62,7 +71,7 @@ const createOfferContainerTemplate = (pointData) => {
 
       <div class="event__available-offers">
 
-      ${createOfferListTemplate(pointData)}
+      ${createOfferListTemplate(pointData, offers)}
 
       </div>
     </section>
@@ -70,22 +79,37 @@ const createOfferContainerTemplate = (pointData) => {
   );
 };
 
-const createOfferListTemplate = (pointData) => {
+const createOfferListTemplate = (pointData, offers) => {
   return (
-    Object.entries(OfferList).map((key) => {
+    offers.map((offer, index) => {
       return (`<div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${key[0]}-1" type="checkbox" name="event-offer-${key[0]}" ${isOfferCheckedForPoint(key[0], pointData.offers) ? `checked` : ``}>
-        <label class="event__offer-label" for="event-offer-${key[0]}-1">
-          <span class="event__offer-title">${key[1].text}</span>
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${index}-1" type="checkbox" data-title="${offer.title}" data-price="${offer.price}" name="event-offer-${index}" ${offer.checked ? `checked` : ``}>
+        <label class="event__offer-label" for="event-offer-${index}-1">
+          <span class="event__offer-title">${offer.title}</span>
           +
-          €&nbsp;<span class="event__offer-price">${key[1].price}</span>
+          €&nbsp;<span class="event__offer-price">${offer.price}</span>
         </label>
       </div>`);
     }).join(``)
   );
 };
 
-const createPointFormTemplate = (pointData, destinations) => {
+const createFavoriteButtonTemplate = (pointData, editablePoint) => {
+  if (editablePoint === EditablePoint.OLD) {
+    return (
+      `<input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${pointData.isFavorite ? `checked` : ``}></input>
+      <label class="event__favorite-btn" for="event-favorite-1">
+        <span class="visually-hidden">Add to favorite</span>
+        <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
+          <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"></path>
+        </svg>
+      </label>`);
+  }
+
+  return ``;
+};
+
+const createPointFormTemplate = (pointData, destinations, offers, editablePoint) => {
   const optionsListTemplate = createOptionsListTemplate(destinations);
 
   return (
@@ -147,22 +171,16 @@ const createPointFormTemplate = (pointData, destinations) => {
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-        <button class="event__reset-btn" type="reset">Delete</button>
+        <button class="event__reset-btn" type="reset">${editablePoint === EditablePoint.NEW ? `Cancel` : `Delete`}</button>
 
-        <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${pointData.isFavorite ? `checked` : ``}>
-        <label class="event__favorite-btn" for="event-favorite-1">
-          <span class="visually-hidden">Add to favorite</span>
-          <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
-            <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"></path>
-          </svg>
-        </label>
+        ${createFavoriteButtonTemplate(pointData, editablePoint)}
 
         <button class="event__rollup-btn" type="button">
           <span class="visually-hidden">Open event</span>
         </button>
       </header>
 
-      ${pointData.offers.length > 0 ? createOfferContainerTemplate(pointData) : ``}
+      ${offers.length > 0 ? createOfferContainerTemplate(pointData, offers) : ``}
 
       ${pointData.destination.photos.length > 0 ? createPhotoContainerTemplate(pointData) : ``}
 
@@ -172,13 +190,17 @@ const createPointFormTemplate = (pointData, destinations) => {
 };
 
 export default class PointEdit extends SmartView {
-  constructor(point, destinations = []) {
+  constructor(point, destinations, offers, editablePoint) {
     super();
     this._startDatePicker = null;
     this._endDatePicker = null;
 
-    this._destinations = destinations;
     this._data = PointEdit.parsePointToData(point);
+    this._destinations = destinations;
+    this._offers = offers;
+    this._editablePoint = editablePoint;
+
+    this._currentOffers = [];
 
     this._rollupButtonClickHandler = this._rollupButtonClickHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
@@ -189,6 +211,11 @@ export default class PointEdit extends SmartView {
     this._startDateChangeHandler = this._startDateChangeHandler.bind(this);
     this._endDateChangeHandler = this._endDateChangeHandler.bind(this);
     this._resetButtonClickHandler = this._resetButtonClickHandler.bind(this);
+    this._offerListChangeHandler = this._offerListChangeHandler.bind(this);
+
+    this._currentOffers = getOffersForCurrentPointType(this._offers, this._data.type);
+
+    this._setOfferListState();
 
     this._setInnerHandlers();
     this._setDatePicker();
@@ -221,7 +248,7 @@ export default class PointEdit extends SmartView {
   /* -------------------------- Overloaded methods -------------------------- */
 
   _getTemplate() {
-    return createPointFormTemplate(this._data, this._destinations);
+    return createPointFormTemplate(this._data, this._destinations, this._currentOffers, this._editablePoint);
   }
 
   restoreHandlers() {
@@ -259,8 +286,10 @@ export default class PointEdit extends SmartView {
   _setInnerHandlers() {
     const element = this.getElement();
 
-    element.querySelector(`.event__favorite-checkbox`)
-      .addEventListener(`change`, this._favoriteCheckboxChangeHandler);
+    if (this._editablePoint === EditablePoint.OLD) {
+      element.querySelector(`.event__favorite-checkbox`)
+        .addEventListener(`change`, this._favoriteCheckboxChangeHandler);
+    }
     element.querySelector(`.event__input--price`)
       .addEventListener(`change`, this._priceChangeHandler);
     element.querySelector(`.event__input--destination`)
@@ -269,6 +298,10 @@ export default class PointEdit extends SmartView {
       .addEventListener(`change`, this._typeListChangeHandler);
     element.querySelector(`.event__reset-btn`)
       .addEventListener(`click`, this._resetButtonClickHandler);
+    const offersList = element.querySelector(`.event__available-offers`);
+    if (offersList !== null) {
+      offersList.addEventListener(`change`, this._offerListChangeHandler);
+    }
   }
 
   _setDatePicker() {
@@ -318,6 +351,42 @@ export default class PointEdit extends SmartView {
     }, true);
   }
 
+  _setOfferListState() {
+    this._data.offers.forEach((offer) => {
+      const currentOffer = this._currentOffers.find((current) =>
+        offer.title === current.title && offer.price === current.price
+      );
+
+      if (currentOffer !== undefined) {
+        currentOffer.checked = true;
+      } else {
+        this._currentOffers.push(offer);
+      }
+    });
+  }
+
+  _getOfferListState() {
+    this._currentOffers = [];
+    const checkedOffers = [];
+    const offerCheckBoxes = this.getElement().querySelectorAll(`.event__offer-checkbox`);
+    offerCheckBoxes.forEach((offer) => {
+      this._currentOffers.push({
+        title: offer.dataset.title,
+        price: offer.dataset.price,
+        checked: offer.checked
+      });
+
+      if (offer.checked) {
+        checkedOffers.push({
+          title: offer.dataset.title,
+          price: Number(offer.dataset.price)
+        });
+      }
+    });
+
+    return checkedOffers;
+  }
+
 
   /* ---------------------------- Events handlers --------------------------- */
 
@@ -342,8 +411,10 @@ export default class PointEdit extends SmartView {
   }
 
   _typeListChangeHandler(evt) {
+    this._currentOffers = getOffersForCurrentPointType(this._offers, evt.target.value);
+
     this.updateData({
-      type: evt.target.value
+      type: evt.target.value,
     });
   }
 
@@ -367,6 +438,14 @@ export default class PointEdit extends SmartView {
 
   _resetButtonClickHandler() {
     this._callback.resetButtonClick();
+  }
+
+  _offerListChangeHandler() {
+    this._data.offers = this._getOfferListState();
+
+    this.updateData({
+      offers: this._data.offers,
+    });
   }
 
 
