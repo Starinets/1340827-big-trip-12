@@ -7,6 +7,11 @@ const PointKind = {
   ACTIVITY: `activity`,
 };
 
+const EditablePoint = {
+  NEW: `NEW`,
+  OLD: `OLD`
+};
+
 const PointType = {
   TAXI: `taxi`,
   BUS: `bus`,
@@ -108,6 +113,7 @@ const MenuItem = {
 export {
   PointKind,
   PointType,
+  EditablePoint,
   pointKindToTypeMap,
   EMPTY_POINTS_LIST_MESSAGE,
   LOADING_MESSAGE,

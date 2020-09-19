@@ -10,7 +10,8 @@ import {isEscapeEvent} from './../utils/dom-event';
 import {
   UNGROUPED_LIST,
   UserAction,
-  UpdateType
+  UpdateType,
+  EditablePoint
 } from './../constants';
 
 const createEmptyPoint = () => ({
@@ -50,7 +51,7 @@ export default class PointNew {
       return;
     }
 
-    this._editComponent = new PointEditView(createEmptyPoint(), this._destinations, this._offers);
+    this._editComponent = new PointEditView(createEmptyPoint(), this._destinations, this._offers, EditablePoint.NEW);
     this._editComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._editComponent.setResetButtonClickHandler(this._handleResetButtonClick);
     this._editComponent.setRollupButtonClickHandler(this._handleRollupButtonClick);

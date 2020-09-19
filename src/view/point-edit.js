@@ -1,7 +1,8 @@
 import {
   pointTypeToPretext,
   PointKind,
-  pointKindToTypeMap
+  pointKindToTypeMap,
+  EditablePoint
 } from '../constants';
 import {setFirstCharToUpperCase} from './../utils/general';
 import {dateToString} from '../utils/date';
@@ -93,7 +94,22 @@ const createOfferListTemplate = (pointData, offers) => {
   );
 };
 
-const createPointFormTemplate = (pointData, destinations, offers) => {
+const createFavoriteButtonTemplate = (pointData, editablePoint) => {
+  if (editablePoint === EditablePoint.OLD) {
+    return (
+      `<input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${pointData.isFavorite ? `checked` : ``}></input>
+      <label class="event__favorite-btn" for="event-favorite-1">
+        <span class="visually-hidden">Add to favorite</span>
+        <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
+          <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"></path>
+        </svg>
+      </label>`);
+  }
+
+  return ``;
+};
+
+const createPointFormTemplate = (pointData, destinations, offers, editablePoint) => {
   const optionsListTemplate = createOptionsListTemplate(destinations);
 
   return (
@@ -155,15 +171,9 @@ const createPointFormTemplate = (pointData, destinations, offers) => {
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-        <button class="event__reset-btn" type="reset">Delete</button>
+        <button class="event__reset-btn" type="reset">${editablePoint === EditablePoint.NEW ? `Cancel` : `Delete`}</button>
 
-        <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${pointData.isFavorite ? `checked` : ``}>
-        <label class="event__favorite-btn" for="event-favorite-1">
-          <span class="visually-hidden">Add to favorite</span>
-          <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
-            <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"></path>
-          </svg>
-        </label>
+        ${createFavoriteButtonTemplate(pointData, editablePoint)}
 
         <button class="event__rollup-btn" type="button">
           <span class="visually-hidden">Open event</span>
@@ -180,7 +190,7 @@ const createPointFormTemplate = (pointData, destinations, offers) => {
 };
 
 export default class PointEdit extends SmartView {
-  constructor(point, destinations, offers) {
+  constructor(point, destinations, offers, editablePoint) {
     super();
     this._startDatePicker = null;
     this._endDatePicker = null;
@@ -188,6 +198,7 @@ export default class PointEdit extends SmartView {
     this._data = PointEdit.parsePointToData(point);
     this._destinations = destinations;
     this._offers = offers;
+    this._editablePoint = editablePoint;
 
     this._currentOffers = [];
 
@@ -237,7 +248,7 @@ export default class PointEdit extends SmartView {
   /* -------------------------- Overloaded methods -------------------------- */
 
   _getTemplate() {
-    return createPointFormTemplate(this._data, this._destinations, this._currentOffers);
+    return createPointFormTemplate(this._data, this._destinations, this._currentOffers, this._editablePoint);
   }
 
   restoreHandlers() {
@@ -275,8 +286,10 @@ export default class PointEdit extends SmartView {
   _setInnerHandlers() {
     const element = this.getElement();
 
-    element.querySelector(`.event__favorite-checkbox`)
-      .addEventListener(`change`, this._favoriteCheckboxChangeHandler);
+    if (this._editablePoint === EditablePoint.OLD) {
+      element.querySelector(`.event__favorite-checkbox`)
+        .addEventListener(`change`, this._favoriteCheckboxChangeHandler);
+    }
     element.querySelector(`.event__input--price`)
       .addEventListener(`change`, this._priceChangeHandler);
     element.querySelector(`.event__input--destination`)
