@@ -6,9 +6,14 @@ import {
 import {setFirstCharToUpperCase} from './../utils/general';
 import {dateToString} from '../utils/date';
 import SmartView from "./smart";
-
 import flatpickr from "flatpickr";
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
+
+const getOffersForCurrentPointType = (offers, pointType) => {
+  const currentOffer = offers.find((offer) => offer.type === pointType);
+
+  return currentOffer ? JSON.parse(JSON.stringify(currentOffer)).offers : [];
+};
 
 const createOptionsListTemplate = (destinations) => {
   return destinations
@@ -190,27 +195,11 @@ export default class PointEdit extends SmartView {
     this._endDateChangeHandler = this._endDateChangeHandler.bind(this);
     this._resetButtonClickHandler = this._resetButtonClickHandler.bind(this);
     this._offerListChangeHandler = this._offerListChangeHandler.bind(this);
+    this._setOfferListState = this._setOfferListState.bind(this);
 
-    const offerList = JSON.parse(JSON.stringify(
-        this._offers
-          .find((offer) =>
-            offer.type === this._data.type)
-          .offers
-    )) || [];
+    this._currentOffers = getOffersForCurrentPointType(this._offers, this._data.type);
 
-    this._currentOffers = offerList;
-
-    this._data.offers.forEach((offer) => {
-      const currentOffer = offerList.find((current) =>
-        offer.title === current.title && offer.price === current.price
-      );
-
-      if (currentOffer !== undefined) {
-        currentOffer.checked = true;
-      } else {
-        offerList.push(offer);
-      }
-    });
+    this._setOfferListState();
 
     this._setInnerHandlers();
     this._setDatePicker();
@@ -344,6 +333,42 @@ export default class PointEdit extends SmartView {
     }, true);
   }
 
+  _setOfferListState() {
+    this._data.offers.forEach((offer) => {
+      const currentOffer = this._currentOffers.find((current) =>
+        offer.title === current.title && offer.price === current.price
+      );
+
+      if (currentOffer !== undefined) {
+        currentOffer.checked = true;
+      } else {
+        this._currentOffers.push(offer);
+      }
+    });
+  }
+
+  _getOfferListState() {
+    this._currentOffers = [];
+    const checkedOffers = [];
+    const offerCheckBoxes = this.getElement().querySelectorAll(`.event__offer-checkbox`);
+    offerCheckBoxes.forEach((offer) => {
+      this._currentOffers.push({
+        title: offer.dataset.title,
+        price: offer.dataset.price,
+        checked: offer.checked ? true : false
+      });
+
+      if (offer.checked) {
+        checkedOffers.push({
+          title: offer.dataset.title,
+          price: Number(offer.dataset.price)
+        });
+      }
+    });
+
+    return checkedOffers;
+  }
+
 
   /* ---------------------------- Events handlers --------------------------- */
 
@@ -368,14 +393,7 @@ export default class PointEdit extends SmartView {
   }
 
   _typeListChangeHandler(evt) {
-    const offerList = JSON.parse(JSON.stringify(
-        this._offers
-          .find((offer) =>
-            offer.type === evt.target.value)
-          .offers
-    )) || [];
-
-    this._currentOffers = offerList;
+    this._currentOffers = getOffersForCurrentPointType(this._offers, evt.target.value);
 
     this.updateData({
       type: evt.target.value,
@@ -405,28 +423,10 @@ export default class PointEdit extends SmartView {
   }
 
   _offerListChangeHandler() {
-    this._currentOffers = [];
-    const checkedOffers = [];
-    const offerCheckBoxes = this.getElement().querySelectorAll(`.event__offer-checkbox`);
-    offerCheckBoxes.forEach((offer) => {
-      this._currentOffers.push({
-        title: offer.dataset.title,
-        price: offer.dataset.price,
-        checked: offer.checked ? true : false
-      });
-
-      if (offer.checked) {
-        checkedOffers.push({
-          title: offer.dataset.title,
-          price: Number(offer.dataset.price)
-        });
-      }
-    });
-
-    this._data.offers = checkedOffers;
+    this._data.offers = this._getOfferListState();
 
     this.updateData({
-      offers: checkedOffers,
+      offers: this._data.offers,
     });
   }
 
