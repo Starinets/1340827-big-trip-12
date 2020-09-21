@@ -321,14 +321,13 @@ export default class PointEdit extends SmartView {
       element.querySelector(`.event__favorite-checkbox`)
         .addEventListener(`change`, this._favoriteCheckboxChangeHandler);
     }
-    element.querySelector(`.event__input--price`)
-      .addEventListener(`change`, this._priceChangeHandler);
-    element.querySelector(`.event__input--price`)
-      .addEventListener(`input`, this._priceInputHandler);
-    element.querySelector(`.event__input--destination`)
-      .addEventListener(`change`, this._destinationChangeHandler);
-    element.querySelector(`.event__input--destination`)
-      .addEventListener(`input`, this._destinationInputHandler);
+
+    const price = element.querySelector(`.event__input--price`);
+    price.addEventListener(`change`, this._priceChangeHandler);
+    price.addEventListener(`input`, this._priceInputHandler);
+    const destination = element.querySelector(`.event__input--destination`);
+    destination.addEventListener(`change`, this._destinationChangeHandler);
+    destination.addEventListener(`input`, this._destinationInputHandler);
     element.querySelector(`.event__type-list`)
       .addEventListener(`change`, this._typeListChangeHandler);
     element.querySelector(`.event__reset-btn`)
@@ -423,9 +422,10 @@ export default class PointEdit extends SmartView {
   }
 
   _validateFields() {
-    const destination = this.getElement().querySelector(`.event__input--destination`).value;
-    const price = this.getElement().querySelector(`.event__input--price`).valueAsNumber;
-    const saveButton = this.getElement().querySelector(`.event__save-btn`);
+    const element = this.getElement();
+    const destination = element.querySelector(`.event__input--destination`).value;
+    const price = element.querySelector(`.event__input--price`).valueAsNumber;
+    const saveButton = element.querySelector(`.event__save-btn`);
 
     // save button must be disabled if 'destination' empty, or not in list;
     // or price = 0; and if not isDisabled - need remove disable status bcs it's
