@@ -71,7 +71,7 @@ const handleMenuClick = (menuItem) => {
       tripPresenter.init();
       tripPresenter.createPoint();
       menuView.reset();
-      addPointButtonView.getElement().disabled = true;
+      addPointButtonView.setDisabled();
       break;
     case MenuItem.TABLE:
       statisticsPresenter.destroy();

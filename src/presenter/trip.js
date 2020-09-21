@@ -4,6 +4,7 @@ import {
   UNGROUPED_LIST,
   SortType,
   UpdateType,
+  PointFormState,
   UserAction,
   FilterType
 } from './../constants';
@@ -123,21 +124,33 @@ export default class Trip {
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_POINT:
+        this._pointPresenter[update.id].setViewState(PointFormState.SAVING);
         this._api.updatePoint(update)
           .then((response) => {
             this._pointsModel.update(updateType, response);
+          })
+          .catch(() => {
+            this._pointPresenter[update.id].setViewState(PointFormState.ABORTING);
           });
         break;
       case UserAction.ADD_POINT:
+        this._pointNewPresenter.setSaving();
         this._api.addPoint(update)
           .then((response) => {
             this._pointsModel.add(updateType, response);
+          })
+          .catch(() => {
+            this._pointNewPresenter.setAborting();
           });
         break;
       case UserAction.DELETE_POINT:
+        this._pointPresenter[update.id].setViewState(PointFormState.DELETING);
         this._api.deletePoint(update)
           .then(() => {
             this._pointsModel.delete(updateType, update);
+          })
+          .catch(() => {
+            this._pointPresenter[update.id].setViewState(PointFormState.ABORTING);
           });
         break;
     }

@@ -10,6 +10,14 @@ import SmartView from "./smart";
 import flatpickr from "flatpickr";
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
+const ButtonText = {
+  SAVE: `Save`,
+  SAVING: `Saving...`,
+  DELETE: `Delete`,
+  DELETING: `Deleting...`,
+  CANCEL: `Cancel`,
+};
+
 const getOffersForCurrentPointType = (offers, pointType) => {
   const currentOffer = offers.find((offer) => offer.type === pointType);
 
@@ -20,6 +28,16 @@ const getOffersForCurrentPointType = (offers, pointType) => {
           offer
       ))
     : [];
+};
+
+const defineTextForDeleteButton = (pointData, editablePoint) => {
+  if (editablePoint === EditablePoint.NEW) {
+    return ButtonText.CANCEL;
+  }
+  if (pointData.isDeleting) {
+    return ButtonText.DELETING;
+  }
+  return ButtonText.DELETE;
 };
 
 const createOptionsListTemplate = (destinations) => {
@@ -83,7 +101,7 @@ const createOfferListTemplate = (pointData, offers) => {
   return (
     offers.map((offer, index) => {
       return (`<div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${index}-1" type="checkbox" data-title="${offer.title}" data-price="${offer.price}" name="event-offer-${index}" ${offer.checked ? `checked` : ``}>
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${index}-1" type="checkbox" data-title="${offer.title}" data-price="${offer.price}" name="event-offer-${index}" ${offer.checked ? `checked` : ``} ${pointData.isDisabled ? `disabled` : ``}>
         <label class="event__offer-label" for="event-offer-${index}-1">
           <span class="event__offer-title">${offer.title}</span>
           +
@@ -97,13 +115,25 @@ const createOfferListTemplate = (pointData, offers) => {
 const createFavoriteButtonTemplate = (pointData, editablePoint) => {
   if (editablePoint === EditablePoint.OLD) {
     return (
-      `<input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${pointData.isFavorite ? `checked` : ``}></input>
+      `<input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${pointData.isFavorite ? `checked` : ``} ${pointData.isDisabled ? `disabled` : ``}></input>
       <label class="event__favorite-btn" for="event-favorite-1">
         <span class="visually-hidden">Add to favorite</span>
         <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
           <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"></path>
         </svg>
       </label>`);
+  }
+
+  return ``;
+};
+
+const createRollupButtonTemplate = (pointData, editablePoint) => {
+  if (editablePoint === EditablePoint.OLD) {
+    return (
+      `<button class="event__rollup-btn" type="button" ${pointData.isDisabled ? `disabled` : ``}>
+        <span class="visually-hidden">Open event</span>
+      </button>`
+    );
   }
 
   return ``;
@@ -121,7 +151,7 @@ const createPointFormTemplate = (pointData, destinations, offers, editablePoint)
             <span class="visually-hidden">Choose event type</span>
             <img class="event__type-icon" width="17" height="17" src="img/icons/${pointData.type}.png" alt="Event type icon">
           </label>
-          <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
+          <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox" ${pointData.isDisabled ? `disabled` : ``}>
 
           <div class="event__type-list">
             <fieldset class="event__type-group">
@@ -144,7 +174,7 @@ const createPointFormTemplate = (pointData, destinations, offers, editablePoint)
           <label class="event__label  event__type-output" for="event-destination-1">
             ${pointTypeToPretext[pointData.type]}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${pointData.destination.name}" list="destination-list-1">
+          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${pointData.destination.name}" list="destination-list-1" ${pointData.isDisabled ? `disabled` : ``}>
           <datalist id="destination-list-1">
             ${optionsListTemplate}
           </datalist>
@@ -154,12 +184,12 @@ const createPointFormTemplate = (pointData, destinations, offers, editablePoint)
           <label class="visually-hidden" for="event-start-time-1">
             From
           </label>
-          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${dateToString(pointData.startTime)}">
+          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${dateToString(pointData.startTime)}" ${pointData.isDisabled ? `disabled` : ``}>
           —
           <label class="visually-hidden" for="event-end-time-1">
             To
           </label>
-          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${dateToString(pointData.endTime)}">
+          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${dateToString(pointData.endTime)}" ${pointData.isDisabled ? `disabled` : ``}>
         </div>
 
         <div class="event__field-group  event__field-group--price">
@@ -167,17 +197,14 @@ const createPointFormTemplate = (pointData, destinations, offers, editablePoint)
             <span class="visually-hidden">Price</span>
             €
           </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${pointData.price}">
+          <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${pointData.price}" ${pointData.isDisabled ? `disabled` : ``}>
         </div>
 
-        <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-        <button class="event__reset-btn" type="reset">${editablePoint === EditablePoint.NEW ? `Cancel` : `Delete`}</button>
+        <button class="event__save-btn  btn  btn--blue" type="submit" ${pointData.isDisabled ? `disabled` : ``}>${pointData.isSaving ? ButtonText.SAVING : ButtonText.SAVE}</button>
+        <button class="event__reset-btn" type="reset" ${pointData.isDisabled ? `disabled` : ``}>${defineTextForDeleteButton(pointData, editablePoint)}</button>
 
         ${createFavoriteButtonTemplate(pointData, editablePoint)}
-
-        <button class="event__rollup-btn" type="button">
-          <span class="visually-hidden">Open event</span>
-        </button>
+        ${createRollupButtonTemplate(pointData, editablePoint)}
       </header>
 
       ${offers.length > 0 ? createOfferContainerTemplate(pointData, offers) : ``}
@@ -212,6 +239,8 @@ export default class PointEdit extends SmartView {
     this._endDateChangeHandler = this._endDateChangeHandler.bind(this);
     this._resetButtonClickHandler = this._resetButtonClickHandler.bind(this);
     this._offerListChangeHandler = this._offerListChangeHandler.bind(this);
+    this._priceInputHandler = this._priceInputHandler.bind(this);
+    this._destinationInputHandler = this._destinationInputHandler.bind(this);
 
     this._currentOffers = getOffersForCurrentPointType(this._offers, this._data.type);
 
@@ -219,6 +248,7 @@ export default class PointEdit extends SmartView {
 
     this._setInnerHandlers();
     this._setDatePicker();
+    this._validateFields();
   }
 
 
@@ -226,9 +256,11 @@ export default class PointEdit extends SmartView {
 
   setRollupButtonClickHandler(callback) {
     this._callback.rollupButtonClick = callback;
-    this.getElement()
-      .querySelector(`.event__rollup-btn`)
-      .addEventListener(`click`, this._rollupButtonClickHandler);
+    if (this._editablePoint === EditablePoint.OLD) {
+      this.getElement()
+        .querySelector(`.event__rollup-btn`)
+        .addEventListener(`click`, this._rollupButtonClickHandler);
+    }
   }
 
   setFormSubmitHandler(callback) {
@@ -254,6 +286,7 @@ export default class PointEdit extends SmartView {
   restoreHandlers() {
     this._setInnerHandlers();
     this._setDatePicker();
+    this._validateFields();
 
     this.setRollupButtonClickHandler(this._callback.rollupButtonClick);
     this.setFormSubmitHandler(this._callback.formSubmit);
@@ -290,10 +323,13 @@ export default class PointEdit extends SmartView {
       element.querySelector(`.event__favorite-checkbox`)
         .addEventListener(`change`, this._favoriteCheckboxChangeHandler);
     }
-    element.querySelector(`.event__input--price`)
-      .addEventListener(`change`, this._priceChangeHandler);
-    element.querySelector(`.event__input--destination`)
-      .addEventListener(`change`, this._destinationChangeHandler);
+
+    const price = element.querySelector(`.event__input--price`);
+    price.addEventListener(`change`, this._priceChangeHandler);
+    price.addEventListener(`input`, this._priceInputHandler);
+    const destination = element.querySelector(`.event__input--destination`);
+    destination.addEventListener(`change`, this._destinationChangeHandler);
+    destination.addEventListener(`input`, this._destinationInputHandler);
     element.querySelector(`.event__type-list`)
       .addEventListener(`change`, this._typeListChangeHandler);
     element.querySelector(`.event__reset-btn`)
@@ -387,6 +423,28 @@ export default class PointEdit extends SmartView {
     return checkedOffers;
   }
 
+  _validateFields() {
+    const element = this.getElement();
+    const destination = element.querySelector(`.event__input--destination`).value;
+    const price = element.querySelector(`.event__input--price`).valueAsNumber;
+    const saveButton = element.querySelector(`.event__save-btn`);
+
+    // save button must be disabled if 'destination' empty, or not in list;
+    // or price = 0; and if not isDisabled - need remove disable status bcs it's
+    // maybe our last change state for Save button
+    if (
+      !this._destinations.some((item) => item.name === destination)
+      || price === 0
+      || isNaN(price)) {
+      saveButton.disabled = true;
+      return;
+    }
+
+    if (!this._data.isDisabled) {
+      saveButton.disabled = false;
+    }
+  }
+
 
   /* ---------------------------- Events handlers --------------------------- */
 
@@ -422,6 +480,7 @@ export default class PointEdit extends SmartView {
     const destination = this._destinations.find((item) => item.name === evt.target.value);
     if (destination === undefined) {
       evt.target.value = this._data.destination.name;
+      this._validateFields();
       return;
     }
 
@@ -430,10 +489,18 @@ export default class PointEdit extends SmartView {
     });
   }
 
+  _destinationInputHandler() {
+    this._validateFields();
+  }
+
   _priceChangeHandler(evt) {
     this.updateData({
       price: evt.target.valueAsNumber,
     }, true);
+  }
+
+  _priceInputHandler() {
+    this._validateFields();
   }
 
   _resetButtonClickHandler() {
@@ -454,11 +521,20 @@ export default class PointEdit extends SmartView {
   static parsePointToData(point) {
     return Object.assign(
         {},
-        point
+        point,
+        {
+          isDisabled: false,
+          isSaving: false,
+          isDeleting: false,
+        }
     );
   }
 
   static parseDataToPoint(pointData) {
+    delete pointData.isDisabled;
+    delete pointData.isSaving;
+    delete pointData.isDeleting;
+
     return Object.assign(
         {},
         pointData

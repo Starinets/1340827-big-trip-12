@@ -6,6 +6,7 @@ import OfferListView from '../view/offer-list';
 import OfferView from './../view/offer';
 import {
   UserAction,
+  PointFormState,
   UpdateType,
   EditablePoint
 } from "./../constants";
@@ -14,7 +15,8 @@ import {isDatesEqual} from "./../utils/date";
 const MAX_OFFERS_COUNT = 3;
 const Mode = {
   DEFAULT: `DEFAULT`,
-  EDITING: `EDITING`
+  EDITING: `EDITING`,
+  FAVORITE: `FAVORITE`
 };
 
 export default class Point {
@@ -69,7 +71,13 @@ export default class Point {
     }
 
     if (this._mode === Mode.EDITING) {
+      replace(this._component, previousEditComponent);
+      this._mode = Mode.DEFAULT;
+    }
+
+    if (this._mode === Mode.FAVORITE) {
       replace(this._editComponent, previousEditComponent);
+      this._mode = Mode.EDITING;
     }
 
     remove(previousComponent);
@@ -85,6 +93,35 @@ export default class Point {
   resetView() {
     if (this._mode !== Mode.DEFAULT) {
       this._replaceFormToCard();
+    }
+  }
+
+  setViewState(state) {
+    const resetFormState = () => {
+      this._editComponent.updateData({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false
+      });
+    };
+
+    switch (state) {
+      case PointFormState.SAVING:
+        this._editComponent.updateData({
+          isDisabled: true,
+          isSaving: true
+        });
+        break;
+      case PointFormState.DELETING:
+        this._editComponent.updateData({
+          isDisabled: true,
+          isDeleting: true
+        });
+        break;
+      case PointFormState.ABORTING:
+        this._component.shake(resetFormState);
+        this._editComponent.shake(resetFormState);
+        break;
     }
   }
 
@@ -141,10 +178,10 @@ export default class Point {
         UserAction.UPDATE_POINT,
         isPatchUpdate ? UpdateType.PATCH : UpdateType.MINOR,
         editedPoint);
-    this._replaceFormToCard();
   }
 
   _handleFavoriteChange(isFavorite) {
+    this._mode = Mode.FAVORITE;
     this._changeData(
         UserAction.UPDATE_POINT,
         UpdateType.PATCH,

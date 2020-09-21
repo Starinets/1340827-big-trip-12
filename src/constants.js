@@ -90,6 +90,12 @@ const UserAction = {
   DELETE_POINT: `DELETE_POINT`
 };
 
+const PointFormState = {
+  SAVING: `SAVING`,
+  DELETING: `DELETING`,
+  ABORTING: `ABORTING`
+};
+
 const UpdateType = {
   PATCH: `PATCH`,
   FILTER: `FILTER`,
@@ -122,6 +128,7 @@ export {
   OfferList,
   SortType,
   UserAction,
+  PointFormState,
   UpdateType,
   FilterType,
   MenuItem

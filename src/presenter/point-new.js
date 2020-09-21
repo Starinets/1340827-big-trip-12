@@ -79,7 +79,26 @@ export default class PointNew {
     remove(this._dayView);
 
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
-    this._addPointButtonView.getElement().disabled = false;
+    this._addPointButtonView.setEnabled();
+  }
+
+  setSaving() {
+    this._editComponent.updateData({
+      isDisabled: true,
+      isSaving: true
+    });
+  }
+
+  setAborting() {
+    const resetFormState = () => {
+      this._editComponent.updateData({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false
+      });
+    };
+
+    this._editComponent.shake(resetFormState);
   }
 
   _handleFormSubmit(point) {
@@ -88,7 +107,6 @@ export default class PointNew {
         UpdateType.MINOR,
         point
     );
-    this.destroy();
   }
 
   _handleResetButtonClick() {
