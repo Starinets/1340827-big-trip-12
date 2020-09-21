@@ -119,6 +119,18 @@ const createFavoriteButtonTemplate = (pointData, editablePoint) => {
   return ``;
 };
 
+const createRollupButtonTemplate = (pointData, editablePoint) => {
+  if (editablePoint === EditablePoint.OLD) {
+    return (
+      `<button class="event__rollup-btn" type="button" ${pointData.isDisabled ? `disabled` : ``}>
+        <span class="visually-hidden">Open event</span>
+      </button>`
+    );
+  }
+
+  return ``;
+};
+
 const createPointFormTemplate = (pointData, destinations, offers, editablePoint) => {
   const optionsListTemplate = createOptionsListTemplate(destinations);
 
@@ -184,10 +196,7 @@ const createPointFormTemplate = (pointData, destinations, offers, editablePoint)
         <button class="event__reset-btn" type="reset" ${pointData.isDisabled ? `disabled` : ``}>${textForDeleteButton(pointData, editablePoint)}</button>
 
         ${createFavoriteButtonTemplate(pointData, editablePoint)}
-
-        <button class="event__rollup-btn" type="button" ${pointData.isDisabled ? `disabled` : ``}>
-          <span class="visually-hidden">Open event</span>
-        </button>
+        ${createRollupButtonTemplate(pointData, editablePoint)}
       </header>
 
       ${offers.length > 0 ? createOfferContainerTemplate(pointData, offers) : ``}
