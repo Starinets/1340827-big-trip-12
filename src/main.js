@@ -18,9 +18,14 @@ import TripPresenter from './presenter/trip';
 import FilterPresenter from './presenter/filter';
 import StatisticsPresenter from './presenter/statistics';
 import Http from './api/http';
+import Store from './api/store';
+import Provider from './api/provider';
 
 const AUTHORIZATION = `Basic hS3sd3dfd2cl7sa2j`;
 const END_POINT = `https://12.ecmascript.pages.academy/big-trip`;
+const STORE_PREFIX = `big-trip-localstorage`;
+const STORE_VER = `v1`;
+const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
 
 const infoPlace = document.querySelector(`.trip-main`);
 const menuPlace = infoPlace.querySelector(`.js-menu`);
@@ -92,8 +97,9 @@ const setMenuHandlers = () => {
 };
 
 const api = new Http(END_POINT, AUTHORIZATION);
+const store = new Store(STORE_NAME, window.localStorage);
+const apiWithProvider = new Provider(api, store);
 const pointsModel = new PointsModel();
-
 const filterModel = new FilterModel();
 
 const infoView = new TripInfoView().getElement();
@@ -105,7 +111,7 @@ render(infoPlace, addPointButtonView, RenderPosition.BEFORE_END);
 const menuView = new MenuView();
 render(menuPlace, menuView, RenderPosition.AFTER_END);
 
-const tripPresenter = new TripPresenter(contentPlace, pointsModel, filterModel, api, addPointButtonView);
+const tripPresenter = new TripPresenter(contentPlace, pointsModel, filterModel, apiWithProvider, addPointButtonView);
 const filterPresenter = new FilterPresenter(filtersPlace, filterModel, pointsModel);
 const statisticsPresenter = new StatisticsPresenter(contentPlace, pointsModel);
 
@@ -113,9 +119,9 @@ filterPresenter.init();
 tripPresenter.init();
 
 Promise.all([
-  api.getPoints(),
-  api.getDestinations(),
-  api.getOffers()
+  apiWithProvider.getPoints(),
+  apiWithProvider.getDestinations(),
+  apiWithProvider.getOffers()
 ])
   .then(([points, destinations, offers]) => {
     tripPresenter.setOptions(destinations, offers);

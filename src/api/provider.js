@@ -1,5 +1,5 @@
 import {nanoid} from 'nanoid';
-import PointsModel from './../model/points';
+import PointsModel from '../model/points';
 
 const getSyncedPoints = (items) => {
   return items.filter(({success}) => success)
