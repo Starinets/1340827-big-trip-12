@@ -1,5 +1,5 @@
-import PointsModel from './../model/points';
-import {adaptDestinationsToClient} from './../utils/general';
+import PointsModel from '../model/points';
+import {adaptDestinationsToClient} from '../utils/general';
 
 const Url = {
   POINTS: `points`,
@@ -19,7 +19,7 @@ const SuccessHTTPStatusRange = {
   MAX: 299
 };
 
-export default class Api {
+export default class Http {
   constructor(endPoint, authorization) {
     this._endPoint = endPoint;
     this._authorization = authorization;
@@ -27,19 +27,19 @@ export default class Api {
 
   getDestinations() {
     return this._load({url: Url.DESTINATIONS})
-      .then(Api.toJSON)
+      .then(Http.toJSON)
       .then((destinations) => adaptDestinationsToClient(destinations)
       );
   }
 
   getOffers() {
     return this._load({url: Url.OFFERS})
-      .then(Api.toJSON);
+      .then(Http.toJSON);
   }
 
   getPoints() {
     return this._load({url: Url.POINTS})
-      .then(Api.toJSON)
+      .then(Http.toJSON)
       .then((points) => points.map(PointsModel.adaptToClient));
   }
 
@@ -50,7 +50,7 @@ export default class Api {
       body: JSON.stringify(PointsModel.adaptToServer(point)),
       headers: new Headers({"Content-Type": `application/json`})
     })
-      .then(Api.toJSON)
+      .then(Http.toJSON)
       .then(PointsModel.adaptToClient);
   }
 
@@ -61,7 +61,7 @@ export default class Api {
       body: JSON.stringify(PointsModel.adaptToServer(point)),
       headers: new Headers({"Content-Type": `application/json`})
     })
-      .then(Api.toJSON)
+      .then(Http.toJSON)
       .then(PointsModel.adaptToClient);
   }
 
@@ -84,8 +84,8 @@ export default class Api {
         `${this._endPoint}/${url}`,
         {method, body, headers}
     )
-      .then(Api.checkStatus)
-      .catch(Api.catchError);
+      .then(Http.checkStatus)
+      .catch(Http.catchError);
   }
 
   static checkStatus(response) {

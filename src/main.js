@@ -17,7 +17,7 @@ import AddPointButtonView from './view/add-point-button';
 import TripPresenter from './presenter/trip';
 import FilterPresenter from './presenter/filter';
 import StatisticsPresenter from './presenter/statistics';
-import Api from './api/api';
+import Http from './api/http';
 
 const AUTHORIZATION = `Basic hS3sd3dfd2cl7sa2j`;
 const END_POINT = `https://12.ecmascript.pages.academy/big-trip`;
@@ -91,7 +91,7 @@ const setMenuHandlers = () => {
   addPointButtonView.setClickHandler(handleMenuClick);
 };
 
-const api = new Api(END_POINT, AUTHORIZATION);
+const api = new Http(END_POINT, AUTHORIZATION);
 const pointsModel = new PointsModel();
 
 const filterModel = new FilterModel();
