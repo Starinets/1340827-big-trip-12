@@ -256,9 +256,11 @@ export default class PointEdit extends SmartView {
 
   setRollupButtonClickHandler(callback) {
     this._callback.rollupButtonClick = callback;
-    this.getElement()
-      .querySelector(`.event__rollup-btn`)
-      .addEventListener(`click`, this._rollupButtonClickHandler);
+    if (this._editablePoint === EditablePoint.OLD) {
+      this.getElement()
+        .querySelector(`.event__rollup-btn`)
+        .addEventListener(`click`, this._rollupButtonClickHandler);
+    }
   }
 
   setFormSubmitHandler(callback) {
