@@ -29,4 +29,12 @@ export default class AddPointButton extends Abstract {
 
     this.getElement().addEventListener(`click`, this._elementClickHandler);
   }
+
+  setDisabled() {
+    this.getElement().disabled = true;
+  }
+
+  setEnabled() {
+    this.getElement().disabled = false;
+  }
 }

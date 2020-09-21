@@ -79,7 +79,7 @@ export default class PointNew {
     remove(this._dayView);
 
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
-    this._addPointButtonView.getElement().disabled = false;
+    this._addPointButtonView.setEnabled();
   }
 
   setSaving() {
