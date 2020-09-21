@@ -10,6 +10,14 @@ import SmartView from "./smart";
 import flatpickr from "flatpickr";
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
+const ButtonText = {
+  SAVE: `Save`,
+  SAVING: `Saving...`,
+  DELETE: `Delete`,
+  DELETING: `Deleting...`,
+  CANCEL: `Cancel`,
+};
+
 const getOffersForCurrentPointType = (offers, pointType) => {
   const currentOffer = offers.find((offer) => offer.type === pointType);
 
@@ -22,14 +30,14 @@ const getOffersForCurrentPointType = (offers, pointType) => {
     : [];
 };
 
-const textForDeleteButton = (pointData, editablePoint) => {
+const defineTextForDeleteButton = (pointData, editablePoint) => {
   if (editablePoint === EditablePoint.NEW) {
-    return `Cancel`;
+    return ButtonText.CANCEL;
   }
   if (pointData.isDeleting) {
-    return `Deleting...`;
+    return ButtonText.DELETING;
   }
-  return `Delete`;
+  return ButtonText.DELETE;
 };
 
 const createOptionsListTemplate = (destinations) => {
@@ -192,8 +200,8 @@ const createPointFormTemplate = (pointData, destinations, offers, editablePoint)
           <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${pointData.price}" ${pointData.isDisabled ? `disabled` : ``}>
         </div>
 
-        <button class="event__save-btn  btn  btn--blue" type="submit" ${pointData.isDisabled ? `disabled` : ``}>${pointData.isSaving ? `Saving...` : `Save`}</button>
-        <button class="event__reset-btn" type="reset" ${pointData.isDisabled ? `disabled` : ``}>${textForDeleteButton(pointData, editablePoint)}</button>
+        <button class="event__save-btn  btn  btn--blue" type="submit" ${pointData.isDisabled ? `disabled` : ``}>${pointData.isSaving ? ButtonText.SAVING : ButtonText.SAVE}</button>
+        <button class="event__reset-btn" type="reset" ${pointData.isDisabled ? `disabled` : ``}>${defineTextForDeleteButton(pointData, editablePoint)}</button>
 
         ${createFavoriteButtonTemplate(pointData, editablePoint)}
         ${createRollupButtonTemplate(pointData, editablePoint)}
