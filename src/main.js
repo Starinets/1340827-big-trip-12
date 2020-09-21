@@ -17,7 +17,7 @@ import AddPointButtonView from './view/add-point-button';
 import TripPresenter from './presenter/trip';
 import FilterPresenter from './presenter/filter';
 import StatisticsPresenter from './presenter/statistics';
-import Api from "./api.js";
+import Api from './api/api';
 
 const AUTHORIZATION = `Basic hS3sd3dfd2cl7sa2j`;
 const END_POINT = `https://12.ecmascript.pages.academy/big-trip`;
