@@ -231,6 +231,8 @@ export default class PointEdit extends SmartView {
     this._endDateChangeHandler = this._endDateChangeHandler.bind(this);
     this._resetButtonClickHandler = this._resetButtonClickHandler.bind(this);
     this._offerListChangeHandler = this._offerListChangeHandler.bind(this);
+    this._priceInputHandler = this._priceInputHandler.bind(this);
+    this._destinationInputHandler = this._destinationInputHandler.bind(this);
 
     this._currentOffers = getOffersForCurrentPointType(this._offers, this._data.type);
 
@@ -313,8 +315,12 @@ export default class PointEdit extends SmartView {
     }
     element.querySelector(`.event__input--price`)
       .addEventListener(`change`, this._priceChangeHandler);
+    element.querySelector(`.event__input--price`)
+      .addEventListener(`input`, this._priceInputHandler);
     element.querySelector(`.event__input--destination`)
       .addEventListener(`change`, this._destinationChangeHandler);
+    element.querySelector(`.event__input--destination`)
+      .addEventListener(`input`, this._destinationInputHandler);
     element.querySelector(`.event__type-list`)
       .addEventListener(`change`, this._typeListChangeHandler);
     element.querySelector(`.event__reset-btn`)
@@ -416,7 +422,10 @@ export default class PointEdit extends SmartView {
     // save button must be disabled if 'destination' empty, or not in list;
     // or price = 0; and if not isDisabled - need remove disable status bcs it's
     // maybe our last change state for Save button
-    if (this._destinations.find((item) => item.name === destination) === undefined || price === 0) {
+    if (
+      !this._destinations.some((item) => item.name === destination)
+      || price === 0
+      || isNaN(price)) {
       saveButton.disabled = true;
       return;
     }
@@ -458,11 +467,10 @@ export default class PointEdit extends SmartView {
   }
 
   _destinationChangeHandler(evt) {
-    this._validateFields();
-
     const destination = this._destinations.find((item) => item.name === evt.target.value);
     if (destination === undefined) {
       evt.target.value = this._data.destination.name;
+      this._validateFields();
       return;
     }
 
@@ -471,12 +479,18 @@ export default class PointEdit extends SmartView {
     });
   }
 
-  _priceChangeHandler(evt) {
+  _destinationInputHandler() {
     this._validateFields();
+  }
 
+  _priceChangeHandler(evt) {
     this.updateData({
       price: evt.target.valueAsNumber,
     }, true);
+  }
+
+  _priceInputHandler() {
+    this._validateFields();
   }
 
   _resetButtonClickHandler() {
