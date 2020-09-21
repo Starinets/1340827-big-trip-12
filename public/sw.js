@@ -26,7 +26,12 @@ self.addEventListener(`install`, (evt) => {
             `/img/icons/sightseeing.png`,
             `/img/icons/taxi.png`,
             `/img/icons/train.png`,
-            `/img/icons/transport.png`
+            `/img/icons/transport.png`,
+            `/img/photos/1.jpg`,
+            `/img/photos/2.jpg`,
+            `/img/photos/3.jpg`,
+            `/img/photos/4.jpg`,
+            `/img/photos/5.jpg`,
           ]);
         })
   );
