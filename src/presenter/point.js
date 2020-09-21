@@ -15,7 +15,8 @@ import {isDatesEqual} from "./../utils/date";
 const MAX_OFFERS_COUNT = 3;
 const Mode = {
   DEFAULT: `DEFAULT`,
-  EDITING: `EDITING`
+  EDITING: `EDITING`,
+  FAVORITE: `FAVORITE`
 };
 
 export default class Point {
@@ -72,6 +73,11 @@ export default class Point {
     if (this._mode === Mode.EDITING) {
       replace(this._component, previousEditComponent);
       this._mode = Mode.DEFAULT;
+    }
+
+    if (this._mode === Mode.FAVORITE) {
+      replace(this._editComponent, previousEditComponent);
+      this._mode = Mode.EDITING;
     }
 
     remove(previousComponent);
@@ -175,6 +181,7 @@ export default class Point {
   }
 
   _handleFavoriteChange(isFavorite) {
+    this._mode = Mode.FAVORITE;
     this._changeData(
         UserAction.UPDATE_POINT,
         UpdateType.PATCH,
