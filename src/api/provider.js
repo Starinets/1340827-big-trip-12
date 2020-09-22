@@ -1,8 +1,8 @@
 import {nanoid} from 'nanoid';
 import PointsModel from '../model/points';
 
-const getSyncedPoints = (items) => {
-  return items.filter(({success}) => success)
+const getSyncedPoints = (points) => {
+  return points.filter(({success}) => success)
     .map(({payload}) => payload.point);
 };
 
@@ -21,6 +21,16 @@ export default class Provider {
   constructor(http, store) {
     this._http = http;
     this._store = store;
+    this._syncRequired = false;
+  }
+
+  get syncRequired() {
+    return this._syncRequired;
+  }
+
+  set syncRequired(value) {
+    this._syncRequired = value;
+    this._store.syncRequired = value;
   }
 
   getPoints() {
@@ -124,7 +134,7 @@ export default class Provider {
 
   sync() {
     if (Provider.isOnline()) {
-      const storePoints = Object.values(this._store.getPoints());
+      const storePoints = Object.values(this._store.getSyncRequired());
 
       return this._http.sync(storePoints)
         .then((response) => {
@@ -132,6 +142,8 @@ export default class Provider {
           const updatedPoints = getSyncedPoints(response.updated);
 
           const points = createStoreStructure([...createdPoints, ...updatedPoints]);
+
+          this.syncRequired = false;
 
           this._store.setPoints(points);
         });

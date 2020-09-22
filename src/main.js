@@ -162,4 +162,5 @@ window.addEventListener(`online`, () => {
 
 window.addEventListener(`offline`, () => {
   document.title += ` [offline]`;
+  apiWithProvider.syncRequired = true;
 });

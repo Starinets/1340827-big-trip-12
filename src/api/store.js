@@ -2,12 +2,22 @@ const ActionKey = {
   POINTS: `points`,
   OFFERS: `offers`,
   DESTINATIONS: `destinations`,
+  SYNC_REQUIRED: `syncRequired`
 };
 
 export default class Store {
   constructor(key, storage) {
     this._storage = storage;
     this._key = key;
+    this._syncRequired = false;
+  }
+
+  get syncRequired() {
+    return this._syncRequired;
+  }
+
+  set syncRequired(value) {
+    this._syncRequired = value;
   }
 
   getPoints() {
@@ -20,6 +30,10 @@ export default class Store {
 
   getOffers() {
     return this._getItems()[ActionKey.OFFERS];
+  }
+
+  getSyncRequired() {
+    return this._getItems()[ActionKey.SYNC_REQUIRED];
   }
 
   setPoint(id, point) {
@@ -37,7 +51,11 @@ export default class Store {
   }
 
   setPoints(points) {
-    this._setItem(ActionKey.POINTS, points);
+    if (this._syncRequired) {
+      this._setItem(ActionKey.SYNC_REQUIRED, points);
+    } else {
+      this._setItem(ActionKey.POINTS, points);
+    }
   }
 
   setOffers(offers) {
