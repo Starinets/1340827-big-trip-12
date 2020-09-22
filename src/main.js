@@ -96,9 +96,9 @@ const setMenuHandlers = () => {
   addPointButtonView.setClickHandler(handleMenuClick);
 };
 
-const api = new Http(END_POINT, AUTHORIZATION);
+const http = new Http(END_POINT, AUTHORIZATION);
 const store = new Store(STORE_NAME, window.localStorage);
-const apiWithProvider = new Provider(api, store);
+const apiWithProvider = new Provider(http, store);
 const pointsModel = new PointsModel();
 const filterModel = new FilterModel();
 
@@ -153,4 +153,13 @@ window.addEventListener(`load`, () => {
     }).catch(() => {
       console.error(`ServiceWorker isn't available`); // eslint-disable-line
     });
+});
+
+window.addEventListener(`online`, () => {
+  document.title = document.title.replace(` [offline]`, ``);
+  apiWithProvider.sync();
+});
+
+window.addEventListener(`offline`, () => {
+  document.title += ` [offline]`;
 });
