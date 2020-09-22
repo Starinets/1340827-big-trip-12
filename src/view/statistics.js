@@ -10,6 +10,21 @@ const CHART_BACKGROUND_COLOR = `#f2f2f2`;
 const LEGEND_DISPLAY = false;
 const TOOLTIPS_ENABLED = false;
 
+const ChartOption = {
+  MONEY: {
+    text: `MONEY`,
+    formatter: (value) => `€ ${value}`,
+  },
+  TRANSPORT: {
+    text: `TRANSPORT`,
+    formatter: (value) => `${value}x`,
+  },
+  TIME_SPEND: {
+    text: `TIME SPEND`,
+    formatter: (value) => `${getDatesDifference(0, value)}`,
+  }
+};
+
 const ChartDataset = {
   BACKGROUND_COLOR: `#ffffff`,
   HOVER_BACKGROUND_COLOR: `#ffffff`,
@@ -51,21 +66,6 @@ const chartScales = {
       drawBorder: false,
     },
   }],
-};
-
-const ChartOption = {
-  MONEY: {
-    text: `MONEY`,
-    formatter: (value) => `€ ${value}`,
-  },
-  TRANSPORT: {
-    text: `TRANSPORT`,
-    formatter: (value) => `${value}x`,
-  },
-  TIME_SPEND: {
-    text: `TIME SPEND`,
-    formatter: (value) => `${getDatesDifference(0, value)}`,
-  }
 };
 
 const pointTypeToChartLabel = {
@@ -141,9 +141,9 @@ const getPointTypeLabels = (pointTypes) =>
   );
 
 const generateChart = (ctx, chartLabels, chartValues, options) => {
-  ctx.height = BAR_HEIGHT * chartLabels.length;
-
   const {text, formatter} = options;
+
+  ctx.height = BAR_HEIGHT * chartLabels.length;
 
   return new Chart(
       ctx,

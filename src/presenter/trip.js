@@ -156,10 +156,10 @@ export default class Trip {
     }
   }
 
-  _handleModelEvent(updateType, data) {
+  _handleModelEvent(updateType, point) {
     switch (updateType) {
       case UpdateType.PATCH:
-        this._pointPresenter[data.id].init(data);
+        this._pointPresenter[point.id].init(point);
         break;
       case UpdateType.FILTER:
         this._clearPointList({resetSortType: true});

@@ -20,10 +20,10 @@ export default class Filter {
   }
 
   init() {
-    this._current = this._model.get();
-
     const filters = this._getFilters();
     const prevComponent = this._component;
+
+    this._current = this._model.get();
 
     this._component = new FilterView(this._current, filters);
     this._component.setTypeChangeHandler(this._handleTypeChange);

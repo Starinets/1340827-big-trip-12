@@ -6,11 +6,11 @@ const getSyncedPoints = (points) => {
     .map(({payload}) => payload.point);
 };
 
-const createStoreStructure = (items) => {
-  return items.reduce((acc, current) => {
+const storeStructure = (items) => {
+  return items.reduce((points, current) => {
     return Object.assign(
         {},
-        acc,
+        points,
         {
           [current.id]: current,
         });
@@ -37,7 +37,7 @@ export default class Provider {
     if (Provider.isOnline()) {
       return this._http.getPoints()
         .then((points) => {
-          const items = createStoreStructure(points.map(PointsModel.adaptToServer));
+          const items = storeStructure(points.map(PointsModel.adaptToServer));
           this._store.setPoints(items);
           return points;
         });
@@ -141,7 +141,7 @@ export default class Provider {
           const createdPoints = getSyncedPoints(response.created);
           const updatedPoints = getSyncedPoints(response.updated);
 
-          const points = createStoreStructure([...createdPoints, ...updatedPoints]);
+          const points = storeStructure([...createdPoints, ...updatedPoints]);
 
           this.syncRequired = false;
 

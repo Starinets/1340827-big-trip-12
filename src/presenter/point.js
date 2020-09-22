@@ -41,10 +41,10 @@ export default class Point {
   }
 
   init(specifics) {
-    this._specific = specifics;
-
     const previousComponent = this._component;
     const previousEditComponent = this._editComponent;
+
+    this._specific = specifics;
 
     this._component = new PointView(specifics);
     this._editComponent = new PointEditView(specifics, this._destinations, this._offers, EditablePoint.OLD);

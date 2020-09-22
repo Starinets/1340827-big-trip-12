@@ -72,11 +72,11 @@ export default class Http {
     });
   }
 
-  sync(data) {
+  sync(points) {
     return this._load({
       url: `points/sync`,
       method: Method.POST,
-      body: JSON.stringify(data),
+      body: JSON.stringify(points),
       headers: new Headers({"Content-Type": `application/json`})
     })
       .then(Http.toJSON);
