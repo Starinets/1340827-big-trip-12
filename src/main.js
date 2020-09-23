@@ -2,21 +2,16 @@ import {
   render,
   RenderPosition
 } from './utils/dom';
-import {
-  formatMonthDate,
-  addLeadingRank
-} from './utils/date';
 import {MenuItem, UpdateType} from './constants';
 import PointsModel from './model/points';
 import FilterModel from './model/filter';
 import TripInfoView from './view/trip-info';
-import MainInfoView from './view/main-info';
-import TripCostView from './view/trip-cost';
 import MenuView from './view/menu';
 import AddPointButtonView from './view/add-point-button';
 import TripPresenter from './presenter/trip';
 import FilterPresenter from './presenter/filter';
 import StatisticsPresenter from './presenter/statistics';
+import InfoPresenter from './presenter/info';
 import Http from './api/http';
 import Store from './api/store';
 import Provider from './api/provider';
@@ -32,41 +27,6 @@ const menuPlace = infoPlace.querySelector(`.js-menu`);
 const filtersPlace = infoPlace.querySelector(`.trip-controls`);
 
 const contentPlace = document.querySelector(`.trip-events`);
-
-const getTripCost = (points) => points.reduce((pointsPrice, point) =>
-  pointsPrice + point.price + point.offers.reduce((offersPrice, offer) =>
-    offersPrice + offer.price, 0), 0);
-
-const getTripPath = (points) => {
-  switch (points.length) {
-    case 0:
-      return ``;
-    case 1:
-      return `${points[0].destination.name}`;
-    case 2:
-      return `${points[0].destination.name} &mdash; ${points[points.length - 1].destination.name}`;
-    case 3:
-      return `${points[0].destination.name} &mdash; ${points[1].destination.name} &mdash; ${points[points.length - 1].destination.name}`;
-    default:
-      return `${points[0].destination.name} &mdash; ... &mdash; ${points[points.length - 1].destination.name}`;
-  }
-};
-
-const getTripDuration = (points) => {
-  const startTime = points[0].startTime;
-  const endTime = points[points.length - 1].endTime;
-
-  if (startTime.getMonth() !== endTime.getMonth()) {
-    return `${formatMonthDate(startTime)}&nbsp;&mdash;&nbsp;${formatMonthDate(endTime)}`;
-  }
-
-  if (startTime.getDay() !== endTime.getDay()) {
-    return `${formatMonthDate(startTime)}&nbsp;&mdash;&nbsp;${addLeadingRank(endTime.getDate())}`;
-  }
-
-
-  return formatMonthDate(startTime);
-};
 
 const handleMenuClick = (menuItem) => {
   switch (menuItem) {
@@ -114,6 +74,7 @@ render(menuPlace, menuView, RenderPosition.AFTER_END);
 const tripPresenter = new TripPresenter(contentPlace, pointsModel, filterModel, apiWithProvider, addPointButtonView);
 const filterPresenter = new FilterPresenter(filtersPlace, filterModel, pointsModel);
 const statisticsPresenter = new StatisticsPresenter(contentPlace, pointsModel);
+const infoPresenter = new InfoPresenter(infoView, pointsModel);
 
 filterPresenter.init();
 tripPresenter.init();
@@ -127,15 +88,7 @@ Promise.all([
     tripPresenter.setOptions(destinations, offers);
     pointsModel.set(UpdateType.INIT, points);
 
-    // TODO: it is necessary to redo the data update through the model-observer-presenter (in additional task)
-    points = points.sort((less, more) => less.startTime - more.startTime);
-
-    const tripPath = getTripPath(points);
-    const tripDuration = getTripDuration(points);
-    const tripCost = getTripCost(points);
-
-    render(infoView, new MainInfoView(tripPath, tripDuration), RenderPosition.BEFORE_END);
-    render(infoView, new TripCostView(tripCost), RenderPosition.BEFORE_END);
+    infoPresenter.init();
 
     setMenuHandlers();
   })
