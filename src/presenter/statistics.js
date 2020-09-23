@@ -1,5 +1,9 @@
 import StatisticsView from './../view/statistics';
-import {render, RenderPosition, remove} from './../utils/dom';
+import {
+  render,
+  RenderPosition,
+  remove
+} from './../utils/dom';
 
 export default class Statistics {
   constructor(container, pointsModel) {

@@ -6,9 +6,9 @@ import {
 } from '../constants';
 import {setFirstCharToUpperCase} from './../utils/general';
 import {dateToString} from '../utils/date';
-import SmartView from "./smart";
-import flatpickr from "flatpickr";
-import "../../node_modules/flatpickr/dist/flatpickr.min.css";
+import SmartView from './smart';
+import flatpickr from 'flatpickr';
+import './../../node_modules/flatpickr/dist/flatpickr.min.css';
 
 const ButtonText = {
   SAVE: `Save`,

@@ -1,4 +1,9 @@
-import {render, RenderPosition, replace, remove} from './../utils/dom';
+import {
+  render,
+  RenderPosition,
+  replace,
+  remove
+} from './../utils/dom';
 import {
   formatMonthDate,
   addLeadingRank

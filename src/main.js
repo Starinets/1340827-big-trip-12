@@ -2,7 +2,10 @@ import {
   render,
   RenderPosition
 } from './utils/dom';
-import {MenuItem, UpdateType} from './constants';
+import {
+  MenuItem,
+  UpdateType
+} from './constants';
 import PointsModel from './model/points';
 import FilterModel from './model/filter';
 import TripInfoView from './view/trip-info';

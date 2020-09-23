@@ -1,6 +1,14 @@
 import FilterView from './../view/filters';
-import {render, RenderPosition, replace, remove} from './../utils/dom';
-import {UpdateType, FilterType} from './../constants';
+import {
+  render,
+  RenderPosition,
+  replace,
+  remove
+} from './../utils/dom';
+import {
+  UpdateType,
+  FilterType
+} from './../constants';
 import {filterTypeToPoints} from './../utils/filter';
 
 export default class Filter {

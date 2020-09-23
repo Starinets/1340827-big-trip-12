@@ -17,14 +17,14 @@ import {
 import {
   sortPointByTime,
   sortPointByPrice
-} from "../utils/trip";
+} from './../utils/trip';
 import {formatDayDate} from './../utils/date';
 import SortView from './../view/sort';
 import PointMessage from './../view/point-message';
 import DaysView from './../view/days';
 import DayView from './../view/day';
 import PointListView from './../view/point-list';
-import PointPresenter from "./point";
+import PointPresenter from './point';
 import PointNewPresenter from './point-new';
 
 const reducePointByDay = (days, point) => {
