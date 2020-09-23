@@ -54,7 +54,7 @@ export default class Info {
   }
 
   init() {
-    const points = this._pointsModel.get().sort((less, more) => less.startTime - more.startTime);
+    const points = this._pointsModel.get().slice().sort((less, more) => less.startTime - more.startTime);
 
     const tripPath = getTripPath(points);
     const tripDuration = getTripDuration(points);
