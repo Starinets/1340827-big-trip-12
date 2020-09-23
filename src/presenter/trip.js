@@ -85,6 +85,14 @@ export default class Trip {
     this._filterModel.removeObserver(this._handleModelEvent);
   }
 
+  /* -------------------------------- Getters ------------------------------- */
+  /* -------------------------------- Setters ------------------------------- */
+  /* -------------------------- Overloaded methods -------------------------- */
+  /* ----------------------------- Class methods ---------------------------- */
+  /* ---------------------------- Private methods --------------------------- */
+  /* ---------------------------- Events handlers --------------------------- */
+  /* ---------------------------- Static methods ---------------------------- */
+
   setOptions(destinations, offers) {
     this._destinations = destinations;
     this._offers = offers;
@@ -111,78 +119,6 @@ export default class Trip {
     }
 
     return filteredPoints;
-  }
-
-  _handleModeChange() {
-    this._pointNewPresenter.destroy();
-
-    Object
-      .values(this._pointPresenter)
-      .forEach((presenter) => presenter.resetView());
-  }
-
-  _handleViewAction(actionType, updateType, update) {
-    switch (actionType) {
-      case UserAction.UPDATE_POINT:
-        this._pointPresenter[update.id].setViewState(PointFormState.SAVING);
-        this._api.updatePoint(update)
-          .then((response) => {
-            this._pointsModel.update(updateType, response);
-          })
-          .catch(() => {
-            this._pointPresenter[update.id].setViewState(PointFormState.ABORTING);
-          });
-        break;
-      case UserAction.ADD_POINT:
-        this._pointNewPresenter.setSaving();
-        this._api.addPoint(update)
-          .then((response) => {
-            this._pointsModel.add(updateType, response);
-          })
-          .catch(() => {
-            this._pointNewPresenter.setAborting();
-          });
-        break;
-      case UserAction.DELETE_POINT:
-        this._pointPresenter[update.id].setViewState(PointFormState.DELETING);
-        this._api.deletePoint(update)
-          .then(() => {
-            this._pointsModel.delete(updateType, update);
-          })
-          .catch(() => {
-            this._pointPresenter[update.id].setViewState(PointFormState.ABORTING);
-          });
-        break;
-    }
-  }
-
-  _handleModelEvent(updateType, point) {
-    switch (updateType) {
-      case UpdateType.PATCH:
-        this._pointPresenter[point.id].init(point);
-        break;
-      case UpdateType.FILTER:
-        this._clearPointList({resetSortType: true});
-        this._renderSort();
-        this._renderDaysList();
-        break;
-      case UpdateType.MINOR:
-        this._clearPointList();
-        this._renderSort();
-        this._renderDaysList();
-        break;
-      case UpdateType.MAJOR:
-        this._clearPointList({resetSortType: true});
-        this._renderSort();
-        this._renderDaysList();
-        break;
-      case UpdateType.INIT:
-        this._isLoading = false;
-        remove(this._loadingView);
-        this._renderSort();
-        this._renderDaysList();
-        break;
-    }
   }
 
   _renderSort() {
@@ -296,5 +232,77 @@ export default class Trip {
 
       this._pointPresenter[point.id] = pointPresenter;
     });
+  }
+
+  _handleModeChange() {
+    this._pointNewPresenter.destroy();
+
+    Object
+      .values(this._pointPresenter)
+      .forEach((presenter) => presenter.resetView());
+  }
+
+  _handleViewAction(actionType, updateType, update) {
+    switch (actionType) {
+      case UserAction.UPDATE_POINT:
+        this._pointPresenter[update.id].setViewState(PointFormState.SAVING);
+        this._api.updatePoint(update)
+          .then((response) => {
+            this._pointsModel.update(updateType, response);
+          })
+          .catch(() => {
+            this._pointPresenter[update.id].setViewState(PointFormState.ABORTING);
+          });
+        break;
+      case UserAction.ADD_POINT:
+        this._pointNewPresenter.setSaving();
+        this._api.addPoint(update)
+          .then((response) => {
+            this._pointsModel.add(updateType, response);
+          })
+          .catch(() => {
+            this._pointNewPresenter.setAborting();
+          });
+        break;
+      case UserAction.DELETE_POINT:
+        this._pointPresenter[update.id].setViewState(PointFormState.DELETING);
+        this._api.deletePoint(update)
+          .then(() => {
+            this._pointsModel.delete(updateType, update);
+          })
+          .catch(() => {
+            this._pointPresenter[update.id].setViewState(PointFormState.ABORTING);
+          });
+        break;
+    }
+  }
+
+  _handleModelEvent(updateType, point) {
+    switch (updateType) {
+      case UpdateType.PATCH:
+        this._pointPresenter[point.id].init(point);
+        break;
+      case UpdateType.FILTER:
+        this._clearPointList({resetSortType: true});
+        this._renderSort();
+        this._renderDaysList();
+        break;
+      case UpdateType.MINOR:
+        this._clearPointList();
+        this._renderSort();
+        this._renderDaysList();
+        break;
+      case UpdateType.MAJOR:
+        this._clearPointList({resetSortType: true});
+        this._renderSort();
+        this._renderDaysList();
+        break;
+      case UpdateType.INIT:
+        this._isLoading = false;
+        remove(this._loadingView);
+        this._renderSort();
+        this._renderDaysList();
+        break;
+    }
   }
 }

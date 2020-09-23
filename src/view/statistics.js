@@ -254,6 +254,10 @@ export default class Statistics extends Abstract {
     this._generate();
   }
 
+  _getTemplate() {
+    return createStatisticsTemplate();
+  }
+
   _generate() {
     const element = this.getElement();
 
@@ -268,9 +272,5 @@ export default class Statistics extends Abstract {
     this._moneyCart = generateMoneyChart(moneyChart, this._points);
     this._transportChart = generateTransportChart(transportChart, this._points);
     this._timeSpendChart = generateTimeSpendChart(timeSpendChart, this._points);
-  }
-
-  _getTemplate() {
-    return createStatisticsTemplate();
   }
 }

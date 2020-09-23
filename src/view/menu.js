@@ -19,13 +19,13 @@ export default class Menu extends Abstract {
     this._clickHandler = this._clickHandler.bind(this);
   }
 
-  _getTemplate() {
-    return createMenuTemplate();
-  }
-
   setClickHandler(callback) {
     this._callback.itemClick = callback;
     this.getElement().addEventListener(`click`, this._clickHandler);
+  }
+
+  _getTemplate() {
+    return createMenuTemplate();
   }
 
   reset() {

@@ -13,10 +13,6 @@ export default class Abstract {
     this._callback = {};
   }
 
-  _getTemplate() {
-    throw new Error(`Abstract method not implemented: getTemplate`);
-  }
-
   getElement() {
     if (this._element === null) {
       this._element = createElement(this._getTemplate());
@@ -35,5 +31,9 @@ export default class Abstract {
       this.getElement().style.animation = ``;
       callback();
     }, SHAKE_ANIMATION_TIMEOUT);
+  }
+
+  _getTemplate() {
+    throw new Error(`Abstract method not implemented: getTemplate`);
   }
 }

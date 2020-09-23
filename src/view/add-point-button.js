@@ -18,12 +18,6 @@ export default class AddPointButton extends Abstract {
     return createAddPointButtonTemplate();
   }
 
-  _elementClickHandler(evt) {
-    evt.preventDefault();
-    this._callback.buttonClick(MenuItem.ADD_NEW_POINT);
-  }
-
-  // весь объект является кнопкой, и больше в нем ничего нет, поэтому ClickHandler
   setClickHandler(callback) {
     this._callback.buttonClick = callback;
 
@@ -36,5 +30,10 @@ export default class AddPointButton extends Abstract {
 
   setEnabled() {
     this.getElement().disabled = false;
+  }
+
+  _elementClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.buttonClick(MenuItem.ADD_NEW_POINT);
   }
 }
