@@ -1,5 +1,5 @@
-import PointsModel from '../model/points';
-import {adaptDestinationsToClient} from '../utils/general';
+import PointsModel from './../model/points';
+import {adaptDestinationsToClient} from './../utils/general';
 
 const Url = {
   POINTS: `points`,
