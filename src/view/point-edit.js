@@ -318,23 +318,23 @@ export default class PointEdit extends SmartView {
 
   _setInnerHandlers() {
     const element = this.getElement();
+    const price = element.querySelector(`.event__input--price`);
+    const destination = element.querySelector(`.event__input--destination`);
+    const offersList = element.querySelector(`.event__available-offers`);
 
     if (this._editablePoint === EditablePoint.OLD) {
       element.querySelector(`.event__favorite-checkbox`)
         .addEventListener(`change`, this._favoriteCheckboxChangeHandler);
     }
 
-    const price = element.querySelector(`.event__input--price`);
     price.addEventListener(`change`, this._priceChangeHandler);
     price.addEventListener(`input`, this._priceInputHandler);
-    const destination = element.querySelector(`.event__input--destination`);
     destination.addEventListener(`change`, this._destinationChangeHandler);
     destination.addEventListener(`input`, this._destinationInputHandler);
     element.querySelector(`.event__type-list`)
       .addEventListener(`change`, this._typeListChangeHandler);
     element.querySelector(`.event__reset-btn`)
       .addEventListener(`click`, this._resetButtonClickHandler);
-    const offersList = element.querySelector(`.event__available-offers`);
     if (offersList !== null) {
       offersList.addEventListener(`change`, this._offerListChangeHandler);
     }

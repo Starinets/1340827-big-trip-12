@@ -40,6 +40,8 @@ const render = (container, child, place) => {
 };
 
 const replace = (newChild, oldChild) => {
+  const parent = oldChild.parentElement;
+
   if (oldChild instanceof AbstractView) {
     oldChild = oldChild.getElement();
   }
@@ -47,8 +49,6 @@ const replace = (newChild, oldChild) => {
   if (newChild instanceof AbstractView) {
     newChild = newChild.getElement();
   }
-
-  const parent = oldChild.parentElement;
 
   if (parent === null || oldChild === null || newChild === null) {
     throw new Error(`Can't replace unexisting elements`);

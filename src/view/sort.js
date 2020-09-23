@@ -44,17 +44,17 @@ export default class Sort extends Abstract {
     this._typeChangeHandler = this._typeChangeHandler.bind(this);
   }
 
+  setChangeHandler(callback) {
+    this._callback.typeChange = callback;
+    this.getElement()
+      .addEventListener(`change`, this._typeChangeHandler);
+  }
+
   _getTemplate() {
     return createSortTemplate(this._currentType);
   }
 
   _typeChangeHandler(evt) {
     this._callback.typeChange(evt.target.value);
-  }
-
-  setChangeHandler(callback) {
-    this._callback.typeChange = callback;
-    this.getElement()
-      .addEventListener(`change`, this._typeChangeHandler);
   }
 }
