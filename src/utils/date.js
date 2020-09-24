@@ -2,9 +2,9 @@ import moment, {duration} from "moment";
 
 const addLeadingRank = (value) => String(value).padStart(2, `0`);
 
-const dateToString = (date) => moment(date).format(`DD/MM/YY HH:mm`);
+const formatDateToString = (date) => moment(date).format(`DD/MM/YY HH:mm`);
 
-const timeToString = (date) => moment(date).format(`HH:mm`);
+const formatTimeToString = (date) => moment(date).format(`HH:mm`);
 
 const formatDateToISOString = (date) => moment(date).format();
 
@@ -20,8 +20,6 @@ const isDatesEqual = (dateA, dateB) => {
   return moment(dateA).isSame(dateB, `day`);
 };
 
-const getHourDuration = (startDate, endDate) => duration(endDate - startDate).asHours();
-
 const getDatesDifference = (startDate, endDate) => {
   const {days, hours, minutes} = duration(endDate - startDate)._data;
 
@@ -36,12 +34,11 @@ const getDatesDifference = (startDate, endDate) => {
 
 export {
   addLeadingRank,
-  dateToString,
-  timeToString,
+  formatDateToString,
+  formatTimeToString,
   formatDateToISOString,
   formatDayDate,
   formatMonthDate,
   isDatesEqual,
-  getHourDuration,
   getDatesDifference
 };
