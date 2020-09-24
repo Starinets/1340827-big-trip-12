@@ -15,24 +15,30 @@ const getTripCost = (points) => points.reduce((pointsPrice, point) =>
   pointsPrice + point.price + point.offers.reduce((offersPrice, offer) =>
     offersPrice + offer.price, 0), 0);
 
-const getTripPath = (points) => {
-  switch (points.length) {
+const getTripPath = (pointsSortedByStart, pointsSortedByEnd) => {
+  const pointCount = pointsSortedByStart.length;
+  switch (pointCount) {
     case 0:
       return ``;
     case 1:
-      return `${points[0].destination.name}`;
+      return `${pointsSortedByStart[0].destination.name}`;
     case 2:
-      return `${points[0].destination.name} &mdash; ${points[points.length - 1].destination.name}`;
+      return `${pointsSortedByStart[0].destination.name} &mdash; ${pointsSortedByEnd[pointCount - 1].destination.name}`;
     case 3:
-      return `${points[0].destination.name} &mdash; ${points[1].destination.name} &mdash; ${points[points.length - 1].destination.name}`;
+      return `${pointsSortedByStart[0].destination.name} &mdash; ${pointsSortedByStart[1].destination.name} &mdash; ${pointsSortedByEnd[pointCount - 1].destination.name}`;
     default:
-      return `${points[0].destination.name} &mdash; ... &mdash; ${points[points.length - 1].destination.name}`;
+      return `${pointsSortedByStart[0].destination.name} &mdash; ... &mdash; ${pointsSortedByEnd[pointCount - 1].destination.name}`;
   }
 };
 
-const getTripDuration = (points) => {
-  const startTime = points[0].startTime;
-  const endTime = points[points.length - 1].endTime;
+const getTripDuration = (pointsSortedByStart, pointsSortedByEnd) => {
+  const pointCount = pointsSortedByStart.length;
+  if (pointCount === 0) {
+    return ``;
+  }
+
+  const startTime = pointsSortedByStart[0].startTime;
+  const endTime = pointsSortedByEnd[pointCount - 1].endTime;
 
   if (startTime.getMonth() !== endTime.getMonth()) {
     return `${formatMonthDate(startTime)}&nbsp;&mdash;&nbsp;${formatMonthDate(endTime)}`;
@@ -59,11 +65,12 @@ export default class Info {
   }
 
   init() {
-    const points = this._pointsModel.get().slice().sort((less, more) => less.startTime - more.startTime);
+    const pointsSortedByStart = this._pointsModel.get().slice().sort((less, more) => less.startTime - more.startTime);
+    const pointsSortedByEnd = pointsSortedByStart.slice().sort((less, more) => less.endTime - more.endTime);
 
-    const tripPath = getTripPath(points);
-    const tripDuration = getTripDuration(points);
-    const tripCost = getTripCost(points);
+    const tripPath = getTripPath(pointsSortedByStart, pointsSortedByEnd);
+    const tripDuration = getTripDuration(pointsSortedByStart, pointsSortedByEnd);
+    const tripCost = getTripCost(pointsSortedByStart);
 
     const previewMainInfoComponent = this._mainInfoComponent;
     const previewTripCostComponent = this._tripCostComponent;
