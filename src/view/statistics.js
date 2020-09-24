@@ -200,7 +200,7 @@ const generateMoneyChart = (ctx, points) => {
   const chartLabels = getPointTypeLabels(sortedTotals.map((total) => total.type));
   const chartValues = sortedTotals.map((total) => total.price);
 
-  return generateChart(ctx, chartLabels, chartValues, ChartOption.MONEY);
+  generateChart(ctx, chartLabels, chartValues, ChartOption.MONEY);
 };
 
 const generateTransportChart = (ctx, points) => {
@@ -209,7 +209,7 @@ const generateTransportChart = (ctx, points) => {
   const chartLabels = getPointTypeLabels(sortedTotals.map((total) => total.type));
   const chartValues = sortedTotals.map((total) => total.totals);
 
-  return generateChart(ctx, chartLabels, chartValues, ChartOption.TRANSPORT);
+  generateChart(ctx, chartLabels, chartValues, ChartOption.TRANSPORT);
 };
 
 const generateTimeSpendChart = (ctx, points) => {
@@ -218,7 +218,7 @@ const generateTimeSpendChart = (ctx, points) => {
   const chartLabels = getPointTypeLabels(sortedTotals.map((total) => total.type));
   const chartValues = sortedTotals.map((total) => total.time);
 
-  return generateChart(ctx, chartLabels, chartValues, ChartOption.TIME_SPEND);
+  generateChart(ctx, chartLabels, chartValues, ChartOption.TIME_SPEND);
 };
 
 
@@ -247,10 +247,6 @@ export default class Statistics extends Abstract {
     super();
     this._points = points;
 
-    this._moneyChart = null;
-    this._transportChart = null;
-    this._timeChart = null;
-
     this._generate();
   }
 
@@ -269,8 +265,8 @@ export default class Statistics extends Abstract {
     transportChart.style.backgroundColor = CHART_BACKGROUND_COLOR;
     timeSpendChart.style.backgroundColor = CHART_BACKGROUND_COLOR;
 
-    this._moneyCart = generateMoneyChart(moneyChart, this._points);
-    this._transportChart = generateTransportChart(transportChart, this._points);
-    this._timeSpendChart = generateTimeSpendChart(timeSpendChart, this._points);
+    generateMoneyChart(moneyChart, this._points);
+    generateTransportChart(transportChart, this._points);
+    generateTimeSpendChart(timeSpendChart, this._points);
   }
 }
