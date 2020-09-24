@@ -45,6 +45,17 @@ export default class Filter {
     remove(prevComponent);
   }
 
+  _getFilters() {
+    const points = this._pointsModel.get();
+    const currentDate = new Date();
+
+    return {
+      [FilterType.EVERYTHING]: filterTypeToPoints[FilterType.EVERYTHING](points).length,
+      [FilterType.FUTURE]: filterTypeToPoints[FilterType.FUTURE](points, currentDate).length,
+      [FilterType.PAST]: filterTypeToPoints[FilterType.PAST](points, currentDate).length,
+    };
+  }
+
   _handleModelEvent() {
     this.init();
   }
@@ -55,16 +66,5 @@ export default class Filter {
     }
 
     this._model.set(UpdateType.FILTER, filterType);
-  }
-
-  _getFilters() {
-    const points = this._pointsModel.get();
-    const currentDate = new Date();
-
-    return {
-      [FilterType.EVERYTHING]: filterTypeToPoints[FilterType.EVERYTHING](points).length,
-      [FilterType.FUTURE]: filterTypeToPoints[FilterType.FUTURE](points, currentDate).length,
-      [FilterType.PAST]: filterTypeToPoints[FilterType.PAST](points, currentDate).length,
-    };
   }
 }
