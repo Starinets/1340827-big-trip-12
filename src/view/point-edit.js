@@ -5,7 +5,7 @@ import {
   EditablePoint
 } from '../constants';
 import {setFirstCharToUpperCase} from './../utils/general';
-import {dateToString} from '../utils/date';
+import {formatDateToString} from '../utils/date';
 import SmartView from './smart';
 import flatpickr from 'flatpickr';
 import './../../node_modules/flatpickr/dist/flatpickr.min.css';
@@ -184,12 +184,12 @@ const createPointFormTemplate = (pointData, destinations, offers, editablePoint)
           <label class="visually-hidden" for="event-start-time-1">
             From
           </label>
-          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${dateToString(pointData.startTime)}" ${pointData.isDisabled ? `disabled` : ``}>
+          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${formatDateToString(pointData.startTime)}" ${pointData.isDisabled ? `disabled` : ``}>
           —
           <label class="visually-hidden" for="event-end-time-1">
             To
           </label>
-          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${dateToString(pointData.endTime)}" ${pointData.isDisabled ? `disabled` : ``}>
+          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${formatDateToString(pointData.endTime)}" ${pointData.isDisabled ? `disabled` : ``}>
         </div>
 
         <div class="event__field-group  event__field-group--price">
@@ -295,14 +295,7 @@ export default class PointEdit extends SmartView {
   removeElement() {
     super.removeElement();
 
-    if (this._startDatePicker !== null) {
-      this._startDatePicker.destroy();
-      this._startDatePicker = null;
-    }
-    if (this._endDatePicker !== null) {
-      this._endDatePicker.destroy();
-      this._endDatePicker = null;
-    }
+    this._destroyDatePickerIfNeeded();
   }
 
   /* ----------------------------- Class methods ---------------------------- */
@@ -340,7 +333,7 @@ export default class PointEdit extends SmartView {
     }
   }
 
-  _setDatePicker() {
+  _destroyDatePickerIfNeeded() {
     if (this._startDatePicker !== null) {
       this._startDatePicker.destroy();
       this._startDatePicker = null;
@@ -349,6 +342,10 @@ export default class PointEdit extends SmartView {
       this._endDatePicker.destroy();
       this._endDatePicker = null;
     }
+  }
+
+  _setDatePicker() {
+    this._destroyDatePickerIfNeeded();
 
     this._startDatePicker = flatpickr(
         this.getElement().querySelector(`#event-start-time-1`),
@@ -357,7 +354,6 @@ export default class PointEdit extends SmartView {
           'time_24hr': true,
           'dateFormat': `d/m/y H:i`,
           'defaultDate': this._data.startTime || new Date(),
-          'maxDate': this._data.endTime,
           'onChange': this._startDateChangeHandler
         }
     );
@@ -369,7 +365,6 @@ export default class PointEdit extends SmartView {
           'time_24hr': true,
           'dateFormat': `d/m/y H:i`,
           'defaultDate': this._data.endTime || new Date(),
-          'minDate': this._data.startTime,
           'onChange': this._endDateChangeHandler
         }
     );
@@ -379,12 +374,14 @@ export default class PointEdit extends SmartView {
     this.updateData({
       startTime: userDate
     }, true);
+    this._validateFields();
   }
 
   _endDateChangeHandler([userDate]) {
     this.updateData({
       endTime: userDate
     }, true);
+    this._validateFields();
   }
 
   _setOfferListState() {
@@ -435,7 +432,8 @@ export default class PointEdit extends SmartView {
     if (
       !this._destinations.some((item) => item.name === destination)
       || price === 0
-      || isNaN(price)) {
+      || isNaN(price)
+      || this._data.startTime > this._data.endTime) {
       saveButton.disabled = true;
       return;
     }
